@@ -81,7 +81,6 @@
             background: #64748b;
         }
 
-        /* Toast & Modal Transitions */
         .toast-enter {
             transform: translateY(-20px);
             opacity: 0;
@@ -248,7 +247,7 @@
                     <h2 class="text-2xl sm:text-3xl font-extrabold font-dojo text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600">
                         <i class="fa-solid fa-crown text-amber-400 mr-2"></i> PENTAS JUARA BIO-DOJO <i class="fa-solid fa-crown text-amber-400 ml-2"></i>
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Murid dengan tajukan terbanyak & cop mengikut minit pembelajaran</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Murid dengan cop terbanyak mengikut minit pembelajaran & rekod kehadiran</p>
                 </div>
 
                 <!-- Podium Displays -->
@@ -321,7 +320,7 @@
                             <i class="fa-solid fa-list-ol text-emerald-400"></i>
                             <span>Kedudukan Keseluruhan Murid</span>
                         </h3>
-                        <p class="text-xs text-slate-400">Senarai disusun berdasarkan Jumlah Cop & Minit Pembelajaran</p>
+                        <p class="text-xs text-slate-400">Senarai disusun berdasarkan Jumlah Cop (Kehadiran & Bonus) & Minit Pembelajaran</p>
                     </div>
                     <div class="relative w-full sm:w-64">
                         <input type="text" id="search-leaderboard" onkeyup="renderLeaderboard()" placeholder="Cari nama murid..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
@@ -407,7 +406,7 @@
                     </span>
                 </div>
                 <div class="flex flex-wrap gap-3 items-center">
-                    <span class="text-slate-400 font-bold uppercase text-[10px]">Lencana Bonus:</span>
+                    <span class="text-slate-400 font-bold uppercase text-[10px]">Lencana Bonus (+1 Cop):</span>
                     <span class="text-slate-300" title="Perfect Recall 10/10">⭐ Perfect Recall</span>
                     <span class="text-slate-300" title="Bio-Dojo Champion">👑 Champion</span>
                     <span class="text-slate-300" title="Terangkan Konsep">🧠 Terangkan Konsep</span>
@@ -857,7 +856,7 @@
         </div>
     </div>
 
-    <!-- General Confirmation Modal (Replaces native confirm) -->
+    <!-- General Confirmation Modal -->
     <div id="modal-confirm" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
             <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto text-xl">
@@ -873,7 +872,7 @@
     </div>
 
     <script>
-        // Updated Default Students List - AZZAHRA WANIE replaced with NUR NADIRAH SYAHIRAH BINTI ABDULLAH
+        // Updated Default Students List - NUR NADIRAH SYAHIRAH BINTI ABDULLAH included
         const DEFAULT_STUDENTS = [
             "ABDUL DANISH BIN ABDULLAH",
             "AHMAD SYAHZANIRULLAH BIN AHMAD ZAIDI",
@@ -983,10 +982,11 @@
 
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
             const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'warning' ? 'bg-amber-600 text-white' : 'bg-blue-600 text-white';
             
-            toast.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold transition-all duration-300 toast-enter flex items-center space-x-2`;
+            toast.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold transition-all duration-300 toast-enter flex items-center space-x-2 pointer-events-auto`;
             toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'} text-sm"></i> <span>${msg}</span>`;
             
             container.appendChild(toast);
@@ -1018,8 +1018,7 @@
             const savedStudents = localStorage.getItem('biodojo_students');
             if (savedStudents) {
                 students = JSON.parse(savedStudents);
-                // Ensure name update is carried over if previous key existed with old name
-                const targetIdx = students.findIndex(s => s.name.includes("AZZAHRA WANIE"));
+                const targetIdx = students.findIndex(s => s.name && s.name.includes("AZZAHRA WANIE"));
                 if (targetIdx !== -1) {
                     students[targetIdx].name = "NUR NADIRAH SYAHIRAH BINTI ABDULLAH";
                     saveStudentsToStorage();
@@ -1027,7 +1026,8 @@
             } else {
                 students = DEFAULT_STUDENTS.map((name, index) => ({
                     id: 'std_' + (index + 1),
-                    name: name
+                    name: name,
+                    extraCops: 0
                 }));
                 saveStudentsToStorage();
             }
@@ -1060,8 +1060,326 @@
             localStorage.setItem('biodojo_attendance', JSON.stringify(attendanceRecords));
         }
 
+        // ================= CALCULATE STUDENT STATS (LINKED TO ATTENDANCE) =================
+        function calculateStudentStats(studentId) {
+            let attendanceCops = 0;
+            let badgeCops = 0;
+            let attendedSessions = 0;
+            let badges = { perfectRecall: 0, champion: 0, explainConcept: 0 };
+
+            const student = students.find(s => s.id === studentId);
+            const extraCops = student ? (student.extraCops || 0) : 0;
+
+            Object.keys(attendanceRecords).forEach(sessionId => {
+                const rec = attendanceRecords[sessionId]?.[studentId];
+                if (rec) {
+                    if (rec.status === '✓') {
+                        attendanceCops += 1;
+                        attendedSessions += 1;
+                    } else if (rec.status === 'P') {
+                        attendedSessions += 1;
+                    }
+
+                    if (rec.perfectRecall) { badges.perfectRecall += 1; badgeCops += 1; }
+                    if (rec.champion) { badges.champion += 1; badgeCops += 1; }
+                    if (rec.explainConcept) { badges.explainConcept += 1; badgeCops += 1; }
+                }
+            });
+
+            const totalCops = Math.max(0, attendanceCops + badgeCops + extraCops);
+            const totalMinutes = totalCops * 20;
+            const belt = getBeltInfo(totalCops);
+            const attendancePct = Math.round((attendedSessions / Math.max(1, sessions.length)) * 100);
+
+            return { totalCops, attendanceCops, badgeCops, extraCops, totalMinutes, belt, attendancePct, attendedSessions, badges };
+        }
+
+        function getBeltInfo(cops) {
+            if (cops >= 50) return { title: "BIO-DOJO LEGEND", color: "bg-amber-500 text-slate-950 border-amber-300", icon: "🏆", bgClass: "bg-amber-500/20 text-amber-400 border-amber-500/40" };
+            if (cops >= 40) return { title: "ELITE", color: "bg-slate-900 text-amber-400 border-slate-700", icon: "⬛", bgClass: "bg-slate-800 text-slate-200 border-slate-600" };
+            if (cops >= 30) return { title: "MASTER", color: "bg-amber-900 text-amber-100 border-amber-800", icon: "🟤", bgClass: "bg-amber-900/30 text-amber-300 border-amber-800" };
+            if (cops >= 20) return { title: "ACHIEVER", color: "bg-blue-600 text-white border-blue-400", icon: "🔵", bgClass: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
+            if (cops >= 10) return { title: "EXPLORER", color: "bg-emerald-600 text-white border-emerald-400", icon: "🟢", bgClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
+            return { title: "STARTER", color: "bg-slate-300 text-slate-900 border-slate-400", icon: "⚪", bgClass: "bg-slate-800 text-slate-400 border-slate-700" };
+        }
+
+        // ================= ATTENDANCE MATRIX LOGIC =================
+        function populateAttendanceSessionDropdown() {
+            const select = document.getElementById('select-attendance-session');
+            select.innerHTML = sessions.map(s => `
+                <option value="${s.id}">${s.title} — ${s.bab} (Ting. ${s.form})</option>
+            `).join('');
+        }
+
+        function loadAttendanceMatrix() {
+            const selectEl = document.getElementById('select-attendance-session');
+            if (!selectEl || sessions.length === 0) return;
+
+            const sessionId = selectEl.value || sessions[0].id;
+            const currentSession = sessions.find(s => s.id === sessionId) || sessions[0];
+
+            if (currentSession) {
+                document.getElementById('session-info-badge').innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-300 gap-1">
+                        <div><strong class="text-white">Bab Diuji:</strong> ${currentSession.bab} (Ting. ${currentSession.form})</div>
+                        <div><strong class="text-emerald-400">Flashcard:</strong> ${currentSession.flashcard} | <strong class="text-amber-400">Aktiviti:</strong> ${currentSession.activity}</div>
+                    </div>
+                `;
+            }
+
+            const currentAttData = attendanceRecords[sessionId] || {};
+            const tbody = document.getElementById('attendance-matrix-body');
+
+            tbody.innerHTML = students.map((std, idx) => {
+                const rec = currentAttData[std.id] || { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+                const overallStats = calculateStudentStats(std.id);
+
+                return `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 text-center text-slate-500 font-semibold">${idx + 1}</td>
+                        <td class="p-3 font-semibold text-slate-200">${std.name}</td>
+                        <td class="p-3 text-center">
+                            <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 space-x-1">
+                                <button onclick="setStudentStatus('${std.id}', '✓')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === '✓' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">✓ Hadir</button>
+                                <button onclick="setStudentStatus('${std.id}', 'P')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'P' ? 'bg-amber-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">P Lengkap Tak</button>
+                                <button onclick="setStudentStatus('${std.id}', 'A')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'A' ? 'bg-rose-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">A Ponteng</button>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center space-x-1">
+                            <button onclick="toggleBadge('${std.id}', 'perfectRecall')" title="Perfect Recall 10/10 (+1 Cop)" class="p-1.5 rounded-lg border transition ${rec.perfectRecall ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">⭐</button>
+                            <button onclick="toggleBadge('${std.id}', 'champion')" title="Bio-Dojo Champion (+1 Cop)" class="p-1.5 rounded-lg border transition ${rec.champion ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">👑</button>
+                            <button onclick="toggleBadge('${std.id}', 'explainConcept')" title="Terangkan Konsep (+1 Cop)" class="p-1.5 rounded-lg border transition ${rec.explainConcept ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">🧠</button>
+                        </td>
+                        <td class="p-3 text-center font-bold ${rec.status === '✓' ? 'text-emerald-400' : 'text-slate-500'}">
+                            ${rec.status === '✓' ? '+1 Cop' : '0 Cop'}
+                        </td>
+                        <td class="p-3 text-center font-extrabold text-white">${overallStats.totalCops} Cop</td>
+                        <td class="p-3 text-center text-amber-400 font-bold">${overallStats.totalMinutes} Min</td>
+                        <td class="p-3 text-center">
+                            <span class="belt-badge ${overallStats.belt.bgClass}">
+                                ${overallStats.belt.icon} ${overallStats.belt.title}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function setStudentStatus(studentId, status) {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            if (!attendanceRecords[sessionId][studentId]) {
+                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+            }
+            attendanceRecords[sessionId][studentId].status = status;
+            saveAttendanceToStorage();
+            loadAttendanceMatrix();
+            updateDashboard();
+        }
+
+        function toggleBadge(studentId, badgeKey) {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            if (!attendanceRecords[sessionId][studentId]) {
+                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+            }
+            attendanceRecords[sessionId][studentId][badgeKey] = !attendanceRecords[sessionId][studentId][badgeKey];
+            saveAttendanceToStorage();
+            loadAttendanceMatrix();
+            updateDashboard();
+        }
+
+        function markAllPresent() {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            students.forEach(std => {
+                if (!attendanceRecords[sessionId][std.id]) {
+                    attendanceRecords[sessionId][std.id] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+                } else {
+                    attendanceRecords[sessionId][std.id].status = '✓';
+                }
+            });
+            saveAttendanceToStorage();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Semua murid ditanda Hadir (✓) & diberikan +1 Cop!");
+        }
+
+        function markAllAbsent() {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            students.forEach(std => {
+                if (!attendanceRecords[sessionId][std.id]) {
+                    attendanceRecords[sessionId][std.id] = { status: 'A', perfectRecall: false, champion: false, explainConcept: false };
+                } else {
+                    attendanceRecords[sessionId][std.id].status = 'A';
+                }
+            });
+            saveAttendanceToStorage();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Semua murid ditanda Ponteng (A).", "warning");
+        }
+
+        function resetCurrentSessionAttendance() {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            delete attendanceRecords[sessionId];
+            saveAttendanceToStorage();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Rekod sesi ini telah direset.");
+        }
+
+        function saveAttendanceData() {
+            saveAttendanceToStorage();
+            updateDashboard();
+            showToast("Rekod kehadiran & cop berjaya disimpan!");
+        }
+
+        // ================= DASHBOARD & LEADERBOARD =================
+        function updateDashboard() {
+            let studentRankings = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
+            studentRankings.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
+
+            const totalCopsSum = studentRankings.reduce((acc, curr) => acc + curr.totalCops, 0);
+            const totalMinutesSum = totalCopsSum * 20;
+            const avgAttendance = Math.round(studentRankings.reduce((acc, curr) => acc + curr.attendancePct, 0) / (students.length || 1));
+            const legendCount = studentRankings.filter(s => s.totalCops >= 50).length;
+
+            document.getElementById('stat-total-cops').innerText = totalCopsSum;
+            document.getElementById('stat-total-minutes').innerText = totalMinutesSum + ' Min';
+            document.getElementById('stat-attendance-rate').innerText = avgAttendance + '%';
+            document.getElementById('stat-legend-count').innerText = legendCount;
+
+            const avgMins = Math.round(totalMinutesSum / (students.length || 1));
+            document.getElementById('avg-minutes-text').innerText = `${avgMins} / 100 Min Purata`;
+            const barPct = Math.min(100, Math.round((avgMins / 100) * 100));
+            document.getElementById('avg-minutes-bar').style.width = barPct + '%';
+
+            if (studentRankings.length > 0) setPodiumData('podium-1', studentRankings[0]);
+            if (studentRankings.length > 1) setPodiumData('podium-2', studentRankings[1]);
+            if (studentRankings.length > 2) setPodiumData('podium-3', studentRankings[2]);
+
+            renderActiveSessionBanner();
+            renderLeaderboard(studentRankings);
+        }
+
+        function setPodiumData(podiumPrefix, student) {
+            document.getElementById(`${podiumPrefix}-name`).innerText = student.name;
+            document.getElementById(`${podiumPrefix}-cops`).innerText = `${student.totalCops} Cop (${student.totalMinutes} Min)`;
+            document.getElementById(`${podiumPrefix}-belt`).innerHTML = `
+                <span class="belt-badge ${student.belt.bgClass}">
+                    ${student.belt.icon} ${student.belt.title}
+                </span>
+            `;
+        }
+
+        function renderActiveSessionBanner() {
+            const activeSessionId = document.getElementById('select-attendance-session')?.value || sessions[0]?.id;
+            const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+
+            const container = document.getElementById('active-session-banner');
+            if (!container) return;
+
+            if (!activeSession) {
+                container.innerHTML = `<p class="text-xs text-slate-400">Tiada sesi didaftarkan.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                                UJIAN BAB HARI INI: ${activeSession.title}
+                            </span>
+                            <span class="text-xs text-slate-400">Tingkatan ${activeSession.form}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mt-1">
+                            <i class="fa-solid fa-book-bookmark text-amber-400 mr-2"></i> ${activeSession.bab}
+                        </h3>
+                        ${activeSession.notes ? `<p class="text-xs text-slate-300 mt-1 italic"><i class="fa-solid fa-note-sticky text-amber-400 mr-1"></i>${activeSession.notes}</p>` : ''}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+                            <span class="text-slate-400">Flashcard:</span>
+                            <span class="text-emerald-400 font-bold ml-1">${activeSession.flashcard}</span>
+                        </div>
+                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+                            <span class="text-slate-400">Aktiviti:</span>
+                            <span class="text-amber-400 font-bold ml-1">${activeSession.activity}</span>
+                        </div>
+                        <button onclick="openQuickChapterModal('${activeSession.id}')" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold px-3 py-2 rounded-xl border border-slate-700 transition">
+                            <i class="fa-solid fa-pen-to-square"></i> Tukar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLeaderboard(customList = null) {
+            let list = customList;
+            if (!list) {
+                list = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
+                list.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
+            }
+
+            const searchKey = document.getElementById('search-leaderboard')?.value.toLowerCase() || '';
+            if (searchKey) {
+                list = list.filter(s => s.name.toLowerCase().includes(searchKey));
+            }
+
+            const tbody = document.getElementById('leaderboard-table-body');
+            tbody.innerHTML = list.map((std, idx) => `
+                <tr class="hover:bg-slate-800/50 transition">
+                    <td class="p-3 text-center font-bold ${idx < 3 ? 'text-amber-400' : 'text-slate-400'}">#${idx + 1}</td>
+                    <td class="p-3 font-semibold text-white">${std.name}</td>
+                    <td class="p-3 text-center">
+                        <span class="belt-badge ${std.belt.bgClass}">
+                            ${std.belt.icon} ${std.belt.title}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center font-bold text-emerald-400">
+                        <div class="inline-flex items-center space-x-1">
+                            <button onclick="quickAddCop('${std.id}', -1)" title="Tolak 1 Cop" class="w-5 h-5 bg-slate-800 hover:bg-rose-600/30 text-rose-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">-</button>
+                            <span class="px-1 text-sm">${std.totalCops}</span>
+                            <button onclick="quickAddCop('${std.id}', 1)" title="Tambah 1 Cop" class="w-5 h-5 bg-slate-800 hover:bg-emerald-600/30 text-emerald-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">+</button>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center text-slate-300 font-semibold">${std.totalMinutes} Min</td>
+                    <td class="p-3 text-center text-slate-300">${std.attendancePct}%</td>
+                    <td class="p-3 text-right">
+                        <div class="flex justify-end space-x-1">
+                            <button onclick="viewStudentPassport('${std.id}')" title="Lihat Passport" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-id-card mr-1"></i> Passport
+                            </button>
+                            <button onclick="openEditStudentModal('${std.id}')" title="Sunting Nama" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 px-2 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteStudentConfirm('${std.id}')" title="Padam Murid" class="text-xs bg-slate-800 hover:bg-slate-700 text-rose-400 px-2 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function quickAddCop(studentId, delta) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            student.extraCops = (student.extraCops || 0) + delta;
+            saveStudentsToStorage();
+            updateDashboard();
+            loadAttendanceMatrix();
+            showToast(`Cop bagi ${student.name} dikemaskini (${delta > 0 ? '+' + delta : delta}).`);
+        }
+
+        // ================= DAILY PLANNER & SESSIONS =================
         function renderDailyPlannerGrid() {
             const container = document.getElementById('daily-planner-grid');
+            if (!container) return;
+
             const formFilter = document.getElementById('filter-planner-form')?.value || 'ALL';
             const searchKey = document.getElementById('search-planner-bab')?.value.toLowerCase() || '';
 
@@ -1258,6 +1576,7 @@
 
         function renderSessionList() {
             const tbody = document.getElementById('session-list-body');
+            if (!tbody) return;
             document.getElementById('session-count-tag').innerText = `${sessions.length} Sesi`;
 
             tbody.innerHTML = sessions.map(s => `
@@ -1318,6 +1637,220 @@
             populateBabDropdown();
         }
 
+        // ================= STUDENT PASSPORT & MANAGEMENT =================
+        function renderStudentCards() {
+            const grid = document.getElementById('student-cards-grid');
+            if (!grid) return;
+
+            grid.innerHTML = students.map(std => {
+                const stats = calculateStudentStats(std.id);
+                return `
+                    <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/40 rounded-2xl p-4 flex flex-col justify-between transition">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="belt-badge ${stats.belt.bgClass}">
+                                    ${stats.belt.icon} ${stats.belt.title}
+                                </span>
+                                <div class="flex space-x-1">
+                                    <button onclick="openEditStudentModal('${std.id}')" class="text-slate-500 hover:text-blue-400 p-1"><i class="fa-solid fa-pen text-xs"></i></button>
+                                    <button onclick="deleteStudentConfirm('${std.id}')" class="text-slate-500 hover:text-rose-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+                                </div>
+                            </div>
+
+                            <h4 class="font-bold text-white text-sm mt-1 line-clamp-1">${std.name}</h4>
+
+                            <div class="grid grid-cols-2 gap-2 mt-4 text-center">
+                                <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
+                                    <span class="text-base font-extrabold text-emerald-400">${stats.totalCops} Cop</span>
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Minit</span>
+                                    <span class="text-base font-extrabold text-amber-400">${stats.totalMinutes} Min</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-800">
+                            <button onclick="viewStudentPassport('${std.id}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center space-x-1">
+                                <i class="fa-solid fa-id-card"></i>
+                                <span>Lihat Passport 100</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewStudentPassport(studentId) {
+            const std = students.find(s => s.id === studentId);
+            if (!std) return;
+
+            const stats = calculateStudentStats(studentId);
+
+            document.getElementById('passport-modal-name').innerText = std.name;
+            document.getElementById('passport-modal-belt').innerHTML = `
+                <span class="belt-badge ${stats.belt.bgClass} text-xs px-3 py-1">
+                    ${stats.belt.icon} TAHAP: ${stats.belt.title}
+                </span>
+            `;
+
+            document.getElementById('passport-modal-cops').innerText = stats.totalCops;
+            document.getElementById('passport-modal-minutes').innerText = `${stats.totalMinutes} Min`;
+            document.getElementById('passport-modal-cops-badge').innerText = `${stats.totalCops} Cop`;
+
+            document.getElementById('btn-passport-minus').onclick = () => quickAddCop(studentId, -1);
+            document.getElementById('btn-passport-plus').onclick = () => quickAddCop(studentId, 1);
+            document.getElementById('btn-passport-edit').onclick = () => { closeModal('modal-passport'); openEditStudentModal(studentId); };
+
+            const badgesContainer = document.getElementById('passport-modal-badges');
+            badgesContainer.innerHTML = `
+                <span class="bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg ${stats.badges.perfectRecall > 0 ? 'text-amber-400' : 'text-slate-600'}">⭐ Perfect Recall: ${stats.badges.perfectRecall}</span>
+                <span class="bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg ${stats.badges.champion > 0 ? 'text-amber-400' : 'text-slate-600'}">👑 Champion: ${stats.badges.champion}</span>
+                <span class="bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg ${stats.badges.explainConcept > 0 ? 'text-emerald-400' : 'text-slate-600'}">🧠 Terangkan Konsep: ${stats.badges.explainConcept}</span>
+            `;
+
+            const historyContainer = document.getElementById('passport-modal-history');
+            const historyItems = sessions.map(s => {
+                const rec = attendanceRecords[s.id]?.[studentId];
+                const status = rec ? rec.status : 'A';
+                const statusLabel = status === '✓' ? '<span class="text-emerald-400 font-bold">✓ Hadir (+1 Cop)</span>' : status === 'P' ? '<span class="text-amber-400">P Lengkap Tak</span>' : '<span class="text-rose-400">A Ponteng</span>';
+
+                return `
+                    <div class="flex justify-between items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
+                        <span class="text-slate-300 font-semibold">${s.title}: ${s.bab}</span>
+                        ${statusLabel}
+                    </div>
+                `;
+            });
+
+            historyContainer.innerHTML = historyItems.join('');
+            document.getElementById('modal-passport').classList.remove('hidden');
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('new-student-name-input').value = "";
+            document.getElementById('modal-add-student').classList.remove('hidden');
+        }
+
+        function handleAddStudent() {
+            const name = document.getElementById('new-student-name-input').value.trim();
+            if (!name) return;
+
+            const newId = 'std_' + Date.now();
+            students.push({ id: newId, name: name, extraCops: 0 });
+            saveStudentsToStorage();
+            closeModal('modal-add-student');
+            renderStudentCards();
+            updateDashboard();
+            loadAttendanceMatrix();
+            showToast("Murid baru berjaya ditambah!");
+        }
+
+        function openEditStudentModal(studentId) {
+            const std = students.find(s => s.id === studentId);
+            if (!std) return;
+
+            document.getElementById('edit-student-id-input').value = std.id;
+            document.getElementById('edit-student-name-input').value = std.name;
+            document.getElementById('modal-edit-student').classList.remove('hidden');
+        }
+
+        function handleSaveEditStudent() {
+            const id = document.getElementById('edit-student-id-input').value;
+            const name = document.getElementById('edit-student-name-input').value.trim();
+
+            const std = students.find(s => s.id === id);
+            if (std && name) {
+                std.name = name;
+                saveStudentsToStorage();
+                closeModal('modal-edit-student');
+                renderStudentCards();
+                updateDashboard();
+                loadAttendanceMatrix();
+                showToast("Nama murid berjaya dikemaskini!");
+            }
+        }
+
+        function deleteStudentConfirm(studentId) {
+            showConfirmModal(
+                "Padam Murid",
+                "Adakah anda pasti untuk memadam murid ini dari senarai kelas?",
+                function() {
+                    students = students.filter(s => s.id !== studentId);
+                    saveStudentsToStorage();
+                    renderStudentCards();
+                    updateDashboard();
+                    loadAttendanceMatrix();
+                    showToast("Murid berjaya dipadam.", "warning");
+                }
+            );
+        }
+
+        // ================= ANALYTICS & CHARTS =================
+        function initCharts() {
+            const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
+            const ctx2 = document.getElementById('chart-belt-distribution')?.getContext('2d');
+            const ctx3 = document.getElementById('chart-session-trend')?.getContext('2d');
+
+            if (!ctx1 || !ctx2 || !ctx3) return;
+
+            minutesChart = new Chart(ctx1, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Jumlah Minit', data: [], backgroundColor: '#10b981', borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+
+            beltChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: { labels: ['Starter', 'Explorer', 'Achiever', 'Master', 'Elite', 'Legend'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: ['#e2e8f0', '#22c55e', '#3b82f6', '#8b5cf6', '#334155', '#eab308'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+
+            trendChart = new Chart(ctx3, {
+                type: 'line',
+                data: { labels: [], datasets: [{ label: 'Kadar Kehadiran (%)', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+            });
+
+            updateCharts();
+        }
+
+        function updateCharts() {
+            if (!minutesChart || !beltChart || !trendChart) return;
+
+            const studentData = students.map(s => ({ name: s.name.split(' ')[0], ...calculateStudentStats(s.id) }));
+            
+            // Chart 1
+            minutesChart.data.labels = studentData.map(s => s.name);
+            minutesChart.data.datasets[0].data = studentData.map(s => s.totalMinutes);
+            minutesChart.update();
+
+            // Chart 2
+            const beltCounts = { STARTER: 0, EXPLORER: 0, ACHIEVER: 0, MASTER: 0, ELITE: 0, "BIO-DOJO LEGEND": 0 };
+            studentData.forEach(s => { beltCounts[s.belt.title] = (beltCounts[s.belt.title] || 0) + 1; });
+            beltChart.data.datasets[0].data = [beltCounts["STARTER"], beltCounts["EXPLORER"], beltCounts["ACHIEVER"], beltCounts["MASTER"], beltCounts["ELITE"], beltCounts["BIO-DOJO LEGEND"]];
+            beltChart.update();
+
+            // Chart 3
+            const sessionLabels = sessions.slice(0, 15).map(s => s.title);
+            const attendanceRates = sessions.slice(0, 15).map(s => {
+                const recs = attendanceRecords[s.id] || {};
+                const presentCount = Object.values(recs).filter(r => r.status === '✓' || r.status === 'P').length;
+                return Math.round((presentCount / Math.max(1, students.length)) * 100);
+            });
+            trendChart.data.labels = sessionLabels;
+            trendChart.data.datasets[0].data = attendanceRates;
+            trendChart.update();
+
+            // Coverage text
+            const f4Tested = new Set(sessions.filter(s => s.form === '4').map(s => s.bab)).size;
+            const f5Tested = new Set(sessions.filter(s => s.form === '5').map(s => s.bab)).size;
+            document.getElementById('coverage-f4-text').innerText = `${f4Tested} / 15 Bab (${Math.round((f4Tested/15)*100)}%)`;
+            document.getElementById('coverage-f5-text').innerText = `${f5Tested} / 13 Bab (${Math.round((f5Tested/13)*100)}%)`;
+        }
+
+        // ================= UTILITIES =================
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
@@ -1353,602 +1886,36 @@
             }
         }
 
-        function calculateStudentStats(studentId) {
-            let totalCops = 0;
-            let attendedSessions = 0;
-            let badges = { perfectRecall: 0, champion: 0, explainConcept: 0 };
-
-            Object.keys(attendanceRecords).forEach(sessionId => {
-                const rec = attendanceRecords[sessionId]?.[studentId];
-                if (rec) {
-                    if (rec.status === '✓') {
-                        totalCops += 1;
-                        attendedSessions += 1;
-                    } else if (rec.status === 'P') {
-                        attendedSessions += 1;
-                    }
-
-                    if (rec.perfectRecall) badges.perfectRecall += 1;
-                    if (rec.champion) badges.champion += 1;
-                    if (rec.explainConcept) badges.explainConcept += 1;
-                }
+        function triggerConfetti() {
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
             });
-
-            const totalMinutes = totalCops * 20;
-            const belt = getBeltInfo(totalCops);
-            const attendancePct = Math.round((attendedSessions / Math.max(1, sessions.length)) * 100);
-
-            return { totalCops, totalMinutes, belt, attendancePct, attendedSessions, badges };
-        }
-
-        function getBeltInfo(cops) {
-            if (cops >= 50) return { title: "BIO-DOJO LEGEND", color: "bg-amber-500 text-slate-950 border-amber-300", icon: "🏆", bgClass: "bg-amber-500/20 text-amber-400 border-amber-500/40" };
-            if (cops >= 40) return { title: "ELITE", color: "bg-slate-900 text-amber-400 border-slate-700", icon: "⬛", bgClass: "bg-slate-800 text-slate-200 border-slate-600" };
-            if (cops >= 30) return { title: "MASTER", color: "bg-amber-900 text-amber-100 border-amber-800", icon: "🟤", bgClass: "bg-amber-900/30 text-amber-300 border-amber-800" };
-            if (cops >= 20) return { title: "ACHIEVER", color: "bg-blue-600 text-white border-blue-400", icon: "🔵", bgClass: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
-            if (cops >= 10) return { title: "EXPLORER", color: "bg-emerald-600 text-white border-emerald-400", icon: "🟢", bgClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
-            return { title: "STARTER", color: "bg-slate-300 text-slate-900 border-slate-400", icon: "⚪", bgClass: "bg-slate-800 text-slate-400 border-slate-700" };
-        }
-
-        function updateDashboard() {
-            let studentRankings = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
-            studentRankings.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
-
-            const totalCopsSum = studentRankings.reduce((acc, curr) => acc + curr.totalCops, 0);
-            const totalMinutesSum = totalCopsSum * 20;
-            const avgAttendance = Math.round(studentRankings.reduce((acc, curr) => acc + curr.attendancePct, 0) / (students.length || 1));
-            const legendCount = studentRankings.filter(s => s.totalCops >= 50).length;
-
-            document.getElementById('stat-total-cops').innerText = totalCopsSum;
-            document.getElementById('stat-total-minutes').innerText = totalMinutesSum + ' Min';
-            document.getElementById('stat-attendance-rate').innerText = avgAttendance + '%';
-            document.getElementById('stat-legend-count').innerText = legendCount;
-
-            const avgMins = Math.round(totalMinutesSum / (students.length || 1));
-            document.getElementById('avg-minutes-text').innerText = `${avgMins} / 100 Min Purata`;
-            const barPct = Math.min(100, Math.round((avgMins / 100) * 100));
-            document.getElementById('avg-minutes-bar').style.width = barPct + '%';
-
-            if (studentRankings.length > 0) setPodiumData('podium-1', studentRankings[0]);
-            if (studentRankings.length > 1) setPodiumData('podium-2', studentRankings[1]);
-            if (studentRankings.length > 2) setPodiumData('podium-3', studentRankings[2]);
-
-            renderActiveSessionBanner();
-            renderLeaderboard(studentRankings);
-        }
-
-        function setPodiumData(podiumPrefix, student) {
-            document.getElementById(`${podiumPrefix}-name`).innerText = student.name;
-            document.getElementById(`${podiumPrefix}-cops`).innerText = `${student.totalCops} Cop (${student.totalMinutes} Min)`;
-            document.getElementById(`${podiumPrefix}-belt`).innerHTML = `
-                <span class="belt-badge ${student.belt.bgClass}">
-                    ${student.belt.icon} ${student.belt.title}
-                </span>
-            `;
-        }
-
-        function renderActiveSessionBanner() {
-            const activeSessionId = document.getElementById('select-attendance-session')?.value || sessions[0]?.id;
-            const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
-
-            const container = document.getElementById('active-session-banner');
-            if (!activeSession) {
-                container.innerHTML = `<p class="text-xs text-slate-400">Tiada sesi didaftarkan.</p>`;
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                                UJIAN BAB HARI INI: ${activeSession.title}
-                            </span>
-                            <span class="text-xs text-slate-400">Tingkatan ${activeSession.form}</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mt-1">
-                            <i class="fa-solid fa-book-bookmark text-amber-400 mr-2"></i> ${activeSession.bab}
-                        </h3>
-                        ${activeSession.notes ? `<p class="text-xs text-slate-300 mt-1 italic"><i class="fa-solid fa-note-sticky text-amber-400 mr-1"></i>${activeSession.notes}</p>` : ''}
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 text-xs">
-                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
-                            <span class="text-slate-400">Flashcard:</span>
-                            <span class="text-emerald-400 font-bold ml-1">${activeSession.flashcard}</span>
-                        </div>
-                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
-                            <span class="text-slate-400">Aktiviti:</span>
-                            <span class="text-amber-400 font-bold ml-1">${activeSession.activity}</span>
-                        </div>
-                        <button onclick="openQuickChapterModal('${activeSession.id}')" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold px-3 py-2 rounded-xl border border-slate-700 transition">
-                            <i class="fa-solid fa-pen-to-square"></i> Tukar
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderLeaderboard(customList = null) {
-            let list = customList;
-            if (!list) {
-                list = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
-                list.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
-            }
-
-            const searchKey = document.getElementById('search-leaderboard')?.value.toLowerCase() || '';
-            if (searchKey) {
-                list = list.filter(s => s.name.toLowerCase().includes(searchKey));
-            }
-
-            const tbody = document.getElementById('leaderboard-table-body');
-            tbody.innerHTML = list.map((std, idx) => `
-                <tr class="hover:bg-slate-800/50 transition">
-                    <td class="p-3 text-center font-bold ${idx < 3 ? 'text-amber-400' : 'text-slate-400'}">#${idx + 1}</td>
-                    <td class="p-3 font-semibold text-white">${std.name}</td>
-                    <td class="p-3 text-center">
-                        <span class="belt-badge ${std.belt.bgClass}">
-                            ${std.belt.icon} ${std.belt.title}
-                        </span>
-                    </td>
-                    <td class="p-3 text-center font-bold text-emerald-400">
-                        <div class="inline-flex items-center space-x-1">
-                            <button onclick="quickAddCop('${std.id}', -1)" title="Tolak 1 Cop" class="w-5 h-5 bg-slate-800 hover:bg-rose-600/30 text-rose-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">-</button>
-                            <span class="px-1 text-sm">${std.totalCops}</span>
-                            <button onclick="quickAddCop('${std.id}', 1)" title="Tambah 1 Cop" class="w-5 h-5 bg-slate-800 hover:bg-emerald-600/30 text-emerald-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">+</button>
-                        </div>
-                    </td>
-                    <td class="p-3 text-center text-slate-300 font-semibold">${std.totalMinutes} Min</td>
-                    <td class="p-3 text-center text-slate-300">${std.attendancePct}%</td>
-                    <td class="p-3 text-right">
-                        <div class="flex justify-end space-x-1">
-                            <button onclick="viewStudentPassport('${std.id}')" title="Lihat Passport" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
-                                <i class="fa-solid fa-id-card mr-1"></i> Passport
-                            </button>
-                            <button onclick="openEditStudentModal('${std.id}')" title="Sunting Nama" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 px-2 py-1 rounded-lg border border-slate-700 transition">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteStudentConfirm('${std.id}')" title="Padam Murid" class="text-xs bg-slate-800 hover:bg-slate-700 text-rose-400 px-2 py-1 rounded-lg border border-slate-700 transition">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function populateAttendanceSessionDropdown() {
-            const select = document.getElementById('select-attendance-session');
-            select.innerHTML = sessions.map(s => `
-                <option value="${s.id}">${s.title} — ${s.bab} (Ting. ${s.form})</option>
-            `).join('');
-        }
-
-        function loadAttendanceMatrix() {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            const currentSession = sessions.find(s => s.id === sessionId);
-
-            if (currentSession) {
-                document.getElementById('session-info-badge').innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-300 gap-1">
-                        <div><strong class="text-white">Bab Diuji:</strong> ${currentSession.bab} (Ting. ${currentSession.form})</div>
-                        <div><strong class="text-emerald-400">Flashcard:</strong> ${currentSession.flashcard} | <strong class="text-amber-400">Aktiviti:</strong> ${currentSession.activity}</div>
-                    </div>
-                `;
-            }
-
-            const currentAttData = attendanceRecords[sessionId] || {};
-            const tbody = document.getElementById('attendance-matrix-body');
-
-            tbody.innerHTML = students.map((std, idx) => {
-                const rec = currentAttData[std.id] || { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
-                const overallStats = calculateStudentStats(std.id);
-
-                return `
-                    <tr class="hover:bg-slate-800/40">
-                        <td class="p-3 text-center text-slate-500">${idx + 1}</td>
-                        <td class="p-3 font-semibold text-slate-200">${std.name}</td>
-                        <td class="p-3 text-center">
-                            <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 space-x-1">
-                                <button onclick="setStudentStatus('${std.id}', '✓')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === '✓' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">✓ Hadir</button>
-                                <button onclick="setStudentStatus('${std.id}', 'P')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'P' ? 'bg-amber-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">P Lengkap Tak</button>
-                                <button onclick="setStudentStatus('${std.id}', 'A')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'A' ? 'bg-rose-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">A Ponteng</button>
-                            </div>
-                        </td>
-                        <td class="p-3 text-center space-x-1">
-                            <button onclick="toggleBadge('${std.id}', 'perfectRecall')" title="Perfect Recall (10/10)" class="p-1.5 rounded-lg border transition ${rec.perfectRecall ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">⭐</button>
-                            <button onclick="toggleBadge('${std.id}', 'champion')" title="Bio-Dojo Champion" class="p-1.5 rounded-lg border transition ${rec.champion ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">👑</button>
-                            <button onclick="toggleBadge('${std.id}', 'explainConcept')" title="Terangkan Konsep" class="p-1.5 rounded-lg border transition ${rec.explainConcept ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">🧠</button>
-                        </td>
-                        <td class="p-3 text-center font-bold ${rec.status === '✓' ? 'text-emerald-400' : 'text-slate-500'}">
-                            ${rec.status === '✓' ? '+1 Cop' : '0 Cop'}
-                        </td>
-                        <td class="p-3 text-center font-extrabold text-white">${overallStats.totalCops} Cop</td>
-                        <td class="p-3 text-center text-amber-400 font-bold">${overallStats.totalMinutes} Min</td>
-                        <td class="p-3 text-center">
-                            <span class="belt-badge ${overallStats.belt.bgClass}">
-                                ${overallStats.belt.icon} ${overallStats.belt.title}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function setStudentStatus(studentId, status) {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
-            if (!attendanceRecords[sessionId][studentId]) {
-                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
-            }
-            attendanceRecords[sessionId][studentId].status = status;
-            loadAttendanceMatrix();
-            updateDashboard();
-        }
-
-        function toggleBadge(studentId, badgeKey) {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
-            if (!attendanceRecords[sessionId][studentId]) {
-                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
-            }
-            attendanceRecords[sessionId][studentId][badgeKey] = !attendanceRecords[sessionId][studentId][badgeKey];
-            loadAttendanceMatrix();
-            updateDashboard();
-        }
-
-        function quickAddCop(studentId, delta) {
-            const currentSessionId = document.getElementById('select-attendance-session')?.value || sessions[0]?.id;
-            if (!currentSessionId) return;
-
-            if (!attendanceRecords[currentSessionId]) attendanceRecords[currentSessionId] = {};
-            if (!attendanceRecords[currentSessionId][studentId]) {
-                attendanceRecords[currentSessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
-            } else {
-                if (delta > 0) attendanceRecords[currentSessionId][studentId].status = '✓';
-                else if (delta < 0) attendanceRecords[currentSessionId][studentId].status = 'A';
-            }
-
-            saveAttendanceToStorage();
-            updateDashboard();
-            loadAttendanceMatrix();
-        }
-
-        function markAllPresent() {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
-            students.forEach(std => {
-                if (!attendanceRecords[sessionId][std.id]) {
-                    attendanceRecords[sessionId][std.id] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
-                } else {
-                    attendanceRecords[sessionId][std.id].status = '✓';
-                }
-            });
-            loadAttendanceMatrix();
-            updateDashboard();
-        }
-
-        function markAllAbsent() {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
-            students.forEach(std => {
-                if (!attendanceRecords[sessionId][std.id]) {
-                    attendanceRecords[sessionId][std.id] = { status: 'A', perfectRecall: false, champion: false, explainConcept: false };
-                } else {
-                    attendanceRecords[sessionId][std.id].status = 'A';
-                }
-            });
-            loadAttendanceMatrix();
-            updateDashboard();
-        }
-
-        function resetCurrentSessionAttendance() {
-            const sessionId = document.getElementById('select-attendance-session').value;
-            delete attendanceRecords[sessionId];
-            saveAttendanceToStorage();
-            loadAttendanceMatrix();
-            updateDashboard();
-            showToast("Status sesi ini dilahirkan semula.");
-        }
-
-        function saveAttendanceData() {
-            saveAttendanceToStorage();
-            triggerConfetti();
-            showToast("Rekod Kehadiran dan Cop berjaya disimpan!");
-        }
-
-        function initCharts() {
-            const ctx1 = document.getElementById('chart-minutes-per-student').getContext('2d');
-            minutesChart = new Chart(ctx1, {
-                type: 'bar',
-                data: { labels: [], datasets: [{ label: 'Jumlah Minit', data: [], backgroundColor: '#10b981', borderRadius: 6 }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
-                    }
-                }
-            });
-
-            const ctx2 = document.getElementById('chart-belt-distribution').getContext('2d');
-            beltChart = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Starter', 'Explorer', 'Achiever', 'Master', 'Elite', 'Legend'],
-                    datasets: [{
-                        data: [0,0,0,0,0,0],
-                        backgroundColor: ['#e2e8f0', '#22c55e', '#3b82f6', '#8b5cf6', '#334155', '#eab308']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#e2e8f0' } } }
-                }
-            });
-
-            const ctx3 = document.getElementById('chart-session-trend').getContext('2d');
-            trendChart = new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Bil. Murid Hadir & Cop',
-                        data: [],
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#e2e8f0' } } },
-                    scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
-                    }
-                }
-            });
-
-            updateCharts();
-        }
-
-        function updateCharts() {
-            if (!minutesChart || !beltChart || !trendChart) return;
-
-            // Student Minutes Chart
-            const studentStats = students.map(s => ({
-                name: s.name.split(' ')[0],
-                minutes: calculateStudentStats(s.id).totalMinutes
-            }));
-
-            minutesChart.data.labels = studentStats.map(s => s.name);
-            minutesChart.data.datasets[0].data = studentStats.map(s => s.minutes);
-            minutesChart.update();
-
-            // Belt Distribution Chart
-            const beltCounts = { 'STARTER': 0, 'EXPLORER': 0, 'ACHIEVER': 0, 'MASTER': 0, 'ELITE': 0, 'BIO-DOJO LEGEND': 0 };
-            students.forEach(s => {
-                const beltTitle = calculateStudentStats(s.id).belt.title;
-                if (beltCounts[beltTitle] !== undefined) beltCounts[beltTitle]++;
-            });
-
-            beltChart.data.datasets[0].data = [
-                beltCounts['STARTER'],
-                beltCounts['EXPLORER'],
-                beltCounts['ACHIEVER'],
-                beltCounts['MASTER'],
-                beltCounts['ELITE'],
-                beltCounts['BIO-DOJO LEGEND']
-            ];
-            beltChart.update();
-
-            // Daily Trend Chart
-            const sessionLabels = sessions.map(s => s.title);
-            const sessionData = sessions.map(s => {
-                const att = attendanceRecords[s.id] || {};
-                return Object.values(att).filter(v => v.status === '✓').length;
-            });
-
-            trendChart.data.labels = sessionLabels;
-            trendChart.data.datasets[0].data = sessionData;
-            trendChart.update();
-
-            // Syllabus Coverage Tracker
-            const f4Used = new Set(sessions.filter(s => s.form === '4').map(s => s.bab)).size;
-            const f5Used = new Set(sessions.filter(s => s.form === '5').map(s => s.bab)).size;
-            const f4Total = SYLLABUS['4'].length;
-            const f5Total = SYLLABUS['5'].length;
-
-            document.getElementById('coverage-f4-text').innerText = `${f4Used} / ${f4Total} Bab (${Math.round((f4Used/f4Total)*100)}%)`;
-            document.getElementById('coverage-f5-text').innerText = `${f5Used} / ${f5Total} Bab (${Math.round((f5Used/f5Total)*100)}%)`;
-        }
-
-        function renderStudentCards() {
-            const container = document.getElementById('student-cards-grid');
-            container.innerHTML = students.map(std => {
-                const stats = calculateStudentStats(std.id);
-                return `
-                    <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 space-y-3 transition group">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-bold text-white text-sm line-clamp-1">${std.name}</h4>
-                                <div class="mt-1">
-                                    <span class="belt-badge ${stats.belt.bgClass}">
-                                        ${stats.belt.icon} ${stats.belt.title}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xs text-emerald-400 font-extrabold block">${stats.totalCops} Cop</span>
-                                <span class="text-[10px] text-amber-400 font-bold block">${stats.totalMinutes} Min</span>
-                            </div>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-xs">
-                            <span class="text-slate-400">Kehadiran: <strong class="text-slate-200">${stats.attendancePct}%</strong></span>
-                            <button onclick="viewStudentPassport('${std.id}')" class="bg-slate-900 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 font-bold px-3 py-1 rounded-lg transition text-xs">
-                                <i class="fa-solid fa-id-card mr-1"></i> Passport
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function viewStudentPassport(studentId) {
-            const std = students.find(s => s.id === studentId);
-            if (!std) return;
-
-            const stats = calculateStudentStats(std.id);
-
-            document.getElementById('passport-modal-name').innerText = std.name;
-            document.getElementById('passport-modal-belt').innerHTML = `
-                <span class="belt-badge ${stats.belt.bgClass}">
-                    ${stats.belt.icon} ${stats.belt.title}
-                </span>
-            `;
-            document.getElementById('passport-modal-cops').innerText = stats.totalCops;
-            document.getElementById('passport-modal-cops-badge').innerText = `${stats.totalCops} Cop`;
-            document.getElementById('passport-modal-minutes').innerText = `${stats.totalMinutes} Min`;
-
-            // Setup manual cop buttons inside passport modal
-            document.getElementById('btn-passport-minus').onclick = () => { quickAddCop(std.id, -1); viewStudentPassport(std.id); };
-            document.getElementById('btn-passport-plus').onclick = () => { quickAddCop(std.id, 1); viewStudentPassport(std.id); };
-            document.getElementById('btn-passport-edit').onclick = () => { closeModal('modal-passport'); openEditStudentModal(std.id); };
-
-            // Render badges
-            const badgesContainer = document.getElementById('passport-modal-badges');
-            let badgesHtml = '';
-            if (stats.badges.perfectRecall > 0) badgesHtml += `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg">⭐ Perfect Recall x${stats.badges.perfectRecall}</span>`;
-            if (stats.badges.champion > 0) badgesHtml += `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg">👑 Champion x${stats.badges.champion}</span>`;
-            if (stats.badges.explainConcept > 0) badgesHtml += `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-lg">🧠 Terangkan Konsep x${stats.badges.explainConcept}</span>`;
-            if (!badgesHtml) badgesHtml = `<span class="text-slate-500 italic">Belum ada lencana lagi</span>`;
-            badgesContainer.innerHTML = badgesHtml;
-
-            // Render Attendance History
-            const historyContainer = document.getElementById('passport-modal-history');
-            const historyItems = sessions.map(s => {
-                const rec = attendanceRecords[s.id]?.[std.id];
-                const statusStr = rec ? (rec.status === '✓' ? '✓ Hadir (+1 Cop)' : rec.status === 'P' ? 'P Tugas Tak Lengkap' : 'A Ponteng') : 'Belum Rekod';
-                const colorClass = rec?.status === '✓' ? 'text-emerald-400' : rec?.status === 'P' ? 'text-amber-400' : 'text-slate-500';
-
-                return `
-                    <div class="flex justify-between items-center bg-slate-950 p-2 rounded-xl border border-slate-800">
-                        <span class="text-slate-300 font-medium">${s.title}: ${s.bab}</span>
-                        <span class="${colorClass} font-bold">${statusStr}</span>
-                    </div>
-                `;
-            });
-            historyContainer.innerHTML = historyItems.join('');
-
-            document.getElementById('modal-passport').classList.remove('hidden');
-        }
-
-        function openEditStudentModal(studentId) {
-            const std = students.find(s => s.id === studentId);
-            if (!std) return;
-
-            document.getElementById('edit-student-id-input').value = std.id;
-            document.getElementById('edit-student-name-input').value = std.name;
-            document.getElementById('modal-edit-student').classList.remove('hidden');
-        }
-
-        function handleSaveEditStudent() {
-            const id = document.getElementById('edit-student-id-input').value;
-            const newName = document.getElementById('edit-student-name-input').value.trim();
-
-            if (!newName) {
-                showToast("Sila masukkan nama murid!", "warning");
-                return;
-            }
-
-            const std = students.find(s => s.id === id);
-            if (std) {
-                std.name = newName;
-                saveStudentsToStorage();
-                updateDashboard();
-                renderStudentCards();
-                loadAttendanceMatrix();
-                closeModal('modal-edit-student');
-                showToast("Nama murid berjaya dikemaskini!");
-            }
-        }
-
-        function openAddStudentModal() {
-            document.getElementById('new-student-name-input').value = '';
-            document.getElementById('modal-add-student').classList.remove('hidden');
-        }
-
-        function handleAddStudent() {
-            const newName = document.getElementById('new-student-name-input').value.trim();
-            if (!newName) {
-                showToast("Sila masukkan nama murid!", "warning");
-                return;
-            }
-
-            const newId = 'std_' + Date.now();
-            students.push({ id: newId, name: newName });
-            saveStudentsToStorage();
-            updateDashboard();
-            renderStudentCards();
-            loadAttendanceMatrix();
-            closeModal('modal-add-student');
-            showToast("Murid baru berjaya ditambah!");
-        }
-
-        function deleteStudentConfirm(studentId) {
-            showConfirmModal(
-                "Padam Murid",
-                "Adakah anda pasti untuk memadam murid ini dari senarai kelas?",
-                function() {
-                    students = students.filter(s => s.id !== studentId);
-                    saveStudentsToStorage();
-                    updateDashboard();
-                    renderStudentCards();
-                    loadAttendanceMatrix();
-                    showToast("Murid berjaya dipadam");
-                }
-            );
+            showToast("Meraikan pencapaian cemerlang Bio-Dojo!");
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Bil,Nama Murid,Tahap Belt,Jumlah Cop,Jumlah Minit,Kehadiran (%)\n";
-
-            students.forEach((std, index) => {
+            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Tahap Belt,Kadar Kehadiran (%)\n";
+            students.forEach((std, idx) => {
                 const stats = calculateStudentStats(std.id);
-                csvContent += `${index + 1},"${std.name}",${stats.belt.title},${stats.totalCops},${stats.totalMinutes},${stats.attendancePct}%\n`;
+                csvContent += `${idx + 1},"${std.name}",${stats.totalCops},${stats.totalMinutes},"${stats.belt.title}",${stats.attendancePct}%\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Laporan_Bio_Dojo_100.csv");
+            link.setAttribute("download", "Laporan_BioDojo_Bookmark100.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("Fail CSV berjaya dimuat turun!");
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
+            showToast("Laporan CSV berjaya dimuat turun!");
         }
 
         function resetDataConfirmation() {
             showConfirmModal(
-                "Reset Data Bio-Dojo",
-                "Adakah anda pasti untuk menetapkan semula semua data murid dan kehadiran ke tetapan asal?",
+                "Reset Semua Data",
+                "Adakah anda pasti untuk memadam semua rekod kehadiran & tetapan dan mengembalikan data asal program?",
                 function() {
                     localStorage.removeItem('biodojo_students');
                     localStorage.removeItem('biodojo_sessions');
@@ -1959,8 +1926,7 @@
                     populateAttendanceSessionDropdown();
                     loadAttendanceMatrix();
                     updateDashboard();
-                    renderStudentCards();
-                    showToast("Data Bio-Dojo berjaya direset ke asal.");
+                    showToast("Semua data telah direset ke tetapan asal.");
                 }
             );
         }
