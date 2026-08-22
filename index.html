@@ -158,6 +158,11 @@
 
                 <!-- Role Access & Admin Controls -->
                 <div class="flex items-center space-x-2">
+                    <button id="btn-select-student-profile" onclick="openModal('modal-select-student')" class="p-2 sm:px-3 sm:py-2 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <span id="active-student-label" class="hidden sm:inline">Pilih Akaun Saya</span>
+                    </button>
+
                     <button id="btn-role-toggle" onclick="promptAdminLogin()" class="p-2 sm:px-3 sm:py-2 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
                         <i id="role-icon" class="fa-solid fa-user"></i>
                         <span id="role-label" class="hidden sm:inline">Mod Murid</span>
@@ -779,6 +784,41 @@
         </div>
     </div>
 
+    <!-- Modal: PILIH AKAUN / PROFIL MURID -->
+    <div id="modal-select-student" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-blue-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+            <button onclick="closeModal('modal-select-student')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center border-b border-slate-800 pb-3">
+                <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-blue-500/30 mb-2">
+                    <i class="fa-solid fa-id-badge"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Log Masuk Profile Murid</h3>
+                <p class="text-xs text-slate-400">Pilih nama anda daripada senarai untuk melihat pencapaian peribadi anda secara langsung.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Pilih Nama Anda:</label>
+                    <select id="select-active-student-dropdown" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="pt-2 flex space-x-2">
+                    <button onclick="confirmStudentSelection()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-lg">
+                        Buka Passport Saya
+                    </button>
+                    <button onclick="closeModal('modal-select-student')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-4 py-2.5 rounded-xl transition text-xs">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: ADMIN LOGIN / PIN VERIFICATION -->
     <div id="modal-admin-login" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-slate-900 border border-amber-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 relative text-center">
@@ -987,7 +1027,6 @@
             "Bab 13: Teknologi Genetic & Bioteknologi"
         ];
 
-        // SAMPLE STUDENTS REMOVED FOR CLEAN TEACHER SLATE
         const INITIAL_STUDENTS = [];
 
         const INITIAL_SESSIONS = [
@@ -1006,6 +1045,7 @@
 
         let isAdmin = false;
         let selectedStudentForPassport = null;
+        let currentStudentId = localStorage.getItem('bio_dojo_my_id') || null;
         let chartMinutes = null;
         let chartBelt = null;
 
@@ -1017,7 +1057,7 @@
         async function initFirebase() {
             try {
                 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-                    apiKey: "",
+                    apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
                     authDomain: `${appId}.firebaseapp.com`,
                     projectId: appId,
                     storageBucket: `${appId}.appspot.com`
@@ -1036,8 +1076,12 @@
 
                 setupRealtimeListener();
             } catch (err) {
-                console.warn("Firebase fallback to local mode:", err);
-                showToast("Berjalan dalam Mod Penyimpanan Lokal", "amber");
+                console.warn("Firebase fallback to local storage mode:", err);
+                const localSaved = localStorage.getItem('bio_dojo_local_state');
+                if (localSaved) {
+                    try { state = JSON.parse(localSaved); } catch(e){}
+                }
+                showToast("Berjalan dalam Mod Luar Talian", "amber");
                 updateSyncStatus("Lokal (Luar Talian)", "amber");
                 renderAllViews();
             }
@@ -1064,22 +1108,21 @@
                 }
             }, (error) => {
                 console.error("Firestore sync error:", error);
-                updateSyncStatus("Ralat Sambungan", "rose");
+                updateSyncStatus("Simpanan Lokal", "amber");
                 renderAllViews();
             });
         }
 
         async function saveStateToCloud() {
-            if (!db) {
-                renderAllViews();
-                return;
-            }
+            localStorage.setItem('bio_dojo_local_state', JSON.stringify(state));
+            renderAllViews();
+
+            if (!db) return;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_store', 'shared_state');
                 await setDoc(docRef, { state, lastUpdated: new Date().toISOString() });
             } catch (err) {
                 console.error("Failed to save to cloud:", err);
-                showToast("Gagal menyimpan ke pangkalan data awan", "rose");
             }
         }
 
@@ -1171,6 +1214,13 @@
 
                 adminOnlyElements.forEach(el => el.classList.add('opacity-50', 'pointer-events-none'));
             }
+
+            // Student Account Label
+            const stLabel = document.getElementById('active-student-label');
+            if (stLabel) {
+                const currentSt = state.students.find(s => s.id === currentStudentId);
+                stLabel.innerText = currentSt ? currentSt.name.split(' ')[0] : 'Pilih Akaun Saya';
+            }
         }
 
         window.changeAdminPin = function() {
@@ -1183,6 +1233,26 @@
             } else {
                 showToast("PIN mestilah sekurang-kurangnya 4 digit!", "rose");
             }
+        };
+
+        // Student Profile Selector
+        function populateStudentDropdown() {
+            const dropdown = document.getElementById('select-active-student-dropdown');
+            if (!dropdown) return;
+            dropdown.innerHTML = state.students.map(s => `
+                <option value="${s.id}" ${s.id === currentStudentId ? 'selected' : ''}>${s.name} (${s.cops || 0} Cop)</option>
+            `).join('');
+        }
+
+        window.confirmStudentSelection = function() {
+            const dropdown = document.getElementById('select-active-student-dropdown');
+            if (!dropdown || !dropdown.value) return;
+            currentStudentId = dropdown.value;
+            localStorage.setItem('bio_dojo_my_id', currentStudentId);
+            closeModal('modal-select-student');
+            updateRoleUI();
+            openStudentPassport(currentStudentId);
+            showToast("Akaun murid dipilih!", "emerald");
         };
 
         // Navigation Tabs Switching
@@ -1203,6 +1273,7 @@
 
         // Modal Handlers
         window.openModal = function(modalId) {
+            if (modalId === 'modal-select-student') populateStudentDropdown();
             const modal = document.getElementById(modalId);
             if (modal) modal.classList.remove('hidden');
         };
@@ -1275,7 +1346,7 @@
                             <p class="text-xs text-slate-300 mt-0.5"><i class="fa-solid fa-book text-emerald-400 mr-1"></i> ${activeSession.bab}</p>
                         </div>
                         <div class="flex items-center space-x-2 text-xs">
-                            <span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 font-semibold"><i class="fa-solid fa-cards-blank text-purple-400 mr-1"></i> ${activeSession.flashcard}</span>
+                            <span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 font-semibold"><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i> ${activeSession.flashcard}</span>
                             <span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 font-semibold"><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> ${activeSession.activity}</span>
                         </div>
                     </div>
@@ -1306,10 +1377,14 @@
 
             body.innerHTML = sorted.map((student, idx) => {
                 const belt = getBeltInfo(student.cops);
+                const isMyAcc = student.id === currentStudentId;
                 return `
-                    <tr class="hover:bg-slate-800/50 transition">
+                    <tr class="${isMyAcc ? 'bg-blue-950/40 border-l-2 border-blue-500' : 'hover:bg-slate-800/50'} transition">
                         <td class="p-3 text-center font-bold ${idx < 3 ? 'text-amber-400 text-sm' : 'text-slate-400'}">#${idx + 1}</td>
-                        <td class="p-3 font-semibold text-white">${student.name}</td>
+                        <td class="p-3 font-semibold text-white flex items-center space-x-2">
+                            <span>${student.name}</span>
+                            ${isMyAcc ? '<span class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full border border-blue-500/30">Saya</span>' : ''}
+                        </td>
                         <td class="p-3 text-center"><span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span></td>
                         <td class="p-3 text-center font-bold text-emerald-400">${student.cops} Cop</td>
                         <td class="p-3 text-center text-amber-400 font-bold">${student.minutes || student.cops * 4} Min</td>
@@ -1480,7 +1555,6 @@
             let addedCount = 0;
 
             lines.forEach((name, i) => {
-                // Check if already exists
                 if (!state.students.some(s => s.name.toLowerCase() === name.toLowerCase())) {
                     const gender = name.toLowerCase().startsWith('nur') || name.toLowerCase().startsWith('siti') || name.toLowerCase().includes('fatimah') ? 'P' : 'L';
                     state.students.push({
@@ -1567,7 +1641,7 @@
                         <h4 class="text-xs font-bold text-white line-clamp-2">${s.bab}</h4>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-400">
-                        <span><i class="fa-solid fa-cards-blank text-purple-400 mr-1"></i>${s.flashcard}</span>
+                        <span><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i>${s.flashcard}</span>
                         <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 font-bold hover:underline">Edit</button>
                     </div>
                 </div>
@@ -1606,13 +1680,11 @@
             const notes = document.getElementById('session-notes-input').value.trim();
 
             if (idInput) {
-                // Update
                 const idx = state.sessions.findIndex(s => s.id === idInput);
                 if (idx !== -1) {
                     state.sessions[idx] = { id: idInput, title, level, bab, flashcard, activity, notes };
                 }
             } else {
-                // New
                 const newId = `ses-${Date.now()}`;
                 state.sessions.push({ id: newId, title, level, bab, flashcard, activity, notes });
             }
@@ -1654,7 +1726,6 @@
 
         window.openAutoScheduleModal = function() {
             if (!isAdmin) return showToast("Hanya Admin boleh menggunakan susunan auto!", "amber");
-            // Auto schedule T4 chapters
             state.sessions = DEFAULT_BAB_T4.map((bab, idx) => ({
                 id: `ses-auto-${idx + 1}`,
                 title: `Hari ${idx + 1}`,
@@ -1675,6 +1746,13 @@
 
         // CHARTS & ANALYTICS
         function renderCharts() {
+            // F4 & F5 Coverage calculation
+            const f4Count = state.sessions.filter(s => s.level === '4').length;
+            const f5Count = state.sessions.filter(s => s.level === '5').length;
+
+            document.getElementById('coverage-f4-text').innerText = `${f4Count} / 15 Bab (${Math.round((f4Count / 15) * 100)}%)`;
+            document.getElementById('coverage-f5-text').innerText = `${f5Count} / 13 Bab (${Math.round((f5Count / 13) * 100)}%)`;
+
             // Chart 1: Minutes per Student
             const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
             if (ctx1) {
@@ -1748,33 +1826,38 @@
 
             grid.innerHTML = state.students.map(student => {
                 const belt = getBeltInfo(student.cops);
+                const isMyAcc = student.id === currentStudentId;
                 return `
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between hover:border-emerald-500/50 transition">
+                    <div class="bg-slate-950 border ${isMyAcc ? 'border-blue-500/70' : 'border-slate-800'} rounded-2xl p-4 shadow-lg flex flex-col justify-between hover:border-emerald-500/50 transition relative">
+                        ${isMyAcc ? '<span class="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">Akaun Saya</span>' : ''}
                         <div>
                             <div class="flex items-center space-x-3 mb-3">
                                 <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 font-bold">
-                                    <i class="fa-solid ${student.gender === 'P' ? 'fa-user-nurse' : 'fa-user-ninja'}"></i>
+                                    <i class="fa-solid ${student.gender === 'P' ? 'fa-user-nurse' : 'fa-user-ninja'} text-emerald-400"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-white">${student.name}</h4>
+                                    <h4 class="text-sm font-bold text-white line-clamp-1">${student.name}</h4>
                                     <span class="belt-badge ${belt.bg} text-[10px] mt-0.5"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-2 text-center text-xs py-2 bg-slate-900 rounded-xl border border-slate-800">
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs bg-slate-900 p-2.5 rounded-xl border border-slate-800">
                                 <div>
-                                    <span class="text-slate-500 text-[10px] block">Jumlah Cop</span>
-                                    <span class="font-extrabold text-emerald-400">${student.cops}</span>
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
+                                    <span class="text-base font-bold text-emerald-400">${student.cops}</span>
                                 </div>
                                 <div>
-                                    <span class="text-slate-500 text-[10px] block">Minit Belajar</span>
-                                    <span class="font-extrabold text-amber-400">${student.minutes || student.cops * 4} Min</span>
+                                    <span class="text-[10px] text-slate-400 block">Minit Belajar</span>
+                                    <span class="text-base font-bold text-amber-400">${student.minutes || student.cops * 4} Min</span>
                                 </div>
                             </div>
                         </div>
-                        <button onclick="openStudentPassport('${student.id}')" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs transition border border-slate-700 flex items-center justify-center space-x-1">
-                            <i class="fa-solid fa-id-card"></i>
-                            <span>Buka Passport</span>
-                        </button>
+                        <div class="mt-3 pt-3 border-t border-slate-900 flex justify-between items-center text-xs">
+                            <button onclick="openStudentPassport('${student.id}')" class="text-emerald-400 font-bold hover:underline flex items-center space-x-1">
+                                <i class="fa-solid fa-id-card"></i>
+                                <span>Lihat Passport</span>
+                            </button>
+                            <button onclick="deleteStudent('${student.id}')" class="admin-only text-rose-400 font-semibold hover:underline">Padam</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1783,100 +1866,121 @@
         window.openStudentPassport = function(studentId) {
             const student = state.students.find(s => s.id === studentId);
             if (!student) return;
+
             selectedStudentForPassport = student;
+            const belt = getBeltInfo(student.cops);
 
             document.getElementById('passport-modal-name').innerText = student.name;
-            const belt = getBeltInfo(student.cops);
             document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
             document.getElementById('passport-modal-cops').innerText = student.cops;
-            document.getElementById('passport-modal-cops-badge').innerText = `${student.cops} Cop`;
             document.getElementById('passport-modal-minutes').innerText = `${student.minutes || student.cops * 4} Min`;
+            document.getElementById('passport-modal-cops-badge').innerText = `${student.cops} Cop`;
 
-            // Badges
+            // Collect all bonus badges for this student
+            const badgesSet = new Set();
+            Object.values(state.attendance).forEach(sess => {
+                const rec = sess[student.id];
+                if (rec && rec.bonus) {
+                    rec.bonus.forEach(b => badgesSet.add(b));
+                }
+            });
+
+            const badgesArr = Array.from(badgesSet);
             const badgesEl = document.getElementById('passport-modal-badges');
-            badgesEl.innerHTML = (student.badges && student.badges.length) ? 
-                student.badges.map(b => `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-1 rounded-lg">${b}</span>`).join('') :
-                `<span class="text-slate-500 text-xs">Tiada Lencana Bonus Lagi</span>`;
+            if (badgesArr.length > 0) {
+                badgesEl.innerHTML = badgesArr.map(b => `<span class="bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl font-bold">${b} Awarded</span>`).join('');
+            } else {
+                badgesEl.innerHTML = `<span class="text-slate-500 italic">Belum ada lencana bonus.</span>`;
+            }
 
             openModal('modal-passport');
         };
 
-        window.openStudentPassportFromPodium = function(index) {
-            const sorted = [...state.students].sort((a, b) => b.cops - a.cops);
-            if (sorted[index]) openStudentPassport(sorted[index].id);
+        window.openStudentPassportFromPodium = function(podiumIndex) {
+            const sorted = [...state.students].sort((a, b) => b.cops - a.cops || b.minutes - a.minutes);
+            if (sorted[podiumIndex]) {
+                openStudentPassport(sorted[podiumIndex].id);
+            }
         };
 
         window.adjustStudentCop = function(delta) {
-            if (!isAdmin) return showToast("Hanya Admin boleh menyelaras cop secara manual!", "amber");
+            if (!isAdmin) return showToast("Hanya Admin boleh mengemaskini cop!", "amber");
             if (!selectedStudentForPassport) return;
 
-            selectedStudentForPassport.cops = Math.max(0, (selectedStudentForPassport.cops || 0) + delta);
+            selectedStudentForPassport.cops = Math.max(0, selectedStudentForPassport.cops + delta);
             selectedStudentForPassport.minutes = selectedStudentForPassport.cops * 4;
-            
-            document.getElementById('passport-modal-cops').innerText = selectedStudentForPassport.cops;
-            document.getElementById('passport-modal-cops-badge').innerText = `${selectedStudentForPassport.cops} Cop`;
-            document.getElementById('passport-modal-minutes').innerText = `${selectedStudentForPassport.minutes} Min`;
 
             saveStateToCloud();
+            openStudentPassport(selectedStudentForPassport.id);
+            showToast("Cop murid telah dipinda!", "emerald");
         };
 
         window.deleteCurrentStudentFromPassport = function() {
             if (!isAdmin) return showToast("Hanya Admin boleh memadam murid!", "amber");
             if (!selectedStudentForPassport) return;
 
-            const deletedName = selectedStudentForPassport.name;
-            state.students = state.students.filter(s => s.id !== selectedStudentForPassport.id);
-            selectedStudentForPassport = null;
+            deleteStudent(selectedStudentForPassport.id);
             closeModal('modal-passport');
+        };
+
+        window.deleteStudent = function(studentId) {
+            if (!isAdmin) return showToast("Hanya Admin boleh memadam murid!", "amber");
+            state.students = state.students.filter(s => s.id !== studentId);
             recalculateStudentCops();
             saveStateToCloud();
-            showToast(`Murid ${deletedName} telah dipadamkan.`, "rose");
+            showToast("Rekod murid dipadamkan!", "rose");
         };
 
-        // EXPORT TO CSV
+        window.triggerConfetti = function() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        };
+
         window.exportToCSV = function() {
-            let csv = 'Nama Murid,Jantina,Jumlah Cop,Minit Belajar,Tahap Belt\n';
+            if (state.students.length === 0) return showToast("Tiada data murid untuk dieksport!", "amber");
+
+            let csvContent = "data:text/csv;charset=utf-8,Nama Murid,Jumlah Cop,Minit Belajar,Tahap Belt\n";
             state.students.forEach(s => {
                 const belt = getBeltInfo(s.cops).name;
-                csv += `"${s.name}","${s.gender}",${s.cops},${s.minutes || s.cops * 4},"${belt}"\n`;
+                csvContent += `"${s.name}",${s.cops},${s.minutes || s.cops * 4},"${belt}"\n`;
             });
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `BioDojo_Laporan_Murid_${new Date().toISOString().slice(0, 10)}.csv`;
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_BioDojo_100_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         };
 
-        // REWARD CONFETTI
-        window.triggerConfetti = function() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
-        };
-
-        // RESET SYSTEM DATA
         window.openResetModal = function() {
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
+            if (!isAdmin) return showToast("Akses Terhad!", "amber");
             openModal('modal-reset-confirm');
         };
 
         window.executeResetAllData = function() {
             if (!isAdmin) return;
-            state.students = [];
-            state.attendance = {};
+            state = {
+                students: [],
+                sessions: INITIAL_SESSIONS,
+                activeSessionId: 'ses-1',
+                attendance: {},
+                adminPin: '1234'
+            };
             saveStateToCloud();
             closeModal('modal-reset-confirm');
             closeModal('modal-cloud-settings');
-            showToast("Semua data telah direset!", "rose");
+            showToast("Semua data telah di-reset!", "rose");
         };
 
-        // Initialize Application
-        initFirebase();
+        // Global Window Event Listener
+        window.addEventListener('DOMContentLoaded', () => {
+            initFirebase();
+        });
     </script>
 </body>
 </html>
