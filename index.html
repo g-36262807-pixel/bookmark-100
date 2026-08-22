@@ -1,2037 +1,1462 @@
 <!DOCTYPE html>
-<html lang="ms" class="dark">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papan Pemuka Bio-Dojo Bookmark 100</title>
-
+    <title>MISI CAHAYA – SELAMATKAN BANDAR KACHA!</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        dojo: {
-                            gold: '#f59e0b',
-                            dark: '#0f172a',
-                            card: '#1e293b',
-                            accent: '#10b981',
-                            red: '#ef4444',
-                        }
+                        'neon-orange': '#ff7b00',
+                        'neon-yellow': '#ffd000',
+                        'neon-blue': '#00f0ff',
+                        'neon-purple': '#a855f7',
+                        'dark-bg': '#0a0d1a',
+                        'dark-card': '#121829',
+                        'dark-border': '#1e293b'
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        dojo: ['Trebuchet MS', 'sans-serif']
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'laser-beam': 'laserScan 1.5s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 10px rgba(0, 240, 255, 0.4)' },
+                            '100%': { boxShadow: '0 0 25px rgba(0, 240, 255, 0.9), 0 0 35px rgba(255, 123, 0, 0.6)' }
+                        },
+                        laserScan: {
+                            '0%': { opacity: '0.4' },
+                            '50%': { opacity: '1' },
+                            '100%': { opacity: '0.4' }
+                        }
                     }
                 }
             }
         }
     </script>
-
     <!-- Font Awesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Canvas Confetti CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        .podium-1 {
-            height: 220px;
-            background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0d1a;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            user-select: none;
         }
-        .podium-2 {
-            height: 170px;
-            background: linear-gradient(180deg, #94a3b8 0%, #475569 100%);
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+        
+        .glow-text-cyan { text-shadow: 0 0 12px rgba(0, 240, 255, 0.8); }
+        .glow-text-orange { text-shadow: 0 0 12px rgba(255, 123, 0, 0.8); }
+        .glow-box-cyan { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+        .glow-box-orange { box-shadow: 0 0 20px rgba(255, 123, 0, 0.3); }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0d1a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+
+        .glass-panel {
+            background: rgba(18, 24, 41, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
         }
-        .podium-3 {
-            height: 130px;
-            background: linear-gradient(180deg, #d97706 0%, #78350f 100%);
-        }
-        .belt-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.6rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+
+        /* Certificate Print styling */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #modal-passport, #modal-passport * {
-                visibility: visible;
-            }
-            #modal-passport {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white !important;
-                color: black !important;
-            }
-            #btn-passport-print, #btn-passport-delete, #btn-passport-minus, #btn-passport-plus {
-                display: none !important;
-            }
+            body * { visibility: hidden; }
+            #printable-certificate, #printable-certificate * { visibility: visible; }
+            #printable-certificate { position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col relative antialiased selection:bg-emerald-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between bg-dark-bg text-slate-100 relative">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <!-- Navigation Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-900/40 border border-emerald-400/30">
-                        <i class="fa-solid fa-dna text-white text-2xl animate-pulse"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 font-dojo">
-                                BIO-DOJO BOOKMARK 100
-                            </h1>
-                            <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold hidden sm:inline-block">20 MIN/HARI</span>
-                            
-                            <!-- Realtime Sync Status Badge -->
-                            <span id="sync-status-badge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1 cursor-pointer" onclick="openModal('modal-cloud-settings')">
-                                <i class="fa-solid fa-bolt text-xs animate-pulse"></i>
-                                <span id="sync-status-text">Awan Masa Nyata</span>
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-400">Papan Pemuka Tetapan Bab Harian, Kehadiran & Pencapaian Murid Masa Nyata</p>
-                    </div>
+    <!-- MAIN CONTAINER -->
+    <div id="app" class="relative z-10 min-h-screen flex flex-col max-w-6xl mx-auto px-4 py-4 w-full">
+
+        <!-- HEADER BAR (Navigation & Audio Control) -->
+        <header class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg border border-cyan-500/30">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="game.showHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-slate-900 font-bold shadow-lg shadow-cyan-500/50">
+                    <i class="fa-solid fa-bolt text-xl"></i>
                 </div>
-
-                <!-- Navigation Tabs -->
-                <nav class="hidden md:flex space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all bg-emerald-600 text-white shadow-md">
-                        <i class="fa-solid fa-trophy"></i>
-                        <span>Pentas & Utama</span>
-                    </button>
-                    <button onclick="switchTab('attendance')" id="tab-attendance" class="nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
-                        <i class="fa-solid fa-calendar-check"></i>
-                        <span>Rekod Kehadiran</span>
-                    </button>
-                    <button onclick="switchTab('sessions')" id="tab-sessions" class="nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
-                        <i class="fa-solid fa-book-open"></i>
-                        <span>Jadual Bab Harian</span>
-                    </button>
-                    <button onclick="switchTab('analytics')" id="tab-analytics" class="nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>Graf Pencapaian</span>
-                    </button>
-                    <button onclick="switchTab('students')" id="tab-students" class="nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
-                        <i class="fa-solid fa-users"></i>
-                        <span>Senarai Murid</span>
-                    </button>
-                </nav>
-
-                <!-- Role Access & Admin Controls -->
-                <div class="flex items-center space-x-2">
-                    <button id="btn-select-student-profile" onclick="openModal('modal-select-student')" class="p-2 sm:px-3 sm:py-2 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
-                        <i class="fa-solid fa-user-gear"></i>
-                        <span id="active-student-label" class="hidden sm:inline">Pilih Akaun Saya</span>
-                    </button>
-
-                    <button id="btn-role-toggle" onclick="promptAdminLogin()" class="p-2 sm:px-3 sm:py-2 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
-                        <i id="role-icon" class="fa-solid fa-user"></i>
-                        <span id="role-label" class="hidden sm:inline">Mod Murid</span>
-                    </button>
-
-                    <button onclick="openBulkImportModal()" title="Import Pukal Senarai Nama Murid" class="admin-only p-2.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold">
-                        <i class="fa-solid fa-file-import text-sm"></i>
-                        <span class="hidden lg:inline">Import Murid</span>
-                    </button>
-                    
-                    <button onclick="exportToCSV()" title="Eksport Laporan Data (CSV)" class="p-2.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center space-x-1 text-xs font-semibold">
-                        <i class="fa-solid fa-file-csv text-base"></i>
-                        <span class="hidden lg:inline">CSV</span>
-                    </button>
-                    
-                    <button onclick="triggerConfetti()" title="Meraikan Pencapaian" class="p-2.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </button>
-                    
-                    <!-- Butang Perisai / Status Awan -->
-                    <button onclick="openModal('modal-cloud-settings')" title="Info Awan Masa Nyata & Tetapan Firebase" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Mobile Menu Bar -->
-            <div class="md:hidden flex overflow-x-auto py-2 space-x-2 border-t border-slate-800 text-xs no-scrollbar">
-                <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium">Podium & Utama</button>
-                <button onclick="switchTab('attendance')" id="mtab-attendance" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Rekod Kehadiran</button>
-                <button onclick="switchTab('sessions')" id="mtab-sessions" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Jadual Bab Harian</button>
-                <button onclick="switchTab('analytics')" id="mtab-analytics" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Graf Pencapaian</button>
-                <button onclick="switchTab('students')" id="mtab-students" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Senarai Murid</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <!-- Role Notification Banner -->
-        <div id="role-banner" class="mb-6 p-3 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
-            <div class="flex items-center space-x-2">
-                <span id="role-badge-icon" class="w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                <span id="role-banner-text" class="text-slate-300">
-                    Mod Paparan Live Murid: Semua peranti terhubung secara langsung. Sebarang kemaskini oleh guru akan berubah terus di sini!
-                </span>
-            </div>
-            <button id="role-banner-btn" onclick="promptAdminLogin()" class="text-amber-400 hover:underline font-bold underline-offset-4">
-                Log Masuk Admin
-            </button>
-        </div>
-
-        <!-- ================= TAB 1: DASHBOARD & PODIUM ================= -->
-        <section id="view-dashboard" class="tab-content space-y-8">
-            <!-- Program Target Banner -->
-            <div class="bg-gradient-to-r from-slate-900 via-emerald-950/60 to-slate-900 border border-emerald-500/30 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
-                <div class="absolute right-0 top-0 bottom-0 opacity-10 flex items-center pr-10 pointer-events-none">
-                    <i class="fa-solid fa-dragon text-9xl text-emerald-400"></i>
-                </div>
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-                    <div>
-                        <div class="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold mb-2">
-                            <i class="fa-solid fa-bullseye"></i>
-                            <span>SASARAN HEBAT</span>
-                        </div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-white">Capaian Kelas: 100 Minit Seminggu!</h2>
-                        <p class="text-slate-400 text-sm mt-1">5 Cop = 20 Minit • 25 Cop Sasaran Kelas = 100 Minit Seminggu</p>
-                    </div>
-
-                    <!-- Progress Bar Overall -->
-                    <div class="w-full sm:w-80 bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-slate-400">Purata Pencapaian Minit</span>
-                            <span id="avg-minutes-text" class="text-emerald-400 font-bold">0 / 100 Min</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700">
-                            <div id="avg-minutes-bar" class="bg-gradient-to-r from-emerald-500 to-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Overview Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg flex items-center space-x-4">
-                    <div class="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl">
-                        <i class="fa-solid fa-stamp text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400">Jumlah Cop Terkumpul</p>
-                        <h3 id="stat-total-cops" class="text-2xl font-bold text-white">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg flex items-center space-x-4">
-                    <div class="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-xl">
-                        <i class="fa-solid fa-stopwatch text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400">Jumlah Minit Belajar</p>
-                        <h3 id="stat-total-minutes" class="text-2xl font-bold text-white">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg flex items-center space-x-4">
-                    <div class="p-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-xl">
-                        <i class="fa-solid fa-user-check text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400">Jumlah Murid</p>
-                        <h3 id="stat-attendance-rate" class="text-2xl font-bold text-white">0 Murid</h3>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg flex items-center space-x-4">
-                    <div class="p-3 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-xl">
-                        <i class="fa-solid fa-award text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-400">Bio-Dojo Legend</p>
-                        <h3 id="stat-legend-count" class="text-2xl font-bold text-amber-400">0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PODIUM SECTION -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="text-center max-w-xl mx-auto mb-8">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold font-dojo text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600">
-                        <i class="fa-solid fa-crown text-amber-400 mr-2"></i> PENTAS JUARA BIO-DOJO <i class="fa-solid fa-crown text-amber-400 ml-2"></i>
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Murid dengan cop terbanyak mengikut minit pembelajaran & rekod kehadiran</p>
-                </div>
-
-                <!-- Podium Displays -->
-                <div class="flex justify-center items-end max-w-2xl mx-auto min-h-[300px] pt-12 pb-4 gap-2 sm:gap-6">
-                    <!-- 2nd Place -->
-                    <div class="flex flex-col items-center flex-1 max-w-[180px]">
-                        <div id="podium-2-card" class="flex flex-col items-center mb-3 transition-all duration-300 hover:scale-105 cursor-pointer" onclick="openStudentPassportFromPodium(1)">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-800 border-2 border-slate-400 flex items-center justify-center text-slate-300 text-xl font-bold shadow-lg shadow-slate-500/20 relative">
-                                <span class="absolute -top-3 bg-slate-700 text-slate-200 border border-slate-400 text-xs font-bold px-2 py-0.5 rounded-full">#2</span>
-                                <i class="fa-solid fa-user-ninja text-slate-300 text-2xl"></i>
-                            </div>
-                            <h4 id="podium-2-name" class="text-xs sm:text-sm font-bold text-slate-200 mt-2 text-center line-clamp-2">---</h4>
-                            <span id="podium-2-cops" class="text-xs text-slate-400 mt-0.5 font-semibold">0 Cop</span>
-                            <div id="podium-2-belt" class="mt-1"></div>
-                        </div>
-                        <div class="podium-2 w-full rounded-t-xl flex flex-col items-center justify-start pt-3 border-t border-slate-400/40 shadow-xl">
-                            <span class="text-2xl font-black text-slate-200">2</span>
-                            <span class="text-[10px] tracking-widest text-slate-400 font-bold uppercase">PERAK</span>
-                        </div>
-                    </div>
-
-                    <!-- 1st Place -->
-                    <div class="flex flex-col items-center flex-1 max-w-[200px]">
-                        <div id="podium-1-card" class="flex flex-col items-center mb-3 transition-all duration-300 hover:scale-105 cursor-pointer" onclick="openStudentPassportFromPodium(0)">
-                            <div class="relative">
-                                <i class="fa-solid fa-crown text-amber-400 text-2xl absolute -top-6 left-1/2 -translate-x-1/2 animate-bounce"></i>
-                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-950/60 border-4 border-amber-400 flex items-center justify-center text-amber-300 text-2xl font-bold shadow-xl shadow-amber-500/30">
-                                    <i class="fa-solid fa-user-ninja text-amber-400 text-3xl"></i>
-                                </div>
-                            </div>
-                            <h4 id="podium-1-name" class="text-sm sm:text-base font-extrabold text-amber-300 mt-2 text-center line-clamp-2">---</h4>
-                            <span id="podium-1-cops" class="text-xs sm:text-sm text-amber-400 font-bold mt-0.5">0 Cop</span>
-                            <div id="podium-1-belt" class="mt-1"></div>
-                        </div>
-                        <div class="podium-1 w-full rounded-t-xl flex flex-col items-center justify-start pt-3 border-t border-amber-300 shadow-2xl">
-                            <span class="text-3xl font-black text-amber-950">1</span>
-                            <span class="text-xs tracking-widest text-amber-950 font-black uppercase">JUARA EMAS</span>
-                        </div>
-                    </div>
-
-                    <!-- 3rd Place -->
-                    <div class="flex flex-col items-center flex-1 max-w-[180px]">
-                        <div id="podium-3-card" class="flex flex-col items-center mb-3 transition-all duration-300 hover:scale-105 cursor-pointer" onclick="openStudentPassportFromPodium(2)">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-800 border-2 border-amber-700 flex items-center justify-center text-amber-600 text-xl font-bold shadow-lg shadow-amber-800/20 relative">
-                                <span class="absolute -top-3 bg-amber-900 text-amber-200 border border-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">#3</span>
-                                <i class="fa-solid fa-user-ninja text-amber-600 text-2xl"></i>
-                            </div>
-                            <h4 id="podium-3-name" class="text-xs sm:text-sm font-bold text-slate-200 mt-2 text-center line-clamp-2">---</h4>
-                            <span id="podium-3-cops" class="text-xs text-slate-400 mt-0.5 font-semibold">0 Cop</span>
-                            <div id="podium-3-belt" class="mt-1"></div>
-                        </div>
-                        <div class="podium-3 w-full rounded-t-xl flex flex-col items-center justify-start pt-3 border-t border-amber-700/50 shadow-xl">
-                            <span class="text-2xl font-black text-amber-200">3</span>
-                            <span class="text-[10px] tracking-widest text-amber-300 font-bold uppercase">GANGSA</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Current Active Session Summary Banner -->
-            <div id="active-session-banner" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <!-- Dynamically populated -->
-            </div>
-
-            <!-- Quick Leaderboard Table -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-list-ol text-emerald-400"></i>
-                            <span>Kedudukan Keseluruhan Murid</span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Senarai disusun berdasarkan Jumlah Cop (Kehadiran & Bonus) & Minit Pembelajaran</p>
-                    </div>
-                    <div class="relative w-full sm:w-64">
-                        <input type="text" id="search-leaderboard" onkeyup="renderLeaderboard()" placeholder="Cari nama murid..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider">
-                            <tr>
-                                <th class="p-3 text-center">Ked.</th>
-                                <th class="p-3">Nama Murid</th>
-                                <th class="p-3 text-center">Tahap (Belt)</th>
-                                <th class="p-3 text-center">Jumlah Cop</th>
-                                <th class="p-3 text-center">Jumlah Minit</th>
-                                <th class="p-3 text-center">Kehadiran (%)</th>
-                                <th class="p-3 text-right">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-table-body" class="divide-y divide-slate-800/60">
-                            <!-- Dynamically populated -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= TAB 2: REKOD KEHADIRAN & COP ================= -->
-        <section id="view-attendance" class="tab-content space-y-6 hidden">
-            <!-- Session Selector Bar -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div class="w-full md:w-auto flex-1">
-                    <div class="flex items-center justify-between mb-1">
-                        <label for="select-attendance-session" class="block text-xs font-semibold text-slate-400">PILIH HARI / SESI UJIAN:</label>
-                    </div>
-                    <select id="select-attendance-session" onchange="loadAttendanceMatrix()" class="bg-slate-950 border border-slate-700 text-emerald-400 font-bold rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 w-full">
-                        <!-- Populated dynamically -->
-                    </select>
-                </div>
-
-                <!-- Session Meta Info Badge -->
-                <div id="session-info-badge" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex-1 w-full text-xs">
-                    <!-- Dynamic details about chosen session -->
-                </div>
-
-                <div class="flex flex-wrap gap-2 w-full md:w-auto justify-end">
-                    <button onclick="markAllPresent()" title="Tandakan Semua Hadir" class="admin-only bg-slate-800 hover:bg-slate-700 text-xs text-emerald-400 font-semibold px-3 py-2 rounded-xl border border-slate-700 transition flex items-center space-x-1">
-                        <i class="fa-solid fa-check-double text-emerald-400"></i>
-                        <span>Semua Hadir (✓)</span>
-                    </button>
-                    <button onclick="markAllAbsent()" title="Tandakan Semua Ponteng" class="admin-only bg-slate-800 hover:bg-slate-700 text-xs text-rose-400 font-semibold px-3 py-2 rounded-xl border border-slate-700 transition flex items-center space-x-1">
-                        <i class="fa-solid fa-user-xmark"></i>
-                        <span>Semua Ponteng (A)</span>
-                    </button>
-                    <button onclick="resetCurrentSessionAttendance()" title="Reset Status Sesi Ini" class="admin-only bg-slate-800 hover:bg-slate-700 text-xs text-amber-400 px-3 py-2 rounded-xl border border-slate-700 transition flex items-center space-x-1">
-                        <i class="fa-solid fa-arrow-rotate-left"></i>
-                        <span>Reset</span>
-                    </button>
-                    <button onclick="saveAttendanceData()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Simpan Rekod</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Kod Pengisian Legend -->
-            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 text-xs flex flex-wrap gap-4 items-center justify-between">
-                <div class="flex flex-wrap gap-4 items-center">
-                    <span class="text-slate-400 font-bold uppercase text-[10px]">Petunjuk Status:</span>
-                    <span class="inline-flex items-center space-x-1 bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-500/30">
-                        <span class="font-bold">✓</span> <span>Hadir & Selesai Tugas (+1 Cop)</span>
-                    </span>
-                    <span class="inline-flex items-center space-x-1 bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-lg border border-amber-500/30">
-                        <span class="font-bold">P</span> <span>Hadir Tugas Tak Lengkap (0 Cop)</span>
-                    </span>
-                    <span class="inline-flex items-center space-x-1 bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-500/30">
-                        <span class="font-bold">A</span> <span>Tidak Hadir (0 Cop)</span>
-                    </span>
-                </div>
-                <div class="flex flex-wrap gap-3 items-center">
-                    <span class="text-slate-400 font-bold uppercase text-[10px]">Lencana Bonus (+1 Cop):</span>
-                    <span class="text-slate-300" title="Perfect Recall 10/10">⭐ Perfect Recall</span>
-                    <span class="text-slate-300" title="Bio-Dojo Champion">👑 Champion</span>
-                    <span class="text-slate-300" title="Terangkan Konsep">🧠 Terangkan Konsep</span>
-                </div>
-            </div>
-
-            <!-- Attendance Sheet Matrix -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
-                            <tr>
-                                <th class="p-3 text-center w-12">Bil</th>
-                                <th class="p-3">Nama Murid</th>
-                                <th class="p-3 text-center">Status Kehadiran</th>
-                                <th class="p-3 text-center">Lencana Pencapaian</th>
-                                <th class="p-3 text-center">Cop Sesi Ini</th>
-                                <th class="p-3 text-center">Terkumpul (Cop)</th>
-                                <th class="p-3 text-center">Jumlah Minit</th>
-                                <th class="p-3 text-center">Tahap Belt</th>
-                            </tr>
-                        </thead>
-                        <tbody id="attendance-matrix-body" class="divide-y divide-slate-800">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= TAB 3: TETAPAN BAB & SESI ================= -->
-        <section id="view-sessions" class="tab-content space-y-6 hidden">
-            
-            <!-- Quick Actions Header for Daily Chapter Management -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-calendar-days text-amber-400"></i>
-                        <span>Tetapan Bab Yang Diuji Setiap Hari</span>
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">
-                        Pilih & tetapkan topik Biologi Tingkatan 4 atau 5 yang diuji untuk setiap sesi harian murid.
-                    </p>
-                </div>
-                
-                <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="resetSessionForm()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Tambah Sesi Baru</span>
-                    </button>
+                    <h1 class="font-orbitron font-extrabold text-lg md:text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-orange-400 to-yellow-300">
+                        MISI CAHAYA
+                    </h1>
+                    <p class="text-xs text-cyan-300/80 font-rajdhani tracking-wider">BANDAR KCHA OPTICS LAB</p>
                 </div>
             </div>
 
-            <!-- VISUAL DAILY CHAPTER PLANNER GRID -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm font-bold text-white">Grid Kad Bab Harian</span>
-                        <span id="planner-total-count" class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold">0 Hari</span>
-                    </div>
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <!-- Sound Toggle -->
+                <button id="soundBtn" onclick="game.toggleSound()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 transition-all duration-200 border border-slate-700 hover:border-cyan-400" title="Suara / Kesan Bunyi">
+                    <i id="soundIcon" class="fa-solid fa-volume-high text-lg"></i>
+                </button>
 
-                    <!-- Filter Controls -->
-                    <div class="flex items-center space-x-2 text-xs w-full sm:w-auto">
-                        <select id="filter-planner-form" onchange="renderDailyPlannerGrid()" class="bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500">
-                            <option value="ALL">Semua Tingkatan</option>
-                            <option value="4">Tingkatan 4</option>
-                            <option value="5">Tingkatan 5</option>
-                        </select>
-                        <input type="text" id="search-planner-bab" onkeyup="renderDailyPlannerGrid()" placeholder="Cari bab..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 w-full sm:w-48">
-                    </div>
-                </div>
-
-                <!-- Cards Grid representing daily tested chapters -->
-                <div id="daily-planner-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <!-- Dynamically populated daily chapter cards -->
-                </div>
-            </div>
-
-            <!-- Tabular List View & Custom Edit Form -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form to Add/Edit Session (Admin Only) -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
-                    <h3 class="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-                        <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
-                        <span id="session-form-title">Tambah / Kemaskini Sesi</span>
-                    </h3>
-
-                    <form id="form-session" onsubmit="handleSaveSession(event)" class="space-y-3 text-xs">
-                        <input type="hidden" id="session-id-input" value="">
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Label Hari / Tarikh Sesi</label>
-                            <input type="text" id="session-title-input" required placeholder="Cth: Hari 1 (Isnin)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Tingkatan</label>
-                            <select id="session-form-level" onchange="populateBabDropdown()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                                <option value="4">Tingkatan 4</option>
-                                <option value="5">Tingkatan 5</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Bab Biologi Diuji</label>
-                            <select id="session-bab-input" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
-                                <!-- Populated dynamically -->
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Set Flashcard Kamehameha</label>
-                            <input type="text" id="session-flashcard-input" placeholder="Cth: Set 1 / Set 2" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="Set 1">
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Jenis Aktiviti 20 Minit Bio-Dojo</label>
-                            <select id="session-activity-input" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                                <option value="Recall Challenge">Recall Challenge (Fokus)</option>
-                                <option value="Beat The Clock">Beat The Clock (Latih)</option>
-                                <option value="Hot Seat">Hot Seat (Usaha)</option>
-                                <option value="Explain Like A Teacher">Explain Like A Teacher (Kuasai)</option>
-                                <option value="Peer Challenge">Peer Challenge (Cemerlang)</option>
-                                <option value="Mystery Flashcard">Mystery Flashcard</option>
-                                <option value="Rapid Fire">Rapid Fire</option>
-                                <option value="Bio Relay">Bio Relay</option>
-                                <option value="Bio-Dojo Master Challenge">Bio-Dojo Master Challenge</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Nota Khusus Sesi (Pilihan)</label>
-                            <input type="text" id="session-notes-input" placeholder="Cth: Fokus soalan struktur & lukisan rajah" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                        </div>
-
-                        <div class="pt-2 flex space-x-2">
-                            <button type="submit" class="admin-only flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg shadow-emerald-900/40 flex items-center justify-center space-x-1">
-                                <i class="fa-solid fa-check"></i>
-                                <span>Simpan Sesi</span>
-                            </button>
-                            <button type="button" onclick="resetSessionForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-3 py-2.5 rounded-xl transition">
-                                Batal
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Session Schedule Table -->
-                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                        <h3 class="text-base font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-list-check text-emerald-400"></i>
-                            <span>Senarai Jadual Rekod Bab Harian</span>
-                        </h3>
-                        <span id="session-count-tag" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full font-semibold">0 Sesi</span>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider">
-                                <tr>
-                                    <th class="p-3">Hari / Sesi</th>
-                                    <th class="p-3">Bab Terlibat</th>
-                                    <th class="p-3">Flashcard</th>
-                                    <th class="p-3">Aktiviti</th>
-                                    <th class="p-3 text-right">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="session-list-body" class="divide-y divide-slate-800">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= TAB 4: GRAF PENCAPAIAN ================= -->
-        <section id="view-analytics" class="tab-content space-y-6 hidden">
-            
-            <!-- Coverage Summary Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
-                    <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Cakupan Bab Tingkatan 4</span>
-                        <h4 id="coverage-f4-text" class="text-xl font-bold text-emerald-400 mt-1">0 / 15 Bab (0%)</h4>
-                    </div>
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-extrabold text-lg">
-                        T4
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
-                    <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Cakupan Bab Tingkatan 5</span>
-                        <h4 id="coverage-f5-text" class="text-xl font-bold text-amber-400 mt-1">0 / 13 Bab (0%)</h4>
-                    </div>
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-extrabold text-lg">
-                        T5
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Chart 1: Student Minutes Achievement -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
-                    <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-bar text-emerald-400"></i>
-                        <span>Jumlah Minit Pembelajaran Mengikut Murid</span>
-                    </h3>
-                    <div class="h-72 relative">
-                        <canvas id="chart-minutes-per-student"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart 2: Belt Rank Distribution -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
-                    <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie text-amber-400"></i>
-                        <span>Agihan Tahap Pencapaian (Belt Ranks) Kelas</span>
-                    </h3>
-                    <div class="h-72 relative">
-                        <canvas id="chart-belt-distribution"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= TAB 5: SENARAI MURID & PASSPORT ================= -->
-        <section id="view-students" class="tab-content space-y-6 hidden">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-id-card text-emerald-400"></i>
-                            <span>Bio-Dojo Passport 100 - Senarai Murid</span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Semak status passport, cop terkumpul, dan belt rank setiap murid</p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                        <button onclick="openBulkImportModal()" class="admin-only bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-md">
-                            <i class="fa-solid fa-paste"></i>
-                            <span>Import Pukal Nama</span>
-                        </button>
-                        <button onclick="openAddStudentModal()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1 shadow-md">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span>Tambah Murid Baru</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Cards Grid of Students -->
-                <div id="student-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <!-- Dynamic student cards -->
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal: Individual Student Passport Card View -->
-    <div id="modal-passport" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative space-y-5">
-            <button onclick="closeModal('modal-passport')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="text-center border-b border-slate-800 pb-4">
-                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-500/30">
-                    BIO-DOJO PASSPORT 100
-                </span>
-                <h3 id="passport-modal-name" class="text-xl font-black text-white mt-2">NAMA MURID</h3>
-                <p id="passport-modal-belt" class="mt-1"></p>
-            </div>
-
-            <!-- Manual Cop Adjustment Controls (Admin Only) -->
-            <div class="admin-only bg-slate-950/80 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
-                <span class="text-xs text-slate-400 font-semibold">Pelarasan Cop Manual:</span>
-                <div class="flex items-center space-x-2">
-                    <button id="btn-passport-minus" onclick="adjustStudentCop(-1)" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 font-bold border border-rose-500/40 flex items-center justify-center transition">
-                        <i class="fa-solid fa-minus text-xs"></i>
-                    </button>
-                    <span id="passport-modal-cops-badge" class="text-sm font-bold text-emerald-400 px-2">0 Cop</span>
-                    <button id="btn-passport-plus" onclick="adjustStudentCop(1)" class="w-8 h-8 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 font-bold border border-emerald-500/40 flex items-center justify-center transition">
-                        <i class="fa-solid fa-plus text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 text-center">
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">Jumlah Cop</span>
-                    <span id="passport-modal-cops" class="text-2xl font-black text-emerald-400">0</span>
-                </div>
-                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">Jumlah Minit</span>
-                    <span id="passport-modal-minutes" class="text-2xl font-black text-amber-400">0 Min</span>
-                </div>
-            </div>
-
-            <div>
-                <h4 class="text-xs font-bold text-slate-300 uppercase mb-2 tracking-wider">Lencana Pencapaian:</h4>
-                <div id="passport-modal-badges" class="flex flex-wrap gap-2 text-xs">
-                    <!-- Dynamic badges -->
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-                <div class="flex space-x-2">
-                    <button id="btn-passport-print" onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center space-x-1">
-                        <i class="fa-solid fa-print"></i>
-                        <span>Cetak Kad</span>
-                    </button>
-                    <button id="btn-passport-delete" onclick="deleteCurrentStudentFromPassport()" class="admin-only bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 font-medium px-3 py-2 rounded-xl text-xs transition flex items-center space-x-1">
-                        <i class="fa-solid fa-trash"></i>
-                        <span>Padam</span>
-                    </button>
-                </div>
-                <button onclick="closeModal('modal-passport')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-xl text-xs transition">
-                    Tutup
+                <!-- Teacher Mode Button -->
+                <button onclick="game.showTeacherPortal()" class="px-3 py-2 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-purple-300 border border-purple-500/40 text-xs md:text-sm font-semibold flex items-center space-x-2 transition-all">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span class="hidden sm:inline">Mod Guru</span>
                 </button>
             </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- Modal: PILIH AKAUN / PROFIL MURID -->
-    <div id="modal-select-student" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-blue-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
-            <button onclick="closeModal('modal-select-student')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+        <!-- SCREEN 0: HOME / MAIN MENU -->
+        <section id="screen-home" class="flex-1 flex flex-col justify-center items-center text-center py-6">
+            <div class="glass-panel p-6 md:p-10 rounded-3xl max-w-2xl w-full border-2 border-cyan-500/40 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-            <div class="text-center border-b border-slate-800 pb-3">
-                <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-blue-500/30 mb-2">
-                    <i class="fa-solid fa-id-badge"></i>
+                <div class="inline-block px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-400/50 text-cyan-300 text-xs md:text-sm font-rajdhani font-bold mb-4 tracking-widest uppercase">
+                    Sains KSSM Tingkatan 1 • Bab 8
                 </div>
-                <h3 class="text-lg font-bold text-white">Log Masuk Profile Murid</h3>
-                <p class="text-xs text-slate-400">Pilih nama anda daripada senarai untuk melihat pencapaian peribadi anda secara langsung.</p>
+
+                <h2 class="font-orbitron text-3xl md:text-5xl font-black text-white mb-3 tracking-wide leading-tight">
+                    SELAMATKAN <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-yellow-300 to-cyan-400 glow-text-orange">BANDAR KACHA!</span>
+                </h2>
+
+                <p class="text-slate-300 text-sm md:text-base mb-6 max-w-lg mx-auto leading-relaxed">
+                    Bandar Kacha mengalami <span class="text-amber-400 font-semibold">blackout besar-besaran</span>! Sebagai <span class="text-cyan-400 font-semibold">Ejen Cahaya</span>, selesaikan cabaran optik dan tenaga cahaya untuk memulihkan bekalan kuasa ke seluruh kota.
+                </p>
+
+                <!-- Difficulty Selector -->
+                <div class="mb-6 bg-slate-900/80 p-3 rounded-2xl border border-slate-800 max-w-md mx-auto">
+                    <label class="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">Pilih Tahap Kesukaran:</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="game.setDifficulty('mudah')" id="diff-mudah" class="diff-btn py-2 text-xs font-bold rounded-xl border border-cyan-500/30 bg-cyan-950/40 text-cyan-300 transition-all">
+                            Mudah
+                        </button>
+                        <button onclick="game.setDifficulty('sederhana')" id="diff-sederhana" class="diff-btn py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 transition-all">
+                            Sederhana
+                        </button>
+                        <button onclick="game.setDifficulty('mencabar')" id="diff-mencabar" class="diff-btn py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-400 transition-all">
+                            Mencabar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="game.startMission()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-slate-950 font-orbitron font-extrabold text-lg rounded-2xl shadow-xl shadow-orange-500/30 transform hover:-translate-y-1 transition-all flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-play text-xl"></i>
+                        <span>MULA MISI</span>
+                    </button>
+
+                    <button onclick="game.showInstructions()" class="w-full sm:w-auto px-6 py-4 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold text-sm rounded-2xl border border-slate-700 hover:border-cyan-400 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Panduan & Objektif</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN INSTRUCTIONS -->
+        <section id="screen-instructions" class="hidden flex-1 flex flex-col justify-center items-center py-4">
+            <div class="glass-panel p-6 md:p-8 rounded-3xl max-w-3xl w-full border border-cyan-500/30 shadow-2xl overflow-y-auto max-h-[80vh]">
+                <h2 class="font-orbitron text-2xl md:text-3xl font-extrabold text-cyan-400 mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-info text-orange-400"></i> Panduan Permainan & Objektif
+                </h2>
+
+                <div class="space-y-4 text-slate-300 text-sm md:text-base leading-relaxed">
+                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <h3 class="font-bold text-orange-400 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye"></i> Objektif Pembelajaran (DSKP Bab 8):
+                        </h3>
+                        <ul class="list-disc list-inside space-y-1 text-slate-300 text-xs md:text-sm">
+                            <li>Membezakan imej sahih dengan imej maya.</li>
+                            <li>Ciri imej cermin satah, cermin cekung & cermin cembung.</li>
+                            <li>Jarak objek ($d_o$) = Jarak imej ($d_i$) dalam cermin satah.</li>
+                            <li>Penambahan & Penolakan warna cahaya primer (Merah, Hijau, Biru) & sekunder.</li>
+                            <li>Hukum pantulan cahaya & aplikasi optik (Periskop, Gentian Optik, Endoskop).</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <h4 class="font-bold text-cyan-300 text-sm mb-2"><i class="fa-solid fa-gamepad text-orange-400"></i> Mekanik Permainan</h4>
+                            <p class="text-xs text-slate-300 space-y-1">
+                                • Mula dengan <span class="text-red-400 font-bold">3 Nyawa (❤️)</span>.<br>
+                                • Jawapan betul: <span class="text-green-400 font-bold">+10 Mata</span> & Tenaga Cahaya bertambah.<br>
+                                • Jawapan salah: <span class="text-red-400 font-bold">-1 Nyawa</span>.<br>
+                                • Gunakan butang <span class="text-yellow-300 font-bold">"Petunjuk"</span> jika menghadapi kesukaran.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <h4 class="font-bold text-cyan-300 text-sm mb-2"><i class="fa-solid fa-award text-yellow-400"></i> Ganjaran & Gelaran</h4>
+                            <p class="text-xs text-slate-300 space-y-1">
+                                • 0–49 mata: <span class="text-slate-400 font-bold">Pelatih Cahaya</span><br>
+                                • 50–79 mata: <span class="text-cyan-400 font-bold">Juruteknik Optik</span><br>
+                                • 80–99 mata: <span class="text-purple-400 font-bold">Pakar Lumina</span><br>
+                                • 100+ mata: <span class="text-amber-400 font-bold">Wira Kota Lumina</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button onclick="game.showHome()" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-sm rounded-xl transition-all">
+                        Kembali ke Halaman Utama
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN GAMEPLAY -->
+        <section id="screen-gameplay" class="hidden flex-1 flex flex-col space-y-4">
+            
+            <!-- STAGE STATUS HUD BAR -->
+            <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 border border-slate-700">
+                <!-- Level Info -->
+                <div class="flex items-center space-x-3">
+                    <div id="stage-badge" class="px-3 py-1 rounded-xl bg-orange-500/20 border border-orange-400 text-orange-300 font-orbitron text-xs md:text-sm font-bold">
+                        Peringkat 1
+                    </div>
+                    <div>
+                        <h3 id="stage-title" class="font-bold text-sm md:text-base text-white">Laluan Cahaya</h3>
+                        <p id="stage-subtitle" class="text-xs text-slate-400">Cahaya bergerak lurus & bayang-bayang</p>
+                    </div>
+                </div>
+
+                <!-- Stats HUD (Lives, Score, Energy) -->
+                <div class="flex items-center space-x-4 md:space-x-6">
+                    <!-- Lives -->
+                    <div class="flex items-center space-x-1" title="Nyawa">
+                        <span id="lives-display" class="flex space-x-1 text-red-500 text-lg">
+                            <i class="fa-solid fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
+                        </span>
+                    </div>
+
+                    <!-- Energy Meter -->
+                    <div class="w-24 md:w-36">
+                        <div class="flex justify-between text-[10px] font-bold text-slate-300 mb-1">
+                            <span>TENAGA KACHA</span>
+                            <span id="energy-text">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+                            <div id="energy-bar" class="bg-gradient-to-r from-orange-500 to-yellow-400 h-2.5 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Score -->
+                    <div class="bg-slate-900 px-3 py-1.5 rounded-xl border border-cyan-500/30 text-center">
+                        <span class="text-[10px] block text-slate-400 font-bold uppercase">Mata</span>
+                        <span id="score-text" class="font-orbitron font-extrabold text-cyan-400 text-sm md:text-base">0</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-3">
+            <!-- LEVEL PROGRESS BAR -->
+            <div class="w-full bg-slate-900 rounded-lg h-1.5 overflow-hidden border border-slate-800">
+                <div id="question-progress-bar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-300 w-0"></div>
+            </div>
+
+            <!-- QUESTION CARD -->
+            <div class="glass-panel rounded-3xl p-5 md:p-8 flex-1 flex flex-col justify-between border-2 border-cyan-500/30 shadow-xl relative min-h-[420px]">
+                
                 <div>
-                    <label class="block text-slate-300 text-xs font-semibold mb-1">Pilih Nama Anda:</label>
-                    <select id="select-active-student-dropdown" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <!-- Question Header & Tags -->
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="question-num-tag" class="text-xs font-bold text-cyan-300 bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-500/40">
+                            Soalan 1 daripada 5
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <span id="kbat-badge" class="hidden text-[10px] font-bold text-amber-950 bg-amber-400 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                KBAT
+                            </span>
+                            <span id="subtopic-badge" class="text-xs text-slate-400 font-rajdhani">
+                                Subtopik
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual Display Area (Interactive Mini Sim / SVG Diagram) -->
+                    <div id="interactive-visual-box" class="w-full bg-slate-950/90 rounded-2xl p-4 mb-5 border border-slate-800 min-h-[140px] flex items-center justify-center relative overflow-hidden">
+                        <!-- Dynamic content loaded via JS (Ray Diagrams, Color Mixing visualizer, Optics targets) -->
+                    </div>
+
+                    <!-- Question Text -->
+                    <h3 id="question-text" class="text-base md:text-xl font-bold text-white mb-5 leading-relaxed">
+                        Memuatkan soalan...
+                    </h3>
+
+                    <!-- Interactive Input / Options Container -->
+                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <!-- Options injected dynamically -->
+                    </div>
                 </div>
 
-                <div class="pt-2 flex space-x-2">
-                    <button onclick="confirmStudentSelection()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-lg">
-                        Buka Passport Saya
+                <!-- Footer Tools: Hint & Submit Controls -->
+                <div class="pt-4 border-t border-slate-800/80 flex justify-between items-center">
+                    <button onclick="game.toggleHint()" class="text-xs text-amber-300 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 px-3.5 py-2 rounded-xl flex items-center space-x-2 transition-all">
+                        <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                        <span>Petunjuk</span>
                     </button>
-                    <button onclick="closeModal('modal-select-student')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-4 py-2.5 rounded-xl transition text-xs">
+
+                    <button id="next-btn" onclick="game.nextQuestion()" class="hidden px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                        <span>Seterusnya</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Hint Drawer -->
+                <div id="hint-box" class="hidden mt-3 p-3.5 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs md:text-sm animate-pulse-glow">
+                    <span class="font-bold text-amber-400"><i class="fa-solid fa-circle-question"></i> PETUNJUK:</span>
+                    <span id="hint-text">...</span>
+                </div>
+
+                <!-- Explanation Feedback Drawer -->
+                <div id="explanation-box" class="hidden mt-4 p-4 rounded-xl text-xs md:text-sm border">
+                    <div id="explanation-status" class="font-extrabold text-sm mb-1 flex items-center gap-2"></div>
+                    <div id="explanation-text" class="text-slate-200 leading-relaxed"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SCREEN RESULTS & CERTIFICATE -->
+        <section id="screen-results" class="hidden flex-1 flex flex-col justify-center items-center py-6">
+            <div class="glass-panel p-6 md:p-10 rounded-3xl max-w-3xl w-full border-2 border-cyan-500/50 shadow-2xl relative text-center">
+                
+                <div class="inline-block p-4 rounded-full bg-slate-900/90 border border-cyan-400/50 mb-4 shadow-lg shadow-cyan-500/20">
+                    <i id="badge-icon" class="fa-solid fa-trophy text-4xl md:text-5xl text-yellow-400"></i>
+                </div>
+
+                <h2 id="result-title" class="font-orbitron text-2xl md:text-4xl font-black text-white mb-1">
+                    KOTA LUMINA KEMBALI BERCAHAYA!
+                </h2>
+                <p id="result-badge-name" class="text-lg md:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-cyan-400 mb-4">
+                    Gelar: Wira Kota Lumina
+                </p>
+
+                <!-- Performance Breakdown Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Jumlah Mata</span>
+                        <span id="res-score" class="text-xl md:text-2xl font-orbitron font-extrabold text-cyan-400">120</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Ketepatan</span>
+                        <span id="res-accuracy" class="text-xl md:text-2xl font-orbitron font-extrabold text-green-400">92%</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Betul / Salah</span>
+                        <span id="res-correct-wrong" class="text-xl md:text-2xl font-orbitron font-extrabold text-amber-400">23 / 2</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Masa Dimainkan</span>
+                        <span id="res-time" class="text-xl md:text-2xl font-orbitron font-extrabold text-purple-400">14m 20s</span>
+                    </div>
+                </div>
+
+                <!-- Subtopics to Revise Analysis Box -->
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 text-left mb-6">
+                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line"></i> Analisis Prestasi Subtopik:
+                    </h4>
+                    <div id="subtopic-analysis-list" class="space-y-1.5 text-xs md:text-sm text-slate-300">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Printable Certificate Preview Box -->
+                <div id="printable-certificate" class="hidden bg-slate-950 p-8 rounded-2xl border-4 border-amber-400 text-center text-slate-100 my-4 shadow-2xl">
+                    <div class="border-2 border-dashed border-cyan-400 p-6 rounded-xl">
+                        <p class="text-xs uppercase tracking-widest text-amber-400 font-bold">Sijil Pencapaian Digital KSSM Sains</p>
+                        <h3 class="text-2xl font-orbitron font-black text-white my-2">MISI CAHAYA: BANDAR KACHA</h3>
+                        <p class="text-xs text-slate-300">Dengan ini disahkan bahawa</p>
+                        <p id="cert-student-name" class="text-xl font-bold text-cyan-300 my-2 underline uppercase">EJEN CAHAYA TINGKATAN 1</p>
+                        <p class="text-xs text-slate-300">telah berjaya menyelesaikan tugasan optik dengan gelaran:</p>
+                        <h4 id="cert-badge" class="text-lg font-bold text-yellow-300 my-2">WIRA KOTA LUMINA</h4>
+                        <div class="flex justify-between items-end mt-6 text-[10px] text-slate-400">
+                            <div>
+                                <p>Skor: <span id="cert-score">100</span> Mata</p>
+                                <p>Tarikh: <span id="cert-date">--/--/----</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-cyan-400">Pakar Pembangunan Sains KSSM</p>
+                                <p>Makmal Optik Bandar Kacha</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <button onclick="game.toggleCertificateModal()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-sm rounded-xl transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-certificate"></i> Lihat Sijil Digital
+                    </button>
+                    <button onclick="game.startMission()" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-sm rounded-xl transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Main Semula
+                    </button>
+                    <button onclick="game.showTeacherPortal()" class="px-5 py-2.5 bg-purple-900/80 hover:bg-purple-800 text-purple-200 font-bold text-sm rounded-xl border border-purple-500/50 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-user-graduate"></i> Analisis Guru
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SCREEN TEACHER PORTAL -->
+        <section id="screen-teacher" class="hidden flex-1 flex flex-col space-y-4 py-4">
+            <div class="glass-panel p-6 rounded-3xl border border-purple-500/40 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="font-orbitron text-2xl font-black text-purple-300 flex items-center gap-2">
+                            <i class="fa-solid fa-chalkboard-user text-amber-400"></i> Halaman Khas Guru
+                        </h2>
+                        <p class="text-xs text-slate-400">Pentaksiran & Analisis DSKP Sains Tingkatan 1 Bab 8 (Cahaya dan Optik)</p>
+                    </div>
+                    <button onclick="game.showHome()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold">
                         Tutup
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal: ADMIN LOGIN / PIN VERIFICATION -->
-    <div id="modal-admin-login" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-amber-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 relative text-center">
-            <button onclick="closeModal('modal-admin-login')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+                <!-- Summary Tabs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+                        <p class="text-xs text-slate-400 font-bold">JUMLAH SOALAN DALAM BANK</p>
+                        <p class="text-2xl font-orbitron font-extrabold text-cyan-400">25 Soalan</p>
+                        <p class="text-[10px] text-slate-500">Merangkumi 5 Peringkat DSKP</p>
+                    </div>
+                    <div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+                        <p class="text-xs text-slate-400 font-bold">SOALAN ARAS KBAT</p>
+                        <p class="text-2xl font-orbitron font-extrabold text-amber-400">5+ Soalan</p>
+                        <p class="text-[10px] text-slate-500">Aplikasi Kehidupan Sebenar</p>
+                    </div>
+                    <div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+                        <p class="text-xs text-slate-400 font-bold">SUBTOPIK KUNCI</p>
+                        <p class="text-2xl font-orbitron font-extrabold text-purple-400">8 Sub-tajuk</p>
+                        <p class="text-[10px] text-slate-500">Cermin, Warna, Pantulan, Alat Optik</p>
+                    </div>
+                </div>
 
-            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-amber-500/30">
-                <i class="fa-solid fa-key"></i>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-bold text-white">Log Masuk Admin</h3>
-                <p class="text-xs text-slate-400 mt-1">Masukkan Kata Laluan / PIN Admin (PIN Lalai: <span class="font-bold text-amber-300">1234</span>)</p>
-            </div>
-
-            <form onsubmit="handleAdminAuth(event)" class="space-y-3">
-                <input type="password" id="input-admin-pin" required placeholder="Masukkan PIN (e.g. 1234)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold tracking-widest text-amber-400 focus:outline-none focus:border-amber-500">
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-2.5 rounded-xl transition shadow-lg shadow-amber-900/30 text-sm">
-                    Sahkan PIN & Masuk Admin
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal: BULK IMPORT NAMA MURID -->
-    <div id="modal-bulk-import" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 relative">
-            <button onclick="closeModal('modal-bulk-import')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                    <i class="fa-solid fa-file-import text-emerald-400"></i>
-                    <span>Masukkan / Import Senarai Nama Murid</span>
+                <!-- Complete Question Bank & Key Answers -->
+                <h3 class="font-bold text-sm text-cyan-300 mb-3 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i> Skema Jawapan & Analisis DSKP:
                 </h3>
-                <p class="text-xs text-slate-400 mt-1">Copy & paste senarai nama murid anda (satu nama per baris)</p>
+
+                <div id="teacher-question-list" class="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+                    <!-- Populated dynamically via JS -->
+                </div>
             </div>
+        </section>
 
-            <form onsubmit="handleExecuteBulkImport(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Tampal (Paste) Nama Murid Di Sini:</label>
-                    <textarea id="bulk-names-textarea" rows="8" required placeholder="Nama Murid 1&#10;Nama Murid 2&#10;Nama Murid 3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-xs leading-relaxed"></textarea>
-                    <p class="text-[11px] text-slate-500 mt-1">*Sistem akan mendaftarkan nama murid anda secara automatik.</p>
-                </div>
-
-                <div class="flex space-x-2 pt-2">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-1 shadow-lg">
-                        <i class="fa-solid fa-check-double"></i>
-                        <span>Import Senarai Sekarang</span>
-                    </button>
-                    <button type="button" onclick="closeModal('modal-bulk-import')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-4 py-2.5 rounded-xl transition">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 
-    <!-- Modal: TAMBAH MURID BARU -->
-    <div id="modal-add-student" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
-            <button onclick="closeModal('modal-add-student')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+    <!-- FOOTER -->
+    <footer class="text-center py-3 text-xs text-slate-500 border-t border-slate-900 bg-slate-950/80 relative z-10">
+        MISI CAHAYA – SELAMATKAN BANDAR KACHA! • KSSM Sains Tingkatan 1 Bab 8 • Hak Cipta Reka Bentuk Pendidikan Interaktif
+    </footer>
 
-            <div class="border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                    <i class="fa-solid fa-user-plus text-emerald-400"></i>
-                    <span>Tambah Murid Baru</span>
-                </h3>
-            </div>
+    <script>
+        class SoundSynth {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+            }
 
-            <form onsubmit="handleAddSingleStudent(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Nama Penuh Murid</label>
-                    <input type="text" id="add-student-name-input" required placeholder="Cth: Muhammad Adam" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                </div>
-
-                <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Jantina</label>
-                    <select id="add-student-gender-input" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-                        <option value="L">Lelaki</option>
-                        <option value="P">Perempuan</option>
-                    </select>
-                </div>
-
-                <div class="flex space-x-2 pt-2">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg">
-                        Tambah Murid
-                    </button>
-                    <button type="button" onclick="closeModal('modal-add-student')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-4 py-2.5 rounded-xl transition">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal: INFO AWAN MASA NYATA & TETAPAN FIREBASE CONFIG JSON -->
-    <div id="modal-cloud-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden overflow-y-auto max-h-screen py-10">
-        <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 relative">
-            <button onclick="closeModal('modal-cloud-settings')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                    <i class="fa-solid fa-shield-halved text-purple-400"></i>
-                    <span>Sambungkan Firestore Awan</span>
-                </h3>
-                <p class="text-xs text-slate-400 mt-1">Sediakan pangkalan data Firestore awan tersuai bagi penyelarasan peranti secara live.</p>
-            </div>
-
-            <div class="space-y-4 text-xs">
-                <!-- Status Sambungan Firestore -->
-                <div class="bg-purple-950/40 border border-purple-500/30 rounded-2xl p-4 space-y-2">
-                    <h4 class="font-bold text-purple-300 flex items-center space-x-2">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Status Awan Masa Nyata</span>
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed">
-                        Aplikasi ini akan menyelaras data secara automatik melalui Firestore Snapshot. Sekiranya tiada sambungan, data disimpan secara automatik dalam simpanan peranti tempatan (LocalStorage).
-                    </p>
-                </div>
-
-                <!-- Input Box Tetapan Firebase Config JSON -->
-                <div class="space-y-2 border-t border-slate-800 pt-3">
-                    <div class="flex items-center justify-between">
-                        <label class="font-bold text-amber-300 block">Firebase Config JSON Projek Anda:</label>
-                        <span id="custom-firebase-status-badge" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700">Guna Lalai</span>
-                    </div>
-                    <textarea id="input-firebase-config-json" rows="6" placeholder='{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "projek-anda.firebaseapp.com",&#10;  "projectId": "projek-anda",&#10;  "storageBucket": "projek-anda.appspot.com",&#10;  "messagingSenderId": "1234567890",&#10;  "appId": "1:1234567890:web:abc123def456"&#10;}' class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-emerald-400 font-mono text-xs focus:outline-none focus:border-purple-500 leading-relaxed"></textarea>
-                    
-                    <div class="flex space-x-2 pt-1">
-                        <button onclick="saveFirebaseConfigJSON()" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg flex items-center justify-center space-x-1">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            <span>Simpan Kunci Firebase & Muat Semula</span>
-                        </button>
-                        <button onclick="clearFirebaseConfigJSON()" class="bg-slate-800 hover:bg-slate-700 text-rose-400 font-medium px-3 py-2.5 rounded-xl transition" title="Padam Kunci Custom">
-                            Reset
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Tukar PIN Admin -->
-                <div class="admin-only space-y-2 border-t border-slate-800 pt-3">
-                    <h4 class="font-bold text-white">Tukar PIN Admin</h4>
-                    <div class="flex space-x-2">
-                        <input type="password" id="input-new-pin" placeholder="PIN Baru (cth: 5566)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-purple-500 flex-1">
-                        <button onclick="changeAdminPin()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl transition">
-                            Simpan PIN
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Reset Data -->
-                <div class="admin-only border-t border-slate-800 pt-3 flex justify-between items-center">
-                    <div>
-                        <span class="font-bold text-rose-400 block">Reset Semua Data Rekod</span>
-                        <span class="text-[11px] text-slate-500">Padam semua rekod & kembali ke tetapan asal</span>
-                    </div>
-                    <button onclick="openResetModal()" class="bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 border border-rose-500/40 font-bold px-3 py-1.5 rounded-xl transition">
-                        Reset
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: RESET CONFIRMATION -->
-    <div id="modal-reset-confirm" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-rose-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-center">
-            <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-rose-500/30">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="text-lg font-bold text-white">Adakah Anda Yakin?</h3>
-            <p class="text-xs text-slate-400">Tindakan ini akan memadamkan semua rekod murid dan sesi dari pangkalan data awan.</p>
-            <div class="flex space-x-2 pt-2">
-                <button onclick="executeResetAllData()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 rounded-xl transition">
-                    Ya, Reset
-                </button>
-                <button onclick="closeModal('modal-reset-confirm')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-4 py-2 rounded-xl transition text-xs">
-                    Batal
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bio-dojo-bookmark-100';
-
-        const DEFAULT_BAB_T4 = [
-            "Bab 1: Pengenalan kepada Biologi dan Peraturan Makmal",
-            "Bab 2: Biologi Sel dan Organisasi Sel",
-            "Bab 3: Pergerakan Bahan Merentasi Membran Plasma",
-            "Bab 4: Komposisi Kimia dalam Sel",
-            "Bab 5: Metabolisme dan Enzim",
-            "Bab 6: Pembahagian Sel",
-            "Bab 7: Respirasi Sel",
-            "Bab 8: Sistem Respirasi dalam Manusia dan Haiwan",
-            "Bab 9: Nutrisi dan Sistem Pencernaan Manusia",
-            "Bab 10: Pengangkutan dalam Manusia dan Haiwan",
-            "Bab 11: Keimunan Manusia",
-            "Bab 12: Koordinasi dan Gerak Balas dalam Manusia",
-            "Bab 13: Homeostasis dan Sistem Urinari Manusia",
-            "Bab 14: Sokongan dan Pergerakan dalam Manusia dan Haiwan",
-            "Bab 15: Pembiakan Seksual, Perkembangan dan Pertumbuhan"
-        ];
-
-        const DEFAULT_BAB_T5 = [
-            "Bab 1: Organisasi Tumbuhan dan Struktur Daun",
-            "Bab 2: Nutrisi dalam Tumbuhan",
-            "Bab 3: Pengangkutan dalam Tumbuhan",
-            "Bab 4: Pembiakan Seksual dalam Tumbuhan Berbunga",
-            "Bab 5: Gerak Balas dalam Tumbuhan",
-            "Bab 6: Pembiakan dan Pertumbuhan Tumbuhan",
-            "Bab 7: Adaptasi Tumbuhan dalam Habitat Berbeza",
-            "Bab 8: Biodiversiti",
-            "Bab 9: Ekosistem",
-            "Bab 10: Kelestarian Alam Sekitar",
-            "Bab 11: Pewarisan",
-            "Bab 12: Variasi",
-            "Bab 13: Teknologi Genetic & Bioteknologi"
-        ];
-
-        const INITIAL_STUDENTS = [
-            { id: 'std-1', name: 'Ahmad Daniel', gender: 'L', cops: 12, minutes: 48, badges: ['⭐', '🧠'] },
-            { id: 'std-2', name: 'Nur Aisyah', gender: 'P', cops: 25, minutes: 100, badges: ['⭐', '👑', '🧠'] },
-            { id: 'std-3', name: 'Muhammad Rayyan', gender: 'L', cops: 8, minutes: 32, badges: ['⭐'] }
-        ];
-
-        const INITIAL_SESSIONS = [
-            { id: 'ses-1', title: 'Hari 1 (Isnin)', level: '4', bab: DEFAULT_BAB_T4[1], flashcard: 'Set 1', activity: 'Recall Challenge', notes: 'Fokus organel sel' },
-            { id: 'ses-2', title: 'Hari 2 (Selasa)', level: '4', bab: DEFAULT_BAB_T4[2], flashcard: 'Set 2', activity: 'Beat The Clock', notes: 'Pengangkutan aktif & pasif' },
-            { id: 'ses-3', title: 'Hari 3 (Rabu)', level: '5', bab: DEFAULT_BAB_T5[0], flashcard: 'Set 1', activity: 'Explain Like A Teacher', notes: 'Struktur stomata & daun' }
-        ];
-
-        let state = {
-            students: INITIAL_STUDENTS,
-            sessions: INITIAL_SESSIONS,
-            activeSessionId: 'ses-1',
-            attendance: {},
-            adminPin: '1234'
-        };
-
-        let isAdmin = false;
-        let currentStudentId = localStorage.getItem('bio_dojo_my_id') || null;
-        let chartMinutes = null;
-        let chartBelt = null;
-
-        // Firebase Services setup
-        let db = null;
-        let auth = null;
-        let unsubscribeRealtime = null;
-
-        async function initFirebase() {
-            try {
-                let firebaseConfig = {
-                    apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
-                    authDomain: "bio-dojo-bookmark.firebaseapp.com",
-                    projectId: "bio-dojo-bookmark",
-                    storageBucket: "bio-dojo-bookmark.appspot.com"
-                };
-
-                if (typeof __firebase_config !== 'undefined') {
-                    try { firebaseConfig = JSON.parse(__firebase_config); } catch(e){}
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
                 }
+            }
 
-                // Semak custom Firebase Config dari LocalStorage jika ada
-                const customConfig = localStorage.getItem('bio_dojo_custom_firebase');
-                if (customConfig) {
-                    try { 
-                        firebaseConfig = JSON.parse(customConfig); 
-                        const badge = document.getElementById('custom-firebase-status-badge');
-                        const textarea = document.getElementById('input-firebase-config-json');
-                        if (badge) {
-                            badge.innerText = "Kunci Tersuai";
-                            badge.className = "text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30 font-bold";
-                        }
-                        if (textarea) {
-                            textarea.value = JSON.stringify(firebaseConfig, null, 2);
-                        }
-                    } catch(e) {
-                        console.error("Firebase custom config JSON tidak sah", e);
-                    }
-                }
+            playLaser() {
+                if (this.muted) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(110, this.ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.2);
+            }
 
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
+            playCorrect() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            }
 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+            playWrong() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(180, now + 0.15);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            }
 
-                setupRealtimeListener();
-            } catch (err) {
-                console.warn("Firebase fallback to local state:", err);
-                const localSaved = localStorage.getItem('bio_dojo_local_state');
-                if (localSaved) {
-                    try { state = JSON.parse(localSaved); } catch(e){}
-                }
-                updateSyncStatus("Lokal (Luar Talian)", "amber");
-                renderAllViews();
+            playPowerUp() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(900, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
             }
         }
 
-        // Fungsi Simpan JSON Config Firebase dari Modal
-        window.saveFirebaseConfigJSON = function() {
-            const jsonText = document.getElementById('input-firebase-config-json').value.trim();
-            if (!jsonText) {
-                showToast("Sila masukkan string JSON config Firebase!", "amber");
-                return;
+        const sounds = new SoundSynth();
+
+        const QUESTION_BANK = [
+            // PERINGKAT 1: Laluan Cahaya (Cahaya bergerak lurus & bayang)
+            {
+                id: 1,
+                stage: 1,
+                stageTitle: "Peringkat 1: Laluan Cahaya",
+                subtopic: "Sifat Cahaya",
+                kbat: false,
+                text: "Bagaimanakah sifat pergerakan cahaya apabila melalui satu medium lut sinar yang homogen?",
+                visualType: "ray-straight",
+                options: [
+                    "Cahaya bergerak secara melengkung",
+                    "Cahaya bergerak lurus dalam semua arah",
+                    "Cahaya bergerak bergelombang tajam",
+                    "Cahaya berhenti apabila tiada halangan"
+                ],
+                answer: 1,
+                hint: "Fikirkan mengapa kita tidak dapat melihat objek di sebalik bongkah kayu atau selekoh tanpa cermin.",
+                explanation: "Sifat asas cahaya ialah bergerak lurus. Ini membolehkan pembentukan bayang-bayang apabila cahaya dihalang oleh objek legap."
+            },
+            {
+                id: 2,
+                stage: 1,
+                stageTitle: "Peringkat 1: Laluan Cahaya",
+                subtopic: "Pembentukan Bayang-bayang",
+                kbat: false,
+                text: "Antara bahan berikut, yang manakah membenarkan sebahagian cahaya melaluinya dan menghasilkan bayang-bayang separa gelap (penumbra)?",
+                visualType: "shadow-box",
+                options: [
+                    "Bahan Lut Sinar (Contoh: Kaca nipis)",
+                    "Bahan Lut Cahaya (Contoh: Kertas suri / Kaca terpasir)",
+                    "Bahan Legap (Contoh: Bongkah kayu)",
+                    "Cermin Satah"
+                ],
+                answer: 1,
+                hint: "Bahan ini membenarkan sebahagian cahaya melaluinya, tidak sepenuhnya dan tidak menghalang terus.",
+                explanation: "Bahan lut cahaya membenarkan sebahagian cahaya melaluinya, menghasilkan bayang-bayang yang samar atau separa gelap."
+            },
+            {
+                id: 3,
+                stage: 1,
+                stageTitle: "Peringkat 1: Laluan Cahaya",
+                subtopic: "Umbra & Penumbra",
+                kbat: false,
+                text: "Apakah nama bahagian bayang-bayang yang gelap sepenuhnya apabila cahaya dihalang oleh objek legap dari sumber cahaya titik?",
+                visualType: "umbra-diagram",
+                options: [
+                    "Penumbra",
+                    "Umbra",
+                    "Aura",
+                    "Spektrum"
+                ],
+                answer: 1,
+                hint: "Bahagian ini berada di tengah-tengah kawasan bayang-bayang dan tidak menerima sebarang sebaran cahaya.",
+                explanation: "Umbra ialah kawasan bayang-bayang yang gelap sepenuhnya di mana tiada cahaya sampai."
+            },
+            {
+                id: 4,
+                stage: 1,
+                stageTitle: "Peringkat 1: Laluan Cahaya",
+                subtopic: "Kedudukan Bayang-bayang",
+                kbat: true,
+                text: "Jika lampu suluh disinar dari sebelah kiri objek legap, di manakah kedudukan bayang-bayang akan terbentuk?",
+                visualType: "light-position",
+                options: [
+                    "Di atas objek",
+                    "Di sebelah kiri objek",
+                    "Di sebelah kanan objek",
+                    "Di hadapan lampu suluh"
+                ],
+                answer: 2,
+                hint: "Bayang-bayang sentiasa terbentuk di bahagian yang bertentangan dengan sumber cahaya.",
+                explanation: "Oleh kerana cahaya bergerak lurus dan dihalang objek, bayang-bayang terbentuk pada bahagian bertentangan dari arah cahaya."
+            },
+            {
+                id: 5,
+                stage: 1,
+                stageTitle: "Peringkat 1: Laluan Cahaya",
+                subtopic: "Kamera Lubang Jarum",
+                kbat: false,
+                text: "Apakah ciri imej yang terbentuk pada skrin kamera lubang jarum?",
+                visualType: "pinhole-camera",
+                options: [
+                    "Tegak dan lebih besar",
+                    "Nyata, terbalik dan kecil",
+                    "Maya, tegak dan sama saiz",
+                    "Maya dan terbalik"
+                ],
+                answer: 1,
+                hint: "Cahaya dari atas objek bergerak lurus menembusi lubang jarum menuju ke bahagian bawah skrin.",
+                explanation: "Kamera lubang jarum mengaplikasikan prinsip cahaya bergerak lurus untuk menghasilkan imej nyata dan terbalik pada skrin."
+            },
+
+            // PERINGKAT 2: Makmal Warna Cahaya
+            {
+                id: 6,
+                stage: 2,
+                stageTitle: "Peringkat 2: Makmal Warna Cahaya",
+                subtopic: "Penambahan Warna Cahaya",
+                kbat: false,
+                text: "Antara berikut, yang manakah merupakan tiga warna primer bagi cahaya?",
+                visualType: "rgb-primary",
+                options: [
+                    "Merah, Kuning, Biru",
+                    "Merah, Hijau, Biru",
+                    "Cyan, Magenta, Kuning",
+                    "Merah, Oren, Ungu"
+                ],
+                answer: 1,
+                hint: "Warna primer cahaya berbeza dengan warna cat. Singkatannya ialah RGB (Red, Green, Blue).",
+                explanation: "Warna primer cahaya ialah Merah, Hijau dan Biru. Warna ini tidak boleh dihasilkan melalui campur warna lain."
+            },
+            {
+                id: 7,
+                stage: 2,
+                stageTitle: "Peringkat 2: Makmal Warna Cahaya",
+                subtopic: "Warna Sekunder Cahaya",
+                kbat: false,
+                text: "Apakah warna sekunder yang dihasilkan apabila cahaya Merah dan cahaya Hijau dicampurkan?",
+                visualType: "color-mix-1",
+                options: [
+                    "Magenta",
+                    "Sian (Cyan)",
+                    "Kuning",
+                    "Putih"
+                ],
+                answer: 2,
+                hint: "Gabungan warna Merah dan Hijau menghasilkan warna seperti buah pisang yang masak.",
+                explanation: "Penambahan cahaya Merah + Hijau menghasilkan warna sekunder KUNING."
+            },
+            {
+                id: 8,
+                stage: 2,
+                stageTitle: "Peringkat 2: Makmal Warna Cahaya",
+                subtopic: "Warna Sekunder Cahaya",
+                kbat: false,
+                text: "Apakah hasil pertambahan cahaya Hijau dan cahaya Biru?",
+                visualType: "color-mix-2",
+                options: [
+                    "Sian (Cyan)",
+                    "Magenta",
+                    "Kuning",
+                    "Hitam"
+                ],
+                answer: 0,
+                hint: "Warna ini merupakan warna biru muda berkilat seperti kebiruan air laut.",
+                explanation: "Penambahan cahaya Hijau + Biru menghasilkan warna sekunder SIAN (Cyan)."
+            },
+            {
+                id: 9,
+                stage: 2,
+                stageTitle: "Peringkat 2: Makmal Warna Cahaya",
+                subtopic: "Cahaya Putih",
+                kbat: false,
+                text: "Apakah warna cahaya yang terhasil apabila ketiga-tiga warna primer (Merah + Hijau + Biru) dicampurkan dengan keamatan sama?",
+                visualType: "color-mix-3",
+                options: [
+                    "Hitam",
+                    "Cahaya Putih",
+                    "Kelabu",
+                    "Ungu"
+                ],
+                answer: 1,
+                hint: "Prisma kaca menguraikan cahaya ini kepada spektrum 7 warna.",
+                explanation: "Gabungan ketiga-tiga warna primer cahaya Merah, Hijau dan Biru menghasilkan CAHAYA PUTIH."
+            },
+            {
+                id: 10,
+                stage: 2,
+                stageTitle: "Peringkat 2: Makmal Warna Cahaya",
+                subtopic: "Penolakan Warna Cahaya",
+                kbat: true,
+                text: "Jika cahaya putih ditayangkan melalui penapis warna Merah, apakah warna cahaya yang berjaya menembusinya?",
+                visualType: "filter-red",
+                options: [
+                    "Semua warna",
+                    "Hanya warna Merah",
+                    "Warna Hijau dan Biru",
+                    "Tiada cahaya melaluinya"
+                ],
+                answer: 1,
+                hint: "Penapis warna hanya membenarkan warna yang sama dengannya melaluinya dan menyerap warna lain.",
+                explanation: "Penapis merah hanya membenarkan warna Merah melaluinya manakala warna-warna lain diserap (penolakan warna)."
+            },
+
+            // PERINGKAT 3: Misi Pantulan Cahaya
+            {
+                id: 11,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Hukum Pantulan",
+                kbat: false,
+                text: "Menurut Hukum Pantulan Cahaya, bagaimanakah hubungan antara sudut tuju (i) dengan sudut pantulan (r)?",
+                visualType: "reflection-law",
+                options: [
+                    "Sudut tuju lebih besar daripada sudut pantulan (i > r)",
+                    "Sudut tuju adalah sama dengan sudut pantulan (i = r)",
+                    "Sudut tuju lebih kecil daripada sudut pantulan (i < r)",
+                    "Tiada hubungan tetap"
+                ],
+                answer: 1,
+                hint: "Jika sinar tuju berada pada sudut 30° dari garis normal, berapakah sudut pantulannya?",
+                explanation: "Hukum Pantulan menyatakan bahawa Sudut Tuju (i) sentiasa sama dengan Sudut Pantulan (r)."
+            },
+            {
+                id: 12,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Imej Cermin Satah",
+                kbat: false,
+                text: "Antara berikut, yang manakah BUKAN ciri imej yang dibentuk oleh cermin satah?",
+                visualType: "plane-mirror-props",
+                options: [
+                    "Tegak",
+                    "Songkok sisi (Lateral Inversion)",
+                    "Imej adalah Nyata",
+                    "Jarak objek sama dengan jarak imej"
+                ],
+                answer: 2,
+                hint: "Imej dalam cermin satah tidak boleh ditayangkan pada skrin.",
+                explanation: "Imej cermin satah adalah MAYA (tidak dapat ditangkap pada skrin), bukan nyata."
+            },
+            {
+                id: 13,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Jarak Objek & Jarak Imej",
+                kbat: true,
+                text: "Ali berdiri pada jarak 2 meter di hadapan sebuah cermin satah. Berapakah jarak di antara Ali dengan imejnya di dalam cermin?",
+                visualType: "distance-calc",
+                options: [
+                    "2 meter",
+                    "4 meter",
+                    "1 meter",
+                    "8 meter"
+                ],
+                answer: 1,
+                hint: "Jarak Objek ke cermin = 2m. Jarak Imej ke cermin = 2m. Hitung jarak keseluruhan dari Ali ke imejnya.",
+                explanation: "Jarak imej ke cermin = 2m. Maka jarak dari Ali ke imejnya ialah 2m + 2m = 4 meter."
+            },
+            {
+                id: 14,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Imej Sahih vs Imej Maya",
+                kbat: false,
+                text: "Apakah perbezaan utama antara Imej Sahih dengan Imej Maya?",
+                visualType: "real-vs-virtual",
+                options: [
+                    "Imej sahih sentiasa lebih besar",
+                    "Imej sahih boleh dibentuk pada skrin, manakala imej maya tidak boleh",
+                    "Imej maya sentiasa terbalik",
+                    "Imej sahih hanya dibentuk oleh cermin satah"
+                ],
+                answer: 1,
+                hint: "Fikirkan tentang wayang pacak atau skrin pawagam.",
+                explanation: "Imej Sahih boleh ditangkap/diberkaskan pada skrin, manakala Imej Maya tidak boleh ditangkap pada skrin."
+            },
+            {
+                id: 15,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Songkok Sisi",
+                kbat: false,
+                text: "Mengapakah perkataan 'AMBULANS' ditulis terbalik pada bahagian hadapan kenderaan ambulans?",
+                visualType: "ambulance-text",
+                options: [
+                    "Untuk tujuan perhiasan khas",
+                    "Supaya pemandu di hadapan dapat membaca tulisan itu dengan betul melalui cermin pandang belakang",
+                    "Supaya lampu siren kelihatan lebih terang",
+                    "Kerana kesilapan cetakan kilang"
+                ],
+                answer: 1,
+                hint: "Cermin satah menyebabkan fenomena 'Songkok Sisi' di mana kiri menjadi kanan.",
+                explanation: "Fenomena songkok sisi pada cermin pandang belakang pemandu akan membalikkan semula tulisan 'AMBULANS' supaya mudah dibaca."
+            },
+            {
+                id: 16,
+                stage: 3,
+                stageTitle: "Peringkat 3: Misi Pantulan Cahaya",
+                subtopic: "Sudut Normal",
+                kbat: false,
+                text: "Garis normal merupakan garis serenjang yang dilukis pada permukaan cermin. Berapakah sudut garis normal dengan permukaan cermin?",
+                visualType: "normal-line",
+                options: [
+                    "45°",
+                    "90°",
+                    "180°",
+                    "0°"
+                ],
+                answer: 1,
+                hint: "Garis serenjang bermaksud garis bersudut tegak.",
+                explanation: "Garis normal bersudut tegak 90° dengan permukaan cermin pantulan."
+            },
+
+            // PERINGKAT 4: Cabaran Optik (KBAT & Aplikasi Alat Optik)
+            {
+                id: 17,
+                stage: 4,
+                stageTitle: "Peringkat 4: Cabaran Optik",
+                subtopic: "Aplikasi Cermin Cembung",
+                kbat: true,
+                text: "Mengapakah cermin cembung dipasang di selekoh jalan raya yang berbahaya atau di kedai runcit?",
+                visualType: "convex-turn",
+                options: [
+                    "Untuk menjadikan objek kelihatan lebih dekat",
+                    "Untuk memberikan medan penglihatan yang lebih luas kepada pemandu",
+                    "Untuk membesarkan imej kenderaan kecil",
+                    "Untuk memantulkan haba matahari"
+                ],
+                answer: 1,
+                hint: "Cermin cembung melengkung ke luar dan meluaskan pemandangan kawasan terlindung.",
+                explanation: "Cermin cembung menghasilkan imej maya, tegak, dan dikecilkan, lalu memberikan medan penglihatan yang LEBIH LUAS."
+            },
+            {
+                id: 18,
+                stage: 4,
+                stageTitle: "Peringkat 4: Cabaran Optik",
+                subtopic: "Aplikasi Cermin Cekung",
+                kbat: true,
+                text: "Mengapakah doktor gigi menggunakan cermin cekung semasa memelihara atau memeriksa gigi pesakit?",
+                visualType: "dentist-mirror",
+                options: [
+                    "Untuk membesarkan imej gigi supaya kelihatan lebih jelas",
+                    "Untuk mengecilkan pandangan kaviti gigi",
+                    "Untuk membalikkan imej atas ke bawah",
+                    "Supaya cahaya tidak memantul ke mata"
+                ],
+                answer: 0,
+                hint: "Cermin cekung yang diletakkan dekat dengan objek akan menghasilkan imej maya, tegak dan dibesarkan.",
+                explanation: "Cermin cekung membesarkan imej gigi (apabila objek berada dekat) bagi memudahkan doktor melihat kerosakan gigi yang kecil."
+            },
+            {
+                id: 19,
+                stage: 4,
+                stageTitle: "Peringkat 4: Cabaran Optik",
+                subtopic: "Periskop",
+                kbat: true,
+                text: "Kapal selam menggunakan Periskop untuk melihat keadaan di permukaan air. Apakah komponen optik dalam periskop dan kedudukan sudutnya?",
+                visualType: "periscope-diagram",
+                options: [
+                    "Dua cermin satah bersudut 45°",
+                    "Satu cermin cembung bersudut 90°",
+                    "Dua cermin cekung bersudut 30°",
+                    "Kanta pembesar cembung"
+                ],
+                answer: 0,
+                hint: "Cahaya dipantulkan dua kali sebanyak 90° melalui dua cermin yang dipasang sejajar.",
+                explanation: "Periskop menggunakan dua cermin satah yang diletakkan pada sudut 45° untuk memantulkan cahaya ke mata pemerhati."
+            },
+            {
+                id: 20,
+                stage: 4,
+                stageTitle: "Peringkat 4: Cabaran Optik",
+                subtopic: "Gentian Optik (Optical Fibre)",
+                kbat: true,
+                text: "Mengapakah gentian optik digunakan secara meluas dalam kabel internet berkelajuan tinggi dan bidang perubatan (Endoskop)?",
+                visualType: "optical-fiber",
+                options: [
+                    "Ia menggunakan elektrik voltan tinggi",
+                    "Ia memindahkan isyarat cahaya dengan pantas melalui pantulan dalam penuh",
+                    "Ia diperbuat daripada besi tahan karat",
+                    "Ia menyerap semua bunyi bising"
+                ],
+                answer: 1,
+                hint: "Cahaya merambat di dalam tiub kaca halus secara pantulan dalam penuh tanpa banyak kehilangan tenaga.",
+                explanation: "Gentian optik menghantar data dalam bentuk isyarat cahaya sangat pantas melalui konsep Pantulan Dalam Penuh."
+            },
+            {
+                id: 21,
+                stage: 4,
+                stageTitle: "Peringkat 4: Cabaran Optik",
+                subtopic: "Pemantul Lampu Suluh",
+                kbat: true,
+                text: "Mengapakah bahagian dalam mangkuk lampu suluh atau lampu hadapan kereta menggunakan permukaan cermin cekung?",
+                visualType: "flashlight-reflector",
+                options: [
+                    "Untuk menyebarkan cahaya ke semua arah",
+                    "Untuk memfokuskan cahaya menjadi satu alur cahaya sejajar yang selari dan terang",
+                    "Untuk menjimatkan penggunaan bateri",
+                    "Untuk menukarkan cahaya putih kepada warna oren"
+                ],
+                answer: 1,
+                hint: "Mentol diletakkan pada titik fokus cermin cekung supaya cahaya dipantulkan selari ke hadapan.",
+                explanation: "Cermin cekung memantulkan sinar cahaya daripada mentol menjadi alur cahaya selari yang fokus dan memancar jauh."
+            },
+
+            // PERINGKAT 5: Selamatkan Kota Lumina (Gabungan Soalan Akhir)
+            {
+                id: 22,
+                stage: 5,
+                stageTitle: "Peringkat 5: Selamatkan Kota Lumina",
+                subtopic: "Ujian Sintesis Optik",
+                kbat: true,
+                text: "Sebuah baju berwarna Merah kelihatan di bawah cahaya hijau. Apakah warna baju tersebut yang dilihat oleh mata kita?",
+                visualType: "red-cloth-green-light",
+                options: [
+                    "Merah",
+                    "Hijau",
+                    "Hitam",
+                    "Kuning"
+                ],
+                answer: 2,
+                hint: "Baju merah hanya memantulkan cahaya merah. Jika tiada cahaya merah menyinarinya, tiada cahaya dipantulkan ke mata.",
+                explanation: "Baju merah menyerap cahaya hijau dan tiada cahaya dipantulkan ke mata, menyebabkan baju kelihatan HITAM."
+            },
+            {
+                id: 23,
+                stage: 5,
+                stageTitle: "Peringkat 5: Selamatkan Kota Lumina",
+                subtopic: "Alat Optik Perubatan",
+                kbat: true,
+                text: "Apakah alat optik yang membolehkan doktor melihat bahagian dalam organ badan pesakit seperti perut tanpa pembedahan besar?",
+                visualType: "endoscope-tool",
+                options: [
+                    "Periskop",
+                    "Endoskop",
+                    "Teleskop",
+                    "Mikroskop"
+                ],
+                answer: 1,
+                hint: "Alat ini mengandungi tiub gentian optik fleksibel yang dimasukkan ke dalam badan.",
+                explanation: "Endoskop menggunakan gentian optik untuk membawa cahaya dan imej dari dalam organ badan doktor."
+            },
+            {
+                id: 24,
+                stage: 5,
+                stageTitle: "Peringkat 5: Selamatkan Kota Lumina",
+                subtopic: "Pembiasan vs Pantulan",
+                kbat: false,
+                text: "Apakah fenomena yang berlaku apabila cahaya membengkok semasa merambat dari udara ke dalam blok kaca?",
+                visualType: "refraction-beam",
+                options: [
+                    "Pantulan cahaya",
+                    "Pembiasan cahaya",
+                    "Penolakan warna",
+                    "Penumpuan haba"
+                ],
+                answer: 1,
+                hint: "Ini berlaku kerana kelajuan cahaya berubah apabila bergerak antara medium yang berbeza ketumpatan.",
+                explanation: "Pembiasan cahaya ialah pembengkokan arah cahaya apabila bergerak melalui dua medium yang berbeza ketumpatan optik."
+            },
+            {
+                id: 25,
+                stage: 5,
+                stageTitle: "Peringkat 5: Selamatkan Kota Lumina",
+                subtopic: "Sistem Cahaya Pintar Lumina",
+                kbat: true,
+                text: "Untuk mengaktifkan semula Janakuasa Utama Kota Lumina, senaraikan 3 jenis cermin mengikut fungsinya yang betul:",
+                visualType: "mirrors-trio",
+                options: [
+                    "Cermin Satah (Imej sama saiz), Cermin Cekung (Membesar imej), Cermin Cembung (Pemandangan luas)",
+                    "Cermin Satah (Pemandangan luas), Cermin Cekung (Imej maya), Cermin Cembung (Membesar imej)",
+                    "Semua cermin mempunyai fungsi yang serupa",
+                    "Cermin Satah sahaja yang memantulkan cahaya"
+                ],
+                answer: 0,
+                hint: "Padankan aplikasi: cermin muka (satah), cermin doktor gigi (cekung), cermin selekoh (cembung).",
+                explanation: "Syabas! Cermin satah memantulkan imej saiz sama, cermin cekung membesarkan imej dekat, dan cermin cembung meluaskan medan penglihatan."
+            }
+        ];
+
+        class GameEngine {
+            constructor() {
+                this.currentStage = 1;
+                this.score = 0;
+                this.lives = 3;
+                this.energy = 0;
+                this.difficulty = 'mudah'; // mudah, sederhana, mencabar
+                this.questions = [];
+                this.currentIndex = 0;
+                this.selectedAnswer = null;
+                this.startTime = null;
+                this.endTime = null;
+
+                // Stats per subtopic for teacher analysis
+                this.stats = {
+                    totalAnswered: 0,
+                    correct: 0,
+                    wrong: 0,
+                    subtopics: {}
+                };
             }
 
-            try {
-                const parsed = JSON.parse(jsonText);
-                if (!parsed.projectId || !parsed.apiKey) {
-                    showToast("JSON mesti mempunyai 'apiKey' dan 'projectId'!", "rose");
+            init() {
+                this.showHome();
+                this.initBackgroundCanvas();
+            }
+
+            setDifficulty(diff) {
+                this.difficulty = diff;
+                document.querySelectorAll('.diff-btn').forEach(btn => {
+                    btn.classList.remove('bg-cyan-950/40', 'border-cyan-500/30', 'text-cyan-300');
+                    btn.classList.add('border-slate-700', 'text-slate-400');
+                });
+                const selected = document.getElementById(`diff-${diff}`);
+                if (selected) {
+                    selected.classList.remove('border-slate-700', 'text-slate-400');
+                    selected.classList.add('bg-cyan-950/40', 'border-cyan-500/30', 'text-cyan-300');
+                }
+            }
+
+            toggleSound() {
+                sounds.muted = !sounds.muted;
+                const icon = document.getElementById('soundIcon');
+                if (sounds.muted) {
+                    icon.className = 'fa-solid fa-volume-xmark text-red-400';
+                } else {
+                    icon.className = 'fa-solid fa-volume-high text-cyan-400';
+                    sounds.playLaser();
+                }
+            }
+
+            showHome() {
+                this.hideAllScreens();
+                document.getElementById('screen-home').classList.remove('hidden');
+            }
+
+            showInstructions() {
+                this.hideAllScreens();
+                document.getElementById('screen-instructions').classList.remove('hidden');
+            }
+
+            showTeacherPortal() {
+                this.hideAllScreens();
+                document.getElementById('screen-teacher').classList.remove('hidden');
+                this.renderTeacherPortal();
+            }
+
+            hideAllScreens() {
+                const screens = ['screen-home', 'screen-instructions', 'screen-gameplay', 'screen-results', 'screen-teacher'];
+                screens.forEach(id => document.getElementById(id).classList.add('hidden'));
+            }
+
+            startMission() {
+                sounds.playPowerUp();
+                this.currentStage = 1;
+                this.score = 0;
+                this.lives = this.difficulty === 'mencabar' ? 2 : 3;
+                this.energy = 0;
+                this.questions = [...QUESTION_BANK]; // Can be shuffled if desired
+                this.currentIndex = 0;
+                this.startTime = new Date();
+                
+                this.stats = {
+                    totalAnswered: 0,
+                    correct: 0,
+                    wrong: 0,
+                    subtopics: {}
+                };
+
+                this.hideAllScreens();
+                document.getElementById('screen-gameplay').classList.remove('hidden');
+                this.updateHUD();
+                this.loadQuestion();
+            }
+
+            updateHUD() {
+                document.getElementById('score-text').textContent = this.score;
+                document.getElementById('energy-text').textContent = `${Math.min(100, Math.round(this.energy))}%`;
+                document.getElementById('energy-bar').style.width = `${Math.min(100, Math.round(this.energy))}%`;
+
+                // Render Lives
+                let livesHtml = '';
+                for (let i = 0; i < (this.difficulty === 'mencabar' ? 2 : 3); i++) {
+                    if (i < this.lives) {
+                        livesHtml += `<i class="fa-solid fa-heart text-red-500 animate-pulse"></i>`;
+                    } else {
+                        livesHtml += `<i class="fa-regular fa-heart text-slate-600"></i>`;
+                    }
+                }
+                document.getElementById('lives-display').innerHTML = livesHtml;
+            }
+
+            loadQuestion() {
+                const q = this.questions[this.currentIndex];
+                if (!q) {
+                    this.finishGame();
                     return;
                 }
 
-                localStorage.setItem('bio_dojo_custom_firebase', JSON.stringify(parsed));
-                showToast("Kunci Firebase Disimpan! Memuat semula halaman...", "emerald");
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            } catch (err) {
-                showToast("Format JSON tidak sah! Sila semak semula kurungan dan tanda petik.", "rose");
-            }
-        };
+                this.selectedAnswer = null;
 
-        window.clearFirebaseConfigJSON = function() {
-            localStorage.removeItem('bio_dojo_custom_firebase');
-            showToast("Kunci tersuai dipadam. Memuat semula ke mod asal...", "amber");
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        };
-
-        function setupRealtimeListener() {
-            if (!db) {
-                renderAllViews();
-                return;
-            }
-
-            if (unsubscribeRealtime) unsubscribeRealtime();
-
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_app', 'main_state');
-
-            unsubscribeRealtime = onSnapshot(docRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    const cloudData = snapshot.data();
-                    if (cloudData && cloudData.state) {
-                        state = cloudData.state;
-                        renderAllViews();
-                        updateSyncStatus("Awan Masa Nyata", "emerald");
-                    }
+                // Update stage HUD
+                document.getElementById('stage-badge').textContent = `Peringkat ${q.stage}`;
+                document.getElementById('stage-title').textContent = q.stageTitle;
+                document.getElementById('question-num-tag').textContent = `Soalan ${this.currentIndex + 1} daripada ${this.questions.length}`;
+                
+                // KBAT badge
+                const kbatBadge = document.getElementById('kbat-badge');
+                if (q.kbat) {
+                    kbatBadge.classList.remove('hidden');
                 } else {
-                    saveStateToCloud();
+                    kbatBadge.classList.add('hidden');
                 }
-            }, (error) => {
-                console.error("Firestore sync error:", error);
-                updateSyncStatus("Lokal (Luar Talian)", "amber");
-                renderAllViews();
-            });
-        }
 
-        async function saveStateToCloud() {
-            localStorage.setItem('bio_dojo_local_state', JSON.stringify(state));
-            renderAllViews();
+                document.getElementById('subtopic-badge').textContent = `Subtopik: ${q.subtopic}`;
+                document.getElementById('question-text').textContent = q.text;
 
-            if (!db) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_app', 'main_state');
-                await setDoc(docRef, { state, lastUpdated: new Date().toISOString() });
-            } catch (err) {
-                console.error("Gagal simpan ke pangkalan data awan:", err);
-            }
-        }
+                // Progress bar
+                const progressPct = ((this.currentIndex) / this.questions.length) * 100;
+                document.getElementById('question-progress-bar').style.width = `${progressPct}%`;
 
-        function updateSyncStatus(text, colorClass) {
-            const statusBadge = document.getElementById('sync-status-badge');
-            const statusText = document.getElementById('sync-status-text');
-            if (statusBadge && statusText) {
-                statusText.innerText = text;
-                statusBadge.className = `bg-${colorClass}-500/20 text-${colorClass}-400 border border-${colorClass}-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1 cursor-pointer`;
-            }
-        }
+                // Reset hint & explanation boxes
+                document.getElementById('hint-box').classList.add('hidden');
+                document.getElementById('hint-text').textContent = q.hint;
+                document.getElementById('explanation-box').classList.add('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
 
-        // Belt Rank Definitions
-        function getBeltInfo(cops) {
-            if (cops >= 25) return { name: 'Bio-Dojo Legend', bg: 'bg-purple-600 text-white', icon: 'fa-crown', color: '#9333ea' };
-            if (cops >= 20) return { name: 'Black Belt (Master)', bg: 'bg-slate-900 text-white border border-slate-700', icon: 'fa-user-ninja', color: '#0f172a' };
-            if (cops >= 15) return { name: 'Brown Belt (Advance)', bg: 'bg-amber-900 text-amber-200', icon: 'fa-shield', color: '#78350f' };
-            if (cops >= 10) return { name: 'Blue Belt (Intermediate)', bg: 'bg-blue-600 text-white', icon: 'fa-feather', color: '#2563eb' };
-            if (cops >= 5) return { name: 'Green Belt (Adept)', bg: 'bg-emerald-600 text-white', icon: 'fa-leaf', color: '#059669' };
-            return { name: 'White Belt (Novice)', bg: 'bg-slate-700 text-slate-200', icon: 'fa-seedling', color: '#475569' };
-        }
+                // Render Interactive Visual Diagram
+                this.renderVisualBox(q);
 
-        window.showToast = function(msg, type = 'emerald') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `bg-slate-900 border border-${type}-500/50 text-${type}-300 px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center space-x-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-info text-sm"></i> <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        };
+                // Render Options
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
 
-        window.promptAdminLogin = function() {
-            if (isAdmin) {
-                isAdmin = false;
-                updateRoleUI();
-                showToast("Telah log keluar dari Mod Admin", "amber");
-            } else {
-                openModal('modal-admin-login');
-            }
-        };
-
-        window.handleAdminAuth = function(e) {
-            e.preventDefault();
-            const pinInput = document.getElementById('input-admin-pin').value;
-            if (pinInput === state.adminPin) {
-                isAdmin = true;
-                closeModal('modal-admin-login');
-                document.getElementById('input-admin-pin').value = '';
-                updateRoleUI();
-                showToast("Log Masuk Admin Berjaya!", "emerald");
-            } else {
-                showToast("PIN Admin Tidak Sah!", "rose");
-            }
-        };
-
-        function updateRoleUI() {
-            const roleBtn = document.getElementById('btn-role-toggle');
-            const roleIcon = document.getElementById('role-icon');
-            const roleLabel = document.getElementById('role-label');
-            const roleBannerText = document.getElementById('role-banner-text');
-            const roleBannerBtn = document.getElementById('role-banner-btn');
-            const roleBadgeIcon = document.getElementById('role-badge-icon');
-            const adminOnlyElements = document.querySelectorAll('.admin-only');
-
-            if (isAdmin) {
-                if (roleBtn) roleBtn.className = "p-2 sm:px-3 sm:py-2 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold";
-                if (roleIcon) roleIcon.className = "fa-solid fa-user-shield";
-                if (roleLabel) roleLabel.innerText = "Mod Admin (Aktif)";
-                if (roleBannerText) roleBannerText.innerHTML = `<b class="text-emerald-400">Mod Admin Aktif:</b> Anda mempunyai akses penuh untuk kemaskini kehadiran, bab harian, dan data murid.`;
-                if (roleBannerBtn) roleBannerBtn.innerText = "Log Keluar Admin";
-                if (roleBadgeIcon) roleBadgeIcon.className = "w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse";
-                adminOnlyElements.forEach(el => el.classList.remove('opacity-50', 'pointer-events-none'));
-            } else {
-                if (roleBtn) roleBtn.className = "p-2 sm:px-3 sm:py-2 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold";
-                if (roleIcon) roleIcon.className = "fa-solid fa-user";
-                if (roleLabel) roleLabel.innerText = "Mod Murid";
-                if (roleBannerText) roleBannerText.innerText = "Mod Paparan Live Murid: Semua peranti terhubung secara langsung. Sebarang kemaskini oleh guru akan berubah terus di sini!";
-                if (roleBannerBtn) roleBannerBtn.innerText = "Log Masuk Admin";
-                if (roleBadgeIcon) roleBadgeIcon.className = "w-3 h-3 rounded-full bg-blue-500 inline-block animate-pulse";
-                adminOnlyElements.forEach(el => el.classList.add('opacity-50', 'pointer-events-none'));
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn p-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-cyan-400 text-left text-sm md:text-base font-semibold transition-all duration-200 flex items-center space-x-3`;
+                    btn.onclick = () => this.selectAnswer(idx);
+                    
+                    const label = String.fromCharCode(65 + idx); // A, B, C, D
+                    btn.innerHTML = `
+                        <span class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-600 text-cyan-400 font-orbitron font-bold flex items-center justify-center text-xs shrink-0">
+                            ${label}
+                        </span>
+                        <span class="text-slate-200">${opt}</span>
+                    `;
+                    container.appendChild(btn);
+                });
             }
 
-            const stLabel = document.getElementById('active-student-label');
-            if (stLabel) {
-                const currentSt = state.students.find(s => s.id === currentStudentId);
-                stLabel.innerText = currentSt ? currentSt.name.split(' ')[0] : 'Pilih Akaun Saya';
-            }
-        }
+            renderVisualBox(q) {
+                const box = document.getElementById('interactive-visual-box');
+                box.innerHTML = ''; // reset
 
-        window.changeAdminPin = function() {
-            const newPin = document.getElementById('input-new-pin').value.trim();
-            if (newPin.length >= 4) {
-                state.adminPin = newPin;
-                saveStateToCloud();
-                showToast("PIN Admin berjaya ditukar!", "emerald");
-                document.getElementById('input-new-pin').value = '';
-            } else {
-                showToast("PIN mestilah sekurang-kurangnya 4 digit!", "rose");
-            }
-        };
-
-        function populateStudentDropdown() {
-            const dropdown = document.getElementById('select-active-student-dropdown');
-            if (!dropdown) return;
-            dropdown.innerHTML = state.students.map(s => `
-                <option value="${s.id}" ${s.id === currentStudentId ? 'selected' : ''}>${s.name} (${s.cops || 0} Cop)</option>
-            `).join('');
-        }
-
-        window.confirmStudentSelection = function() {
-            const dropdown = document.getElementById('select-active-student-dropdown');
-            if (!dropdown || !dropdown.value) return;
-            currentStudentId = dropdown.value;
-            localStorage.setItem('bio_dojo_my_id', currentStudentId);
-            closeModal('modal-select-student');
-            updateRoleUI();
-            openStudentPassport(currentStudentId);
-            showToast("Akaun murid dipilih!", "emerald");
-        };
-
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            const targetView = document.getElementById(`view-${tabId}`);
-            if (targetView) targetView.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-tab').forEach(el => {
-                el.className = 'nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800';
-            });
-
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if (activeBtn) activeBtn.className = 'nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all bg-emerald-600 text-white shadow-md';
-
-            if (tabId === 'analytics') renderCharts();
-        };
-
-        window.openModal = function(modalId) {
-            if (modalId === 'modal-select-student') populateStudentDropdown();
-            const modal = document.getElementById(modalId);
-            if (modal) modal.classList.remove('hidden');
-        };
-
-        window.closeModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) modal.classList.add('hidden');
-        };
-
-        function renderAllViews() {
-            renderDashboard();
-            renderLeaderboard();
-            renderAttendanceSessionOptions();
-            loadAttendanceMatrix();
-            populateBabDropdown();
-            renderDailyPlannerGrid();
-            renderSessionTable();
-            renderStudentCards();
-            updateRoleUI();
-        }
-
-        function renderDashboard() {
-            const totalCops = state.students.reduce((acc, s) => acc + (s.cops || 0), 0);
-            const totalMinutes = state.students.reduce((acc, s) => acc + (s.minutes || (s.cops * 4)), 0);
-            const legendCount = state.students.filter(s => s.cops >= 25).length;
-            const avgMinutes = state.students.length ? Math.round(totalMinutes / state.students.length) : 0;
-
-            document.getElementById('stat-total-cops').innerText = totalCops;
-            document.getElementById('stat-total-minutes').innerText = `${totalMinutes} min`;
-            document.getElementById('stat-attendance-rate').innerText = `${state.students.length} Murid`;
-            document.getElementById('stat-legend-count').innerText = legendCount;
-            document.getElementById('avg-minutes-text').innerText = `${avgMinutes} / 100 Min`;
-
-            const pctBar = Math.min(100, Math.round((avgMinutes / 100) * 100));
-            document.getElementById('avg-minutes-bar').style.width = `${pctBar}%`;
-
-            const sortedStudents = [...state.students].sort((a, b) => b.cops - a.cops || b.minutes - a.minutes);
-
-            [0, 1, 2].forEach(idx => {
-                const pNum = idx + 1;
-                const student = sortedStudents[idx];
-                const nameEl = document.getElementById(`podium-${pNum}-name`);
-                const copsEl = document.getElementById(`podium-${pNum}-cops`);
-                const beltEl = document.getElementById(`podium-${pNum}-belt`);
-
-                if (student) {
-                    nameEl.innerText = student.name;
-                    copsEl.innerText = `${student.cops} Cop (${student.minutes || student.cops * 4} Min)`;
-                    const belt = getBeltInfo(student.cops);
-                    beltEl.innerHTML = `<span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
+                // Generates dynamic KSSM SVG Optic illustrations
+                if (q.visualType.includes('color') || q.visualType.includes('rgb')) {
+                    box.innerHTML = `
+                        <div class="flex items-center justify-center space-x-4">
+                            <div class="w-16 h-16 rounded-full bg-red-600 border-2 border-white shadow-lg shadow-red-500/50 flex items-center justify-center text-[10px] font-bold">MERAH</div>
+                            <i class="fa-solid fa-plus text-slate-500"></i>
+                            <div class="w-16 h-16 rounded-full bg-green-600 border-2 border-white shadow-lg shadow-green-500/50 flex items-center justify-center text-[10px] font-bold">HIJAU</div>
+                            <i class="fa-solid fa-plus text-slate-500"></i>
+                            <div class="w-16 h-16 rounded-full bg-blue-600 border-2 border-white shadow-lg shadow-blue-500/50 flex items-center justify-center text-[10px] font-bold">BIRU</div>
+                        </div>
+                    `;
+                } else if (q.visualType.includes('reflection') || q.visualType.includes('distance')) {
+                    box.innerHTML = `
+                        <svg class="w-full h-28" viewBox="0 0 300 100">
+                            <!-- Mirror surface -->
+                            <line x1="50" y1="80" x2="250" y2="80" stroke="#00f0ff" stroke-width="4"/>
+                            <line x1="150" y1="20" x2="150" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+                            <!-- Incident Ray -->
+                            <line x1="80" y1="20" x2="150" y2="80" stroke="#ff7b00" stroke-width="3"/>
+                            <!-- Reflected Ray -->
+                            <line x1="150" y1="80" x2="220" y2="20" stroke="#ffd000" stroke-width="3"/>
+                            <text x="100" y="40" fill="#ff7b00" font-size="10" font-weight="bold">i (Tuju)</text>
+                            <text x="180" y="40" fill="#ffd000" font-size="10" font-weight="bold">r (Pantulan)</text>
+                            <text x="155" y="35" fill="#94a3b8" font-size="9">Normal</text>
+                        </svg>
+                    `;
+                } else if (q.visualType.includes('convex') || q.visualType.includes('dentist')) {
+                    box.innerHTML = `
+                        <div class="flex items-center space-x-3 text-cyan-300">
+                            <i class="fa-solid fa-eye text-3xl text-orange-400 animate-pulse"></i>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <div class="p-3 bg-slate-900 border border-cyan-400/40 rounded-xl text-center">
+                                <span class="font-orbitron font-bold text-xs block text-cyan-300">CERMIN OPTIK</span>
+                                <span class="text-[10px] text-slate-400">Aplikasi Kehidupan Sebenar</span>
+                            </div>
+                        </div>
+                    `;
                 } else {
-                    nameEl.innerText = 'Belum Ada Murid';
-                    copsEl.innerText = '0 Cop';
-                    beltEl.innerHTML = '';
+                    box.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <i class="fa-solid fa-lightbulb text-4xl text-yellow-400 animate-pulse"></i>
+                            <div class="h-0.5 w-24 bg-gradient-to-r from-yellow-400 via-orange-400 to-cyan-400"></div>
+                            <i class="fa-solid fa-bullseye text-3xl text-cyan-400"></i>
+                        </div>
+                    `;
                 }
-            });
-
-            const activeSession = state.sessions.find(s => s.id === state.activeSessionId) || state.sessions[0];
-            const activeBanner = document.getElementById('active-session-banner');
-            if (activeSession && activeBanner) {
-                activeBanner.innerHTML = `
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div>
-                            <span class="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">SESI AKTIF HARI INI</span>
-                            <h3 class="text-lg font-bold text-white mt-1">${activeSession.title} - Tingkatan ${activeSession.level}</h3>
-                            <p class="text-xs text-slate-300 mt-0.5"><i class="fa-solid fa-book text-emerald-400 mr-1"></i> ${activeSession.bab}</p>
-                        </div>
-                        <div class="flex items-center space-x-2 text-xs">
-                            <span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 font-semibold"><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i> ${activeSession.flashcard}</span>
-                            <span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 font-semibold"><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> ${activeSession.activity}</span>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        window.renderLeaderboard = function() {
-            const query = (document.getElementById('search-leaderboard')?.value || '').toLowerCase();
-            const body = document.getElementById('leaderboard-table-body');
-            if (!body) return;
-
-            const sorted = [...state.students]
-                .filter(s => s.name.toLowerCase().includes(query))
-                .sort((a, b) => b.cops - a.cops);
-
-            if (sorted.length === 0) {
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="p-8 text-center text-slate-500 text-xs">
-                            <i class="fa-solid fa-users text-2xl mb-2 block text-slate-600"></i>
-                            Tiada rekod murid. Sila klik <b class="text-emerald-400 font-semibold">Import Murid</b> atau <b class="text-emerald-400 font-semibold">Tambah Murid Baru</b> untuk memasukkan senarai murid anda.
-                        </td>
-                    </tr>
-                `;
-                return;
             }
 
-            body.innerHTML = sorted.map((student, idx) => {
-                const belt = getBeltInfo(student.cops);
-                const isMyAcc = student.id === currentStudentId;
-                return `
-                    <tr class="${isMyAcc ? 'bg-blue-950/40 border-l-2 border-blue-500' : 'hover:bg-slate-800/50'} transition">
-                        <td class="p-3 text-center font-bold ${idx < 3 ? 'text-amber-400 text-sm' : 'text-slate-400'}">#${idx + 1}</td>
-                        <td class="p-3 font-semibold text-white flex items-center space-x-2">
-                            <span>${student.name}</span>
-                            ${isMyAcc ? '<span class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full border border-blue-500/30">Saya</span>' : ''}
-                        </td>
-                        <td class="p-3 text-center"><span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span></td>
-                        <td class="p-3 text-center font-bold text-emerald-400">${student.cops} Cop</td>
-                        <td class="p-3 text-center text-amber-400 font-bold">${student.minutes || student.cops * 4} Min</td>
-                        <td class="p-3 text-center font-semibold text-blue-400">100%</td>
-                        <td class="p-3 text-right">
-                            <button onclick="openStudentPassport('${student.id}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-slate-700">
-                                <i class="fa-solid fa-id-card mr-1"></i> Passport
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        };
-
-        function renderAttendanceSessionOptions() {
-            const select = document.getElementById('select-attendance-session');
-            if (!select) return;
-            select.innerHTML = state.sessions.map(s => `<option value="${s.id}" ${s.id === state.activeSessionId ? 'selected' : ''}>${s.title} - T${s.level}: ${s.bab}</option>`).join('');
-        }
-
-        window.loadAttendanceMatrix = function() {
-            const select = document.getElementById('select-attendance-session');
-            if (!select) return;
-            state.activeSessionId = select.value;
-
-            const activeSession = state.sessions.find(s => s.id === state.activeSessionId);
-            const badgeEl = document.getElementById('session-info-badge');
-            if (activeSession && badgeEl) {
-                badgeEl.innerHTML = `
-                    <span class="text-slate-400 font-bold">Aktiviti 20 Minit:</span> <span class="text-amber-400 font-semibold">${activeSession.activity}</span> | 
-                    <span class="text-slate-400 font-bold">Flashcard:</span> <span class="text-purple-400 font-semibold">${activeSession.flashcard}</span>
-                `;
+            toggleHint() {
+                const hintBox = document.getElementById('hint-box');
+                hintBox.classList.toggle('hidden');
+                sounds.playLaser();
             }
 
-            const body = document.getElementById('attendance-matrix-body');
-            if (!body) return;
+            selectAnswer(index) {
+                if (this.selectedAnswer !== null) return; // Answered already
+                
+                this.selectedAnswer = index;
+                const q = this.questions[this.currentIndex];
+                const buttons = document.querySelectorAll('.option-btn');
+                
+                this.stats.totalAnswered++;
+                if (!this.stats.subtopics[q.subtopic]) {
+                    this.stats.subtopics[q.subtopic] = { total: 0, correct: 0 };
+                }
+                this.stats.subtopics[q.subtopic].total++;
 
-            const currentSessionRecord = state.attendance[state.activeSessionId] || {};
+                const isCorrect = (index === q.answer);
 
-            body.innerHTML = state.students.map((student, idx) => {
-                const rec = currentSessionRecord[student.id] || { status: 'A', badges: [] };
-                const belt = getBeltInfo(student.cops);
-                const isSessionCop = rec.status === '✓' ? 1 + rec.badges.length : 0;
+                if (isCorrect) {
+                    sounds.playCorrect();
+                    buttons[index].classList.remove('bg-slate-900/90', 'border-slate-700');
+                    buttons[index].classList.add('bg-green-950/80', 'border-green-500', 'text-green-200');
+                    
+                    this.score += 10;
+                    this.energy += (100 / this.questions.length);
+                    this.stats.correct++;
+                    this.stats.subtopics[q.subtopic].correct++;
 
-                return `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="p-3 text-center text-slate-500 font-bold">${idx + 1}</td>
-                        <td class="p-3 font-semibold text-white">${student.name}</td>
-                        <td class="p-3 text-center">
-                            <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800">
-                                <button onclick="setStudentAttendanceStatus('${student.id}', '✓')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === '✓' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500 hover:text-white'}">✓</button>
-                                <button onclick="setStudentAttendanceStatus('${student.id}', 'P')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === 'P' ? 'bg-amber-600 text-white shadow' : 'text-slate-500 hover:text-white'}">P</button>
-                                <button onclick="setStudentAttendanceStatus('${student.id}', 'A')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === 'A' ? 'bg-rose-600 text-white shadow' : 'text-slate-500 hover:text-white'}">A</button>
-                            </div>
-                        </td>
-                        <td class="p-3 text-center">
-                            <div class="flex justify-center space-x-1">
-                                <button onclick="toggleSessionBadge('${student.id}', '⭐')" title="Perfect Recall" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('⭐') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">⭐</button>
-                                <button onclick="toggleSessionBadge('${student.id}', '👑')" title="Champion" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('👑') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">👑</button>
-                                <button onclick="toggleSessionBadge('${student.id}', '🧠')" title="Terangkan Konsep" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('🧠') ? 'bg-blue-500/20 border-blue-500 text-blue-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">🧠</button>
-                            </div>
-                        </td>
-                        <td class="p-3 text-center font-bold ${isSessionCop > 0 ? 'text-emerald-400' : 'text-slate-500'}">+${isSessionCop} Cop</td>
-                        <td class="p-3 text-center font-bold text-emerald-400">${student.cops}</td>
-                        <td class="p-3 text-center text-amber-400 font-bold">${student.minutes || student.cops * 4} Min</td>
-                        <td class="p-3 text-center"><span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span></td>
-                    </tr>
-                `;
-            }).join('');
-        };
+                    this.showExplanation(true, q.explanation);
+                } else {
+                    sounds.playWrong();
+                    buttons[index].classList.remove('bg-slate-900/90', 'border-slate-700');
+                    buttons[index].classList.add('bg-red-950/80', 'border-red-500', 'text-red-200');
+                    
+                    // Highlight correct answer
+                    buttons[q.answer].classList.remove('bg-slate-900/90', 'border-slate-700');
+                    buttons[q.answer].classList.add('bg-green-950/80', 'border-green-500');
 
-        window.setStudentAttendanceStatus = function(studentId, status) {
-            if (!isAdmin) {
-                showToast("Sila log masuk Admin untuk mengemaskini kehadiran!", "amber");
-                return;
-            }
-            if (!state.attendance[state.activeSessionId]) {
-                state.attendance[state.activeSessionId] = {};
-            }
-            if (!state.attendance[state.activeSessionId][studentId]) {
-                state.attendance[state.activeSessionId][studentId] = { status: 'A', badges: [] };
-            }
-            state.attendance[state.activeSessionId][studentId].status = status;
-            recalculateStudentCops();
-            saveStateToCloud();
-        };
+                    this.lives--;
+                    this.stats.wrong++;
 
-        window.toggleSessionBadge = function(studentId, badge) {
-            if (!isAdmin) {
-                showToast("Sila log masuk Admin untuk mengemaskini lencana!", "amber");
-                return;
-            }
-            if (!state.attendance[state.activeSessionId]) {
-                state.attendance[state.activeSessionId] = {};
-            }
-            if (!state.attendance[state.activeSessionId][studentId]) {
-                state.attendance[state.activeSessionId][studentId] = { status: '✓', badges: [] };
-            }
-            const currentBadges = state.attendance[state.activeSessionId][studentId].badges;
-            const idx = currentBadges.indexOf(badge);
-            if (idx > -1) {
-                currentBadges.splice(idx, 1);
-            } else {
-                currentBadges.push(badge);
-            }
-            recalculateStudentCops();
-            saveStateToCloud();
-        };
+                    this.showExplanation(false, q.explanation);
+                }
 
-        function recalculateStudentCops() {
-            state.students.forEach(student => {
-                let copCount = 0;
-                let badgeSet = new Set();
+                this.updateHUD();
 
-                Object.keys(state.attendance).forEach(sesId => {
-                    const rec = state.attendance[sesId][student.id];
-                    if (rec) {
-                        if (rec.status === '✓') {
-                            copCount += 1;
-                        }
-                        if (rec.badges && rec.badges.length) {
-                            copCount += rec.badges.length;
-                            rec.badges.forEach(b => badgeSet.add(b));
-                        }
-                    }
+                if (this.lives <= 0) {
+                    setTimeout(() => {
+                        this.finishGame(false);
+                    }, 1800);
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                }
+            }
+
+            showExplanation(isCorrect, text) {
+                const expBox = document.getElementById('explanation-box');
+                const status = document.getElementById('explanation-status');
+                const expText = document.getElementById('explanation-text');
+
+                expBox.classList.remove('hidden', 'bg-green-950/40', 'border-green-500/50', 'bg-red-950/40', 'border-red-500/50');
+
+                if (isCorrect) {
+                    expBox.classList.add('bg-green-950/40', 'border-green-500/50');
+                    status.className = "font-extrabold text-sm mb-1 text-green-400 flex items-center gap-2";
+                    status.innerHTML = `<i class="fa-solid fa-circle-check"></i> TEPAT & SYABAS! (+10 Tenaga Cahaya)`;
+                } else {
+                    expBox.classList.add('bg-red-950/40', 'border-red-500/50');
+                    status.className = "font-extrabold text-sm mb-1 text-red-400 flex items-center gap-2";
+                    status.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> JAWAPAN KURANG TEPAT (-1 Nyawa)`;
+                }
+
+                expText.textContent = text;
+            }
+
+            nextQuestion() {
+                sounds.playLaser();
+                this.currentIndex++;
+                this.loadQuestion();
+            }
+
+            finishGame(success = true) {
+                this.endTime = new Date();
+                this.hideAllScreens();
+                document.getElementById('screen-results').classList.remove('hidden');
+
+                const totalTimeSec = Math.round((this.endTime - this.startTime) / 1000);
+                const mins = Math.floor(totalTimeSec / 60);
+                const secs = totalTimeSec % 60;
+
+                const accuracy = this.stats.totalAnswered > 0 ? Math.round((this.stats.correct / this.stats.totalAnswered) * 100) : 0;
+
+                document.getElementById('res-score').textContent = this.score;
+                document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+                document.getElementById('res-correct-wrong').textContent = `${this.stats.correct} / ${this.stats.wrong}`;
+                document.getElementById('res-time').textContent = `${mins}m ${secs}s`;
+
+                // Title & Badge Determination
+                let badgeTitle = "Pelatih Cahaya";
+                let badgeIconClass = "fa-solid fa-seedling text-slate-400";
+
+                if (this.score >= 100) {
+                    badgeTitle = "Wira Kota Lumina";
+                    badgeIconClass = "fa-solid fa-crown text-yellow-400";
+                    sounds.playPowerUp();
+                } else if (this.score >= 80) {
+                    badgeTitle = "Pakar Lumina";
+                    badgeIconClass = "fa-solid fa-award text-purple-400";
+                } else if (this.score >= 50) {
+                    badgeTitle = "Juruteknik Optik";
+                    badgeIconClass = "fa-solid fa-bolt text-cyan-400";
+                }
+
+                document.getElementById('result-badge-name').textContent = `Gelaran: ${badgeTitle}`;
+                document.getElementById('badge-icon').className = `${badgeIconClass} text-5xl`;
+
+                if (!success) {
+                    document.getElementById('result-title').textContent = "MISI TERHENTI - JANAKUASA KEHABISAN TENAGA!";
+                } else {
+                    document.getElementById('result-title').textContent = "KOTA LUMINA KEMBALI BERCAHAYA!";
+                }
+
+                // Subtopic analysis list
+                const analysisContainer = document.getElementById('subtopic-analysis-list');
+                analysisContainer.innerHTML = '';
+
+                Object.keys(this.stats.subtopics).forEach(sub => {
+                    const item = this.stats.subtopics[sub];
+                    const pct = Math.round((item.correct / item.total) * 100);
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center text-xs border-b border-slate-800/60 pb-1";
+                    
+                    let statusColor = "text-green-400";
+                    if (pct < 60) statusColor = "text-red-400 font-bold";
+
+                    div.innerHTML = `
+                        <span class="text-slate-300">• ${sub}</span>
+                        <span class="${statusColor}">${item.correct}/${item.total} (${pct}%)</span>
+                    `;
+                    analysisContainer.appendChild(div);
                 });
 
-                student.cops = copCount;
-                student.minutes = copCount * 4;
-                student.badges = Array.from(badgeSet);
-            });
-        }
-
-        window.markAllPresent = function() {
-            if (!isAdmin) return;
-            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
-            state.students.forEach(s => {
-                if (!state.attendance[state.activeSessionId][s.id]) {
-                    state.attendance[state.activeSessionId][s.id] = { status: '✓', badges: [] };
-                } else {
-                    state.attendance[state.activeSessionId][s.id].status = '✓';
-                }
-            });
-            recalculateStudentCops();
-            saveStateToCloud();
-            showToast("Semua murid ditandakan HADIR (✓)", "emerald");
-        };
-
-        window.markAllAbsent = function() {
-            if (!isAdmin) return;
-            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
-            state.students.forEach(s => {
-                state.attendance[state.activeSessionId][s.id] = { status: 'A', badges: [] };
-            });
-            recalculateStudentCops();
-            saveStateToCloud();
-            showToast("Semua murid ditandakan PONTENG (A)", "rose");
-        };
-
-        window.resetCurrentSessionAttendance = function() {
-            if (!isAdmin) return;
-            delete state.attendance[state.activeSessionId];
-            recalculateStudentCops();
-            saveStateToCloud();
-            showToast("Rekod sesi ini direset!", "amber");
-        };
-
-        window.saveAttendanceData = function() {
-            if (!isAdmin) return;
-            saveStateToCloud();
-            showToast("Rekod Kehadiran Berjaya Disimpan!", "emerald");
-        };
-
-        window.populateBabDropdown = function() {
-            const level = document.getElementById('session-form-level')?.value || '4';
-            const select = document.getElementById('session-bab-input');
-            if (!select) return;
-
-            const babList = level === '4' ? DEFAULT_BAB_T4 : DEFAULT_BAB_T5;
-            select.innerHTML = babList.map(b => `<option value="${b}">${b}</option>`).join('');
-        };
-
-        window.renderDailyPlannerGrid = function() {
-            const grid = document.getElementById('daily-planner-grid');
-            if (!grid) return;
-
-            const filterLevel = document.getElementById('filter-planner-form')?.value || 'ALL';
-            const query = (document.getElementById('search-planner-bab')?.value || '').toLowerCase();
-
-            const filteredSessions = state.sessions.filter(s => {
-                const matchLevel = filterLevel === 'ALL' || s.level === filterLevel;
-                const matchQuery = s.bab.toLowerCase().includes(query) || s.title.toLowerCase().includes(query);
-                return matchLevel && matchQuery;
-            });
-
-            document.getElementById('planner-total-count').innerText = `${filteredSessions.length} Hari`;
-
-            if (filteredSessions.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 text-xs">Tiada sesi bab dijumpai.</div>`;
-                return;
+                // Populate certificate content
+                document.getElementById('cert-badge').textContent = badgeTitle.toUpperCase();
+                document.getElementById('cert-score').textContent = this.score;
+                document.getElementById('cert-date').textContent = new Date().toLocaleDateString('ms-MY');
             }
 
-            grid.innerHTML = filteredSessions.map(s => `
-                <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition group shadow-md">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">${s.title}</span>
-                            <span class="text-[10px] font-extrabold ${s.level === '4' ? 'text-emerald-400' : 'text-blue-400'} bg-slate-900 px-2 py-0.5 rounded-full">Tingkatan ${s.level}</span>
+            toggleCertificateModal() {
+                const cert = document.getElementById('printable-certificate');
+                cert.classList.toggle('hidden');
+            }
+
+            renderTeacherPortal() {
+                const container = document.getElementById('teacher-question-list');
+                container.innerHTML = '';
+
+                QUESTION_BANK.forEach((q, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "p-4 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs leading-relaxed space-y-2";
+                    
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center font-bold">
+                            <span class="text-cyan-400">Soalan ${idx + 1} (${q.stageTitle})</span>
+                            <span class="text-amber-400">Subtopik: ${q.subtopic} ${q.kbat ? '[KBAT]' : ''}</span>
                         </div>
-                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-1 mb-2 group-hover:text-emerald-400 transition">${s.bab}</h4>
-                        <div class="space-y-1 text-[11px] text-slate-400">
-                            <p><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i> ${s.flashcard}</p>
-                            <p><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> ${s.activity}</p>
+                        <p class="text-slate-200 font-semibold">${q.text}</p>
+                        <div class="text-green-400 font-bold bg-green-950/40 p-2 rounded-xl border border-green-500/30">
+                            Jawapan Betul: ${q.options[q.answer]}
                         </div>
-                    </div>
-                    <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] text-slate-500 truncate max-w-[120px]">${s.notes || 'Tiada nota'}</span>
-                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 hover:underline text-xs font-bold">Edit</button>
-                    </div>
-                </div>
-            `).join('');
-        };
-
-        window.renderSessionTable = function() {
-            const body = document.getElementById('session-list-body');
-            if (!body) return;
-
-            document.getElementById('session-count-tag').innerText = `${state.sessions.length} Sesi`;
-
-            body.innerHTML = state.sessions.map(s => `
-                <tr class="hover:bg-slate-800/50 transition">
-                    <td class="p-3 font-semibold text-amber-400">${s.title} <span class="text-[10px] text-slate-400 block">Tingkatan ${s.level}</span></td>
-                    <td class="p-3 font-medium text-white max-w-xs truncate">${s.bab}</td>
-                    <td class="p-3 text-purple-300 font-semibold">${s.flashcard}</td>
-                    <td class="p-3 text-emerald-300 font-semibold">${s.activity}</td>
-                    <td class="p-3 text-right">
-                        <button onclick="editSession('${s.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-1 rounded-lg text-xs font-semibold mr-1 border border-slate-700">Edit</button>
-                        <button onclick="deleteSession('${s.id}')" class="admin-only bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 px-2 py-1 rounded-lg text-xs font-semibold border border-rose-500/30">Padam</button>
-                    </td>
-                </tr>
-            `).join('');
-        };
-
-        window.handleSaveSession = function(e) {
-            e.preventDefault();
-            if (!isAdmin) return;
-
-            const id = document.getElementById('session-id-input').value;
-            const title = document.getElementById('session-title-input').value.trim();
-            const level = document.getElementById('session-form-level').value;
-            const bab = document.getElementById('session-bab-input').value;
-            const flashcard = document.getElementById('session-flashcard-input').value.trim() || 'Set 1';
-            const activity = document.getElementById('session-activity-input').value;
-            const notes = document.getElementById('session-notes-input').value.trim();
-
-            if (id) {
-                const idx = state.sessions.findIndex(s => s.id === id);
-                if (idx > -1) {
-                    state.sessions[idx] = { id, title, level, bab, flashcard, activity, notes };
-                }
-            } else {
-                const newId = `ses-${Date.now()}`;
-                state.sessions.push({ id: newId, title, level, bab, flashcard, activity, notes });
+                        <p class="text-slate-400 italic">Penerangan Sains: ${q.explanation}</p>
+                    `;
+                    container.appendChild(div);
+                });
             }
 
-            resetSessionForm();
-            saveStateToCloud();
-            showToast("Jadual bab harian berjaya disimpan!", "emerald");
-        };
+            initBackgroundCanvas() {
+                const canvas = document.getElementById('bgCanvas');
+                const ctx = canvas.getContext('2d');
 
-        window.editSession = function(id) {
-            const s = state.sessions.find(item => item.id === id);
-            if (!s) return;
+                let width = canvas.width = window.innerWidth;
+                let height = canvas.height = window.innerHeight;
 
-            document.getElementById('session-id-input').value = s.id;
-            document.getElementById('session-title-input').value = s.title;
-            document.getElementById('session-form-level').value = s.level;
-            populateBabDropdown();
-            document.getElementById('session-bab-input').value = s.bab;
-            document.getElementById('session-flashcard-input').value = s.flashcard;
-            document.getElementById('session-activity-input').value = s.activity;
-            document.getElementById('session-notes-input').value = s.notes || '';
+                window.addEventListener('resize', () => {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                });
 
-            document.getElementById('session-form-title').innerText = "Kemaskini Sesi Harian";
-            switchTab('sessions');
-        };
-
-        window.deleteSession = function(id) {
-            if (!isAdmin) return;
-            state.sessions = state.sessions.filter(s => s.id !== id);
-            saveStateToCloud();
-            showToast("Sesi dipadam!", "amber");
-        };
-
-        window.resetSessionForm = function() {
-            document.getElementById('session-id-input').value = '';
-            document.getElementById('session-title-input').value = '';
-            document.getElementById('session-notes-input').value = '';
-            document.getElementById('session-form-title').innerText = "Tambah / Kemaskini Sesi";
-        };
-
-        window.renderStudentCards = function() {
-            const grid = document.getElementById('student-cards-grid');
-            if (!grid) return;
-
-            if (state.students.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500 text-xs">Tiada rekod murid.</div>`;
-                return;
-            }
-
-            grid.innerHTML = state.students.map(s => {
-                const belt = getBeltInfo(s.cops);
-                const isMyAcc = s.id === currentStudentId;
-                return `
-                    <div class="bg-slate-950 border ${isMyAcc ? 'border-blue-500/80 shadow-blue-500/10' : 'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden">
-                        ${isMyAcc ? '<span class="absolute top-2 right-2 bg-blue-500 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full">SAYA</span>' : ''}
-                        <div>
-                            <div class="flex items-center space-x-3 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center font-bold text-slate-300">
-                                    <i class="fa-solid fa-user-ninja"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white line-clamp-1">${s.name}</h4>
-                                    <span class="belt-badge ${belt.bg} text-[10px] mt-0.5"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 text-center text-xs py-2 bg-slate-900/60 rounded-xl border border-slate-800">
-                                <div>
-                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
-                                    <span class="font-bold text-emerald-400 text-base">${s.cops || 0}</span>
-                                </div>
-                                <div>
-                                    <span class="text-[10px] text-slate-400 block">Jumlah Minit</span>
-                                    <span class="font-bold text-amber-400 text-base">${s.minutes || (s.cops * 4)} Min</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center">
-                            <span class="text-xs text-slate-400 font-semibold">${(s.badges || []).join(' ')}</span>
-                            <button onclick="openStudentPassport('${s.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow">
-                                Lihat Passport
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        };
-
-        let activePassportStudentId = null;
-
-        window.openStudentPassport = function(studentId) {
-            activePassportStudentId = studentId;
-            const s = state.students.find(item => item.id === studentId);
-            if (!s) return;
-
-            document.getElementById('passport-modal-name').innerText = s.name;
-            const belt = getBeltInfo(s.cops);
-            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
-            document.getElementById('passport-modal-cops').innerText = s.cops || 0;
-            document.getElementById('passport-modal-cops-badge').innerText = `${s.cops || 0} Cop`;
-            document.getElementById('passport-modal-minutes').innerText = `${s.minutes || (s.cops * 4)} Min`;
-
-            const badgesContainer = document.getElementById('passport-modal-badges');
-            if (s.badges && s.badges.length) {
-                badgesContainer.innerHTML = s.badges.map(b => `<span class="bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-white font-bold">${b} Badge</span>`).join('');
-            } else {
-                badgesContainer.innerHTML = `<span class="text-slate-500 text-xs">Belum ada lencana bonus</span>`;
-            }
-
-            openModal('modal-passport');
-        };
-
-        window.openStudentPassportFromPodium = function(index) {
-            const sorted = [...state.students].sort((a, b) => b.cops - a.cops);
-            if (sorted[index]) {
-                openStudentPassport(sorted[index].id);
-            }
-        };
-
-        window.adjustStudentCop = function(delta) {
-            if (!isAdmin || !activePassportStudentId) return;
-            const s = state.students.find(item => item.id === activePassportStudentId);
-            if (s) {
-                s.cops = Math.max(0, (s.cops || 0) + delta);
-                s.minutes = s.cops * 4;
-                saveStateToCloud();
-                openStudentPassport(activePassportStudentId);
-            }
-        };
-
-        window.deleteCurrentStudentFromPassport = function() {
-            if (!isAdmin || !activePassportStudentId) return;
-            state.students = state.students.filter(s => s.id !== activePassportStudentId);
-            saveStateToCloud();
-            closeModal('modal-passport');
-            showToast("Murid dipadam!", "rose");
-        };
-
-        window.openBulkImportModal = function() {
-            if (!isAdmin) {
-                promptAdminLogin();
-                return;
-            }
-            openModal('modal-bulk-import');
-        };
-
-        window.handleExecuteBulkImport = function(e) {
-            e.preventDefault();
-            if (!isAdmin) return;
-
-            const text = document.getElementById('bulk-names-textarea').value.trim();
-            if (!text) return;
-
-            const names = text.split('\n').map(n => n.trim()).filter(n => n.length > 0);
-            let addedCount = 0;
-
-            names.forEach(name => {
-                if (!state.students.some(s => s.name.toLowerCase() === name.toLowerCase())) {
-                    state.students.push({
-                        id: `std-${Date.now()}-${Math.floor(Math.random()*1000)}`,
-                        name,
-                        gender: 'L',
-                        cops: 0,
-                        minutes: 0,
-                        badges: []
+                const particles = [];
+                for (let i = 0; i < 40; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 2 + 1,
+                        color: Math.random() > 0.5 ? '#00f0ff' : '#ff7b00',
+                        speedY: Math.random() * 0.5 + 0.2
                     });
-                    addedCount++;
                 }
-            });
 
-            document.getElementById('bulk-names-textarea').value = '';
-            closeModal('modal-bulk-import');
-            saveStateToCloud();
-            showToast(`${addedCount} murid baru berjaya diimport!`, "emerald");
-        };
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
 
-        window.openAddStudentModal = function() {
-            if (!isAdmin) {
-                promptAdminLogin();
-                return;
-            }
-            openModal('modal-add-student');
-        };
+                    particles.forEach(p => {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.fill();
 
-        window.handleAddSingleStudent = function(e) {
-            e.preventDefault();
-            if (!isAdmin) return;
+                        p.y -= p.speedY;
+                        if (p.y < 0) p.y = height;
+                    });
 
-            const name = document.getElementById('add-student-name-input').value.trim();
-            const gender = document.getElementById('add-student-gender-input').value;
+                    requestAnimationFrame(animate);
+                }
 
-            if (name) {
-                state.students.push({
-                    id: `std-${Date.now()}`,
-                    name,
-                    gender,
-                    cops: 0,
-                    minutes: 0,
-                    badges: []
-                });
-
-                document.getElementById('add-student-name-input').value = '';
-                closeModal('modal-add-student');
-                saveStateToCloud();
-                showToast("Murid baru didaftarkan!", "emerald");
-            }
-        };
-
-        window.openResetModal = function() {
-            if (!isAdmin) return;
-            openModal('modal-reset-confirm');
-        };
-
-        window.executeResetAllData = function() {
-            if (!isAdmin) return;
-            state = {
-                students: [],
-                sessions: INITIAL_SESSIONS,
-                activeSessionId: 'ses-1',
-                attendance: {},
-                adminPin: '1234'
-            };
-            closeModal('modal-reset-confirm');
-            closeModal('modal-cloud-settings');
-            saveStateToCloud();
-            showToast("Semua data telah direset!", "amber");
-        };
-
-        window.exportToCSV = function() {
-            if (state.students.length === 0) {
-                showToast("Tiada data murid untuk dieksport!", "amber");
-                return;
-            }
-
-            let csv = "Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Tahap Belt\n";
-            state.students.forEach((s, idx) => {
-                const belt = getBeltInfo(s.cops);
-                csv += `"${idx + 1}","${s.name}","${s.cops}","${s.minutes || s.cops * 4}","${belt.name}"\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `BioDojo_Bookmark100_Laporan_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-        };
-
-        window.triggerConfetti = function() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
-        };
-
-        function renderCharts() {
-            const ctxMinutes = document.getElementById('chart-minutes-per-student')?.getContext('2d');
-            const ctxBelt = document.getElementById('chart-belt-distribution')?.getContext('2d');
-
-            if (chartMinutes) chartMinutes.destroy();
-            if (chartBelt) chartBelt.destroy();
-
-            const studentNames = state.students.map(s => s.name);
-            const studentMins = state.students.map(s => s.minutes || (s.cops * 4));
-
-            if (ctxMinutes) {
-                chartMinutes = new Chart(ctxMinutes, {
-                    type: 'bar',
-                    data: {
-                        labels: studentNames,
-                        datasets: [{
-                            label: 'Jumlah Minit Belajar',
-                            data: studentMins,
-                            backgroundColor: '#10b981',
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
-                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-
-            const beltCounts = { 'White': 0, 'Green': 0, 'Blue': 0, 'Brown': 0, 'Black': 0, 'Legend': 0 };
-            state.students.forEach(s => {
-                const belt = getBeltInfo(s.cops);
-                if (belt.name.includes('White')) beltCounts['White']++;
-                else if (belt.name.includes('Green')) beltCounts['Green']++;
-                else if (belt.name.includes('Blue')) beltCounts['Blue']++;
-                else if (belt.name.includes('Brown')) beltCounts['Brown']++;
-                else if (belt.name.includes('Black')) beltCounts['Black']++;
-                else if (belt.name.includes('Legend')) beltCounts['Legend']++;
-            });
-
-            if (ctxBelt) {
-                chartBelt = new Chart(ctxBelt, {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(beltCounts),
-                        datasets: [{
-                            data: Object.values(beltCounts),
-                            backgroundColor: ['#475569', '#059669', '#2563eb', '#78350f', '#0f172a', '#9333ea']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94a3b8' } } }
-                    }
-                });
+                animate();
             }
         }
+
+        // Global Game Instance
+        const game = new GameEngine();
 
         window.onload = function() {
-            initFirebase();
+            game.init();
         };
     </script>
 </body>
