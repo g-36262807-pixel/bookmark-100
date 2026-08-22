@@ -122,9 +122,9 @@
                             </h1>
                             <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold hidden sm:inline-block">20 MIN/HARI</span>
                             
-                            <!-- Realtime Sync Status Badge -->
+                            <!-- Realtime Sync Status Badge (Automatik Masa Nyata) -->
                             <span id="sync-status-badge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1 cursor-pointer" onclick="openModal('modal-cloud-settings')">
-                                <i class="fa-solid fa-signal text-xs animate-ping"></i>
+                                <i class="fa-solid fa-bolt text-xs animate-pulse"></i>
                                 <span id="sync-status-text">Awan Masa Nyata</span>
                             </span>
                         </div>
@@ -182,7 +182,7 @@
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </button>
                     
-                    <button onclick="openModal('modal-cloud-settings')" title="Tetapan Awan & PIN Admin" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
+                    <button onclick="openModal('modal-cloud-settings')" title="Info Awan Masa Nyata & PIN Admin" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
                         <i class="fa-solid fa-shield-halved"></i>
                     </button>
                 </div>
@@ -205,9 +205,9 @@
         <!-- Role Notification Banner -->
         <div id="role-banner" class="mb-6 p-3 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
             <div class="flex items-center space-x-2">
-                <span id="role-badge-icon" class="w-3 h-3 rounded-full bg-blue-500 inline-block animate-pulse"></span>
+                <span id="role-badge-icon" class="w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
                 <span id="role-banner-text" class="text-slate-300">
-                    Mod Paparan Murid: Anda sedang melihat rekod terkini secara langsung. Hanya Guru/Admin boleh mengemaskini data.
+                    Mod Paparan Live Murid: Semua peranti terhubung secara langsung. Sebarang kemaskini oleh guru akan berubah terus di sini!
                 </span>
             </div>
             <button id="role-banner-btn" onclick="promptAdminLogin()" class="text-amber-400 hover:underline font-bold underline-offset-4">
@@ -500,13 +500,13 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="openAutoScheduleModal()" class="admin-only bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5">
+                    <button onclick="autoScheduleSPMSyllabus()" class="admin-only bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Susun Auto Sukatan SPM</span>
                     </button>
-                    <button onclick="openAddNewDayModal()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
+                    <button onclick="resetSessionForm()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Tambah Hari Baru</span>
+                        <span>Tambah Sesi Baru</span>
                     </button>
                 </div>
             </div>
@@ -919,9 +919,9 @@
         </div>
     </div>
 
-    <!-- Modal: TETAPAN AWAN & TUKAR PIN ADMIN -->
+    <!-- Modal: INFO AWAN MASA NYATA & TUKAR PIN ADMIN -->
     <div id="modal-cloud-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+        <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 relative">
             <button onclick="closeModal('modal-cloud-settings')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -929,7 +929,7 @@
             <div class="border-b border-slate-800 pb-3">
                 <h3 class="text-lg font-bold text-white flex items-center space-x-2">
                     <i class="fa-solid fa-shield-halved text-purple-400"></i>
-                    <span>Tetapan Awan & Keselamatan Admin</span>
+                    <span>Status Awan Masa Nyata & Keselamatan Admin</span>
                 </h3>
             </div>
 
@@ -937,10 +937,10 @@
                 <div class="bg-purple-950/40 border border-purple-500/30 rounded-2xl p-4 space-y-2">
                     <h4 class="font-bold text-purple-300 flex items-center space-x-2">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Pangkalan Data Masa Nyata (Firestore)</span>
+                        <span>Pangkalan Data Masa Nyata Automatik</span>
                     </h4>
-                    <p class="text-slate-400">
-                        Aplikasi ini dihubungkan secara automatik ke Pangkalan Data Awan. Sebarang perubahan data oleh Admin akan dikemas kini secara langsung di skrin murid secara *live*.
+                    <p class="text-slate-300 leading-relaxed">
+                        Aplikasi ini dikemas kini secara automatik menerusi pangkalan data awan berpusat (*live snapshot*). Murid tidak perlu membuat apa-apa tetapan berulang. Sebaik sahaja guru mengemaskini kehadiran atau markah, paparan peranti murid akan bertukar secara automatik.
                     </p>
                 </div>
 
@@ -948,7 +948,7 @@
                     <h4 class="font-bold text-white">Tukar PIN Admin</h4>
                     <div class="flex space-x-2">
                         <input type="password" id="input-new-pin" placeholder="PIN Baru (cth: 5566)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-purple-500 flex-1">
-                        <button onclick="changeAdminPin()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl transition">
+                        <button onclick="changeAdminPin()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl transition">
                             Simpan PIN
                         </button>
                     </div>
@@ -992,7 +992,8 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global state and default initial dataset
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bio-dojo-bookmark-100';
+
         const DEFAULT_BAB_T4 = [
             "Bab 1: Pengenalan kepada Biologi dan Peraturan Makmal",
             "Bab 2: Biologi Sel dan Organisasi Sel",
@@ -1027,7 +1028,11 @@
             "Bab 13: Teknologi Genetic & Bioteknologi"
         ];
 
-        const INITIAL_STUDENTS = [];
+        const INITIAL_STUDENTS = [
+            { id: 'std-1', name: 'Ahmad Daniel', gender: 'L', cops: 12, minutes: 48, badges: ['⭐', '🧠'] },
+            { id: 'std-2', name: 'Nur Aisyah', gender: 'P', cops: 25, minutes: 100, badges: ['⭐', '👑', '🧠'] },
+            { id: 'std-3', name: 'Muhammad Rayyan', gender: 'L', cops: 8, minutes: 32, badges: ['⭐'] }
+        ];
 
         const INITIAL_SESSIONS = [
             { id: 'ses-1', title: 'Hari 1 (Isnin)', level: '4', bab: DEFAULT_BAB_T4[1], flashcard: 'Set 1', activity: 'Recall Challenge', notes: 'Fokus organel sel' },
@@ -1039,76 +1044,87 @@
             students: INITIAL_STUDENTS,
             sessions: INITIAL_SESSIONS,
             activeSessionId: 'ses-1',
-            attendance: {}, // { sessionId: { studentId: { status: 'H'/'P'/'A', bonus: [] } } }
+            attendance: {},
             adminPin: '1234'
         };
 
         let isAdmin = false;
-        let selectedStudentForPassport = null;
         let currentStudentId = localStorage.getItem('bio_dojo_my_id') || null;
         let chartMinutes = null;
         let chartBelt = null;
 
-        // Firebase Initialization
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bio-dojo-100-app';
+        // Firebase Services setup
         let db = null;
         let auth = null;
+        let unsubscribeRealtime = null;
 
         async function initFirebase() {
             try {
-                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-                    apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
-                    authDomain: `${appId}.firebaseapp.com`,
-                    projectId: appId,
-                    storageBucket: `${appId}.appspot.com`
-                };
+                let firebaseConfig;
+                if (typeof __firebase_config !== 'undefined') {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                } else {
+                    firebaseConfig = {
+                        apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
+                        authDomain: "bio-dojo-bookmark.firebaseapp.com",
+                        projectId: "bio-dojo-bookmark",
+                        storageBucket: "bio-dojo-bookmark.appspot.com"
+                    };
+                }
+
+                const customConfig = localStorage.getItem('bio_dojo_custom_firebase');
+                if (customConfig) {
+                    try { firebaseConfig = JSON.parse(customConfig); } catch(e){}
+                }
 
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
+                // Auth before Firestore operations (Rule 3)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
 
                 setupRealtimeListener();
             } catch (err) {
-                console.warn("Firebase fallback to local storage mode:", err);
+                console.warn("Firebase fallback to local state:", err);
                 const localSaved = localStorage.getItem('bio_dojo_local_state');
                 if (localSaved) {
                     try { state = JSON.parse(localSaved); } catch(e){}
                 }
-                showToast("Berjalan dalam Mod Luar Talian", "amber");
                 updateSyncStatus("Lokal (Luar Talian)", "amber");
                 renderAllViews();
             }
         }
 
-        // Realtime listener for Firestore document
         function setupRealtimeListener() {
             if (!db) {
                 renderAllViews();
                 return;
             }
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_store', 'shared_state');
 
-            onSnapshot(docRef, (snapshot) => {
+            if (unsubscribeRealtime) unsubscribeRealtime();
+
+            // Strict collection path for public shared data (Rule 1)
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_app', 'main_state');
+
+            unsubscribeRealtime = onSnapshot(docRef, (snapshot) => {
                 if (snapshot.exists()) {
                     const cloudData = snapshot.data();
                     if (cloudData && cloudData.state) {
                         state = cloudData.state;
                         renderAllViews();
-                        updateSyncStatus("Awan Terhubung (Masa Nyata)", "emerald");
+                        updateSyncStatus("Awan Masa Nyata", "emerald");
                     }
                 } else {
                     saveStateToCloud();
                 }
             }, (error) => {
                 console.error("Firestore sync error:", error);
-                updateSyncStatus("Simpanan Lokal", "amber");
+                updateSyncStatus("Lokal (Luar Talian)", "amber");
                 renderAllViews();
             });
         }
@@ -1119,10 +1135,10 @@
 
             if (!db) return;
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_store', 'shared_state');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_app', 'main_state');
                 await setDoc(docRef, { state, lastUpdated: new Date().toISOString() });
             } catch (err) {
-                console.error("Failed to save to cloud:", err);
+                console.error("Gagal simpan ke pangkalan data awan:", err);
             }
         }
 
@@ -1145,7 +1161,6 @@
             return { name: 'White Belt (Novice)', bg: 'bg-slate-700 text-slate-200', icon: 'fa-seedling', color: '#475569' };
         }
 
-        // Toast notifications
         window.showToast = function(msg, type = 'emerald') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1160,7 +1175,6 @@
             }, 3000);
         };
 
-        // UI Role Management & Security
         window.promptAdminLogin = function() {
             if (isAdmin) {
                 isAdmin = false;
@@ -1192,7 +1206,6 @@
             const roleBannerText = document.getElementById('role-banner-text');
             const roleBannerBtn = document.getElementById('role-banner-btn');
             const roleBadgeIcon = document.getElementById('role-badge-icon');
-
             const adminOnlyElements = document.querySelectorAll('.admin-only');
 
             if (isAdmin) {
@@ -1202,20 +1215,17 @@
                 if (roleBannerText) roleBannerText.innerHTML = `<b class="text-emerald-400">Mod Admin Aktif:</b> Anda mempunyai akses penuh untuk kemaskini kehadiran, bab harian, dan data murid.`;
                 if (roleBannerBtn) roleBannerBtn.innerText = "Log Keluar Admin";
                 if (roleBadgeIcon) roleBadgeIcon.className = "w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse";
-
                 adminOnlyElements.forEach(el => el.classList.remove('opacity-50', 'pointer-events-none'));
             } else {
                 if (roleBtn) roleBtn.className = "p-2 sm:px-3 sm:py-2 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition flex items-center space-x-1.5 text-xs font-bold";
                 if (roleIcon) roleIcon.className = "fa-solid fa-user";
                 if (roleLabel) roleLabel.innerText = "Mod Murid";
-                if (roleBannerText) roleBannerText.innerText = "Mod Paparan Murid: Anda sedang melihat rekod terkini secara langsung. Hanya Guru/Admin boleh mengemaskini data.";
+                if (roleBannerText) roleBannerText.innerText = "Mod Paparan Live Murid: Semua peranti terhubung secara langsung. Sebarang kemaskini oleh guru akan berubah terus di sini!";
                 if (roleBannerBtn) roleBannerBtn.innerText = "Log Masuk Admin";
                 if (roleBadgeIcon) roleBadgeIcon.className = "w-3 h-3 rounded-full bg-blue-500 inline-block animate-pulse";
-
                 adminOnlyElements.forEach(el => el.classList.add('opacity-50', 'pointer-events-none'));
             }
 
-            // Student Account Label
             const stLabel = document.getElementById('active-student-label');
             if (stLabel) {
                 const currentSt = state.students.find(s => s.id === currentStudentId);
@@ -1235,7 +1245,6 @@
             }
         };
 
-        // Student Profile Selector
         function populateStudentDropdown() {
             const dropdown = document.getElementById('select-active-student-dropdown');
             if (!dropdown) return;
@@ -1255,7 +1264,6 @@
             showToast("Akaun murid dipilih!", "emerald");
         };
 
-        // Navigation Tabs Switching
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             const targetView = document.getElementById(`view-${tabId}`);
@@ -1271,7 +1279,6 @@
             if (tabId === 'analytics') renderCharts();
         };
 
-        // Modal Handlers
         window.openModal = function(modalId) {
             if (modalId === 'modal-select-student') populateStudentDropdown();
             const modal = document.getElementById(modalId);
@@ -1283,7 +1290,6 @@
             if (modal) modal.classList.add('hidden');
         };
 
-        // RENDER VIEWS
         function renderAllViews() {
             renderDashboard();
             renderLeaderboard();
@@ -1297,7 +1303,6 @@
         }
 
         function renderDashboard() {
-            // Stats Calculations
             const totalCops = state.students.reduce((acc, s) => acc + (s.cops || 0), 0);
             const totalMinutes = state.students.reduce((acc, s) => acc + (s.minutes || (s.cops * 4)), 0);
             const legendCount = state.students.filter(s => s.cops >= 25).length;
@@ -1312,7 +1317,6 @@
             const pctBar = Math.min(100, Math.round((avgMinutes / 100) * 100));
             document.getElementById('avg-minutes-bar').style.width = `${pctBar}%`;
 
-            // Render Podium Top 3
             const sortedStudents = [...state.students].sort((a, b) => b.cops - a.cops || b.minutes - a.minutes);
 
             [0, 1, 2].forEach(idx => {
@@ -1334,7 +1338,6 @@
                 }
             });
 
-            // Render Active Session Summary Banner
             const activeSession = state.sessions.find(s => s.id === state.activeSessionId) || state.sessions[0];
             const activeBanner = document.getElementById('active-session-banner');
             if (activeSession && activeBanner) {
@@ -1399,7 +1402,6 @@
             }).join('');
         };
 
-        // ATTENDANCE MATRIX RENDER
         function renderAttendanceSessionOptions() {
             const select = document.getElementById('select-attendance-session');
             if (!select) return;
@@ -1423,44 +1425,34 @@
             const body = document.getElementById('attendance-matrix-body');
             if (!body) return;
 
-            const sessionAtt = state.attendance[state.activeSessionId] || {};
-
-            if (state.students.length === 0) {
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="p-8 text-center text-slate-500 text-xs">
-                            Senarai murid masih kosong. Sila import atau tambah murid.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+            const currentSessionRecord = state.attendance[state.activeSessionId] || {};
 
             body.innerHTML = state.students.map((student, idx) => {
-                const record = sessionAtt[student.id] || { status: 'H', bonus: [] };
+                const rec = currentSessionRecord[student.id] || { status: 'A', badges: [] };
                 const belt = getBeltInfo(student.cops);
+                const isSessionCop = rec.status === '✓' ? 1 + rec.badges.length : 0;
 
                 return `
-                    <tr class="hover:bg-slate-800/40 transition">
-                        <td class="p-3 text-center text-slate-400 font-bold">${idx + 1}</td>
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-3 text-center text-slate-500 font-bold">${idx + 1}</td>
                         <td class="p-3 font-semibold text-white">${student.name}</td>
                         <td class="p-3 text-center">
-                            <div class="inline-flex bg-slate-950 p-1 rounded-xl border border-slate-800 ${!isAdmin ? 'pointer-events-none opacity-80' : ''}">
-                                <button onclick="setStudentAttendanceStatus('${student.id}', 'H')" class="px-2.5 py-1 rounded-lg font-bold text-xs ${record.status === 'H' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}">✓</button>
-                                <button onclick="setStudentAttendanceStatus('${student.id}', 'P')" class="px-2.5 py-1 rounded-lg font-bold text-xs ${record.status === 'P' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-white'}">P</button>
-                                <button onclick="setStudentAttendanceStatus('${student.id}', 'A')" class="px-2.5 py-1 rounded-lg font-bold text-xs ${record.status === 'A' ? 'bg-rose-600 text-white' : 'text-slate-400 hover:text-white'}">A</button>
+                            <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+                                <button onclick="setStudentAttendanceStatus('${student.id}', '✓')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === '✓' ? 'bg-emerald-600 text-white shadow' : 'text-slate-500 hover:text-white'}">✓</button>
+                                <button onclick="setStudentAttendanceStatus('${student.id}', 'P')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === 'P' ? 'bg-amber-600 text-white shadow' : 'text-slate-500 hover:text-white'}">P</button>
+                                <button onclick="setStudentAttendanceStatus('${student.id}', 'A')" class="px-2.5 py-1 rounded-lg font-extrabold text-xs transition ${rec.status === 'A' ? 'bg-rose-600 text-white shadow' : 'text-slate-500 hover:text-white'}">A</button>
                             </div>
                         </td>
                         <td class="p-3 text-center">
-                            <div class="flex justify-center space-x-1 ${!isAdmin ? 'pointer-events-none opacity-80' : ''}">
-                                <button onclick="toggleStudentBonusBadge('${student.id}', '⭐')" title="Perfect Recall" class="w-7 h-7 rounded-lg border ${record.bonus?.includes('⭐') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">⭐</button>
-                                <button onclick="toggleStudentBonusBadge('${student.id}', '👑')" title="Bio-Dojo Champion" class="w-7 h-7 rounded-lg border ${record.bonus?.includes('👑') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">👑</button>
-                                <button onclick="toggleStudentBonusBadge('${student.id}', '🧠')" title="Terangkan Konsep" class="w-7 h-7 rounded-lg border ${record.bonus?.includes('🧠') ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">🧠</button>
+                            <div class="flex justify-center space-x-1">
+                                <button onclick="toggleSessionBadge('${student.id}', '⭐')" title="Perfect Recall" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('⭐') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">⭐</button>
+                                <button onclick="toggleSessionBadge('${student.id}', '👑')" title="Champion" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('👑') ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">👑</button>
+                                <button onclick="toggleSessionBadge('${student.id}', '🧠')" title="Terangkan Konsep" class="w-7 h-7 rounded-lg border flex items-center justify-center text-xs transition ${rec.badges.includes('🧠') ? 'bg-blue-500/20 border-blue-500 text-blue-400' : 'bg-slate-950 border-slate-800 text-slate-600'}">🧠</button>
                             </div>
                         </td>
-                        <td class="p-3 text-center font-bold text-emerald-400">${record.status === 'H' ? 1 + (record.bonus?.length || 0) : 0} Cop</td>
-                        <td class="p-3 text-center font-bold text-white">${student.cops}</td>
-                        <td class="p-3 text-center font-bold text-amber-400">${student.minutes || student.cops * 4} Min</td>
+                        <td class="p-3 text-center font-bold ${isSessionCop > 0 ? 'text-emerald-400' : 'text-slate-500'}">+${isSessionCop} Cop</td>
+                        <td class="p-3 text-center font-bold text-emerald-400">${student.cops}</td>
+                        <td class="p-3 text-center text-amber-400 font-bold">${student.minutes || student.cops * 4} Min</td>
                         <td class="p-3 text-center"><span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span></td>
                     </tr>
                 `;
@@ -1468,181 +1460,156 @@
         };
 
         window.setStudentAttendanceStatus = function(studentId, status) {
-            if (!isAdmin) return showToast("Hanya Admin boleh mengemaskini kehadiran!", "amber");
-            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
-            if (!state.attendance[state.activeSessionId][studentId]) state.attendance[state.activeSessionId][studentId] = { status: 'H', bonus: [] };
-
+            if (!isAdmin) {
+                showToast("Sila log masuk Admin untuk mengemaskini kehadiran!", "amber");
+                return;
+            }
+            if (!state.attendance[state.activeSessionId]) {
+                state.attendance[state.activeSessionId] = {};
+            }
+            if (!state.attendance[state.activeSessionId][studentId]) {
+                state.attendance[state.activeSessionId][studentId] = { status: 'A', badges: [] };
+            }
             state.attendance[state.activeSessionId][studentId].status = status;
             recalculateStudentCops();
-            loadAttendanceMatrix();
+            saveStateToCloud();
         };
 
-        window.toggleStudentBonusBadge = function(studentId, badge) {
-            if (!isAdmin) return showToast("Hanya Admin boleh menambah lencana bonus!", "amber");
-            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
-            if (!state.attendance[state.activeSessionId][studentId]) state.attendance[state.activeSessionId][studentId] = { status: 'H', bonus: [] };
-
-            let bonuses = state.attendance[state.activeSessionId][studentId].bonus || [];
-            if (bonuses.includes(badge)) {
-                bonuses = bonuses.filter(b => b !== badge);
-            } else {
-                bonuses.push(badge);
+        window.toggleSessionBadge = function(studentId, badge) {
+            if (!isAdmin) {
+                showToast("Sila log masuk Admin untuk mengemaskini lencana!", "amber");
+                return;
             }
-            state.attendance[state.activeSessionId][studentId].bonus = bonuses;
+            if (!state.attendance[state.activeSessionId]) {
+                state.attendance[state.activeSessionId] = {};
+            }
+            if (!state.attendance[state.activeSessionId][studentId]) {
+                state.attendance[state.activeSessionId][studentId] = { status: '✓', badges: [] };
+            }
+            const currentBadges = state.attendance[state.activeSessionId][studentId].badges;
+            const idx = currentBadges.indexOf(badge);
+            if (idx > -1) {
+                currentBadges.splice(idx, 1);
+            } else {
+                currentBadges.push(badge);
+            }
             recalculateStudentCops();
-            loadAttendanceMatrix();
+            saveStateToCloud();
         };
 
         function recalculateStudentCops() {
             state.students.forEach(student => {
                 let copCount = 0;
-                Object.values(state.attendance).forEach(sessionData => {
-                    const rec = sessionData[student.id];
+                let badgeSet = new Set();
+
+                Object.keys(state.attendance).forEach(sesId => {
+                    const rec = state.attendance[sesId][student.id];
                     if (rec) {
-                        if (rec.status === 'H') copCount += 1;
-                        if (rec.bonus) copCount += rec.bonus.length;
+                        if (rec.status === '✓') {
+                            copCount += 1;
+                        }
+                        if (rec.badges && rec.badges.length) {
+                            copCount += rec.badges.length;
+                            rec.badges.forEach(b => badgeSet.add(b));
+                        }
                     }
                 });
+
                 student.cops = copCount;
                 student.minutes = copCount * 4;
+                student.badges = Array.from(badgeSet);
             });
         }
 
+        window.markAllPresent = function() {
+            if (!isAdmin) return;
+            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
+            state.students.forEach(s => {
+                if (!state.attendance[state.activeSessionId][s.id]) {
+                    state.attendance[state.activeSessionId][s.id] = { status: '✓', badges: [] };
+                } else {
+                    state.attendance[state.activeSessionId][s.id].status = '✓';
+                }
+            });
+            recalculateStudentCops();
+            saveStateToCloud();
+            showToast("Semua murid ditandakan HADIR (✓)", "emerald");
+        };
+
+        window.markAllAbsent = function() {
+            if (!isAdmin) return;
+            if (!state.attendance[state.activeSessionId]) state.attendance[state.activeSessionId] = {};
+            state.students.forEach(s => {
+                state.attendance[state.activeSessionId][s.id] = { status: 'A', badges: [] };
+            });
+            recalculateStudentCops();
+            saveStateToCloud();
+            showToast("Semua murid ditandakan PONTENG (A)", "rose");
+        };
+
+        window.resetCurrentSessionAttendance = function() {
+            if (!isAdmin) return;
+            delete state.attendance[state.activeSessionId];
+            recalculateStudentCops();
+            saveStateToCloud();
+            showToast("Rekod sesi ini direset!", "amber");
+        };
+
         window.saveAttendanceData = function() {
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
+            if (!isAdmin) return;
             saveStateToCloud();
             showToast("Rekod Kehadiran Berjaya Disimpan!", "emerald");
         };
 
-        window.markAllPresent = function() {
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
-            state.students.forEach(s => setStudentAttendanceStatus(s.id, 'H'));
-        };
+        function populateBabDropdown() {
+            const level = document.getElementById('session-form-level')?.value || '4';
+            const select = document.getElementById('session-bab-input');
+            if (!select) return;
 
-        window.markAllAbsent = function() {
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
-            state.students.forEach(s => setStudentAttendanceStatus(s.id, 'A'));
-        };
-
-        window.resetCurrentSessionAttendance = function() {
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
-            delete state.attendance[state.activeSessionId];
-            recalculateStudentCops();
-            loadAttendanceMatrix();
-        };
-
-        window.openQuickEditCurrentSession = function() {
-            switchTab('sessions');
-            if (state.activeSessionId) {
-                editSession(state.activeSessionId);
-            }
-        };
-
-        // STUDENT BULK IMPORT & MANAGEMENT
-        window.openBulkImportModal = function() {
-            if (!isAdmin) return showToast("Hanya Admin boleh mengimport nama murid!", "amber");
-            openModal('modal-bulk-import');
-        };
-
-        window.handleExecuteBulkImport = function(e) {
-            e.preventDefault();
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
-
-            const text = document.getElementById('bulk-names-textarea').value.trim();
-            if (!text) return;
-
-            const lines = text.split(/[\r\n,]+/).map(l => l.trim()).filter(l => l.length > 0);
-            let addedCount = 0;
-
-            lines.forEach((name, i) => {
-                if (!state.students.some(s => s.name.toLowerCase() === name.toLowerCase())) {
-                    const gender = name.toLowerCase().startsWith('nur') || name.toLowerCase().startsWith('siti') || name.toLowerCase().includes('fatimah') ? 'P' : 'L';
-                    state.students.push({
-                        id: `std-${Date.now()}-${i}`,
-                        name: name,
-                        gender: gender,
-                        cops: 0,
-                        minutes: 0,
-                        badges: []
-                    });
-                    addedCount++;
-                }
-            });
-
-            document.getElementById('bulk-names-textarea').value = '';
-            closeModal('modal-bulk-import');
-            recalculateStudentCops();
-            saveStateToCloud();
-            showToast(`Berjaya menambah ${addedCount} murid baru!`, "emerald");
-        };
-
-        window.openAddStudentModal = function() {
-            if (!isAdmin) return showToast("Hanya Admin boleh menambah murid!", "amber");
-            openModal('modal-add-student');
-        };
-
-        window.handleAddSingleStudent = function(e) {
-            e.preventDefault();
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
-
-            const name = document.getElementById('add-student-name-input').value.trim();
-            const gender = document.getElementById('add-student-gender-input').value;
-
-            if (name) {
-                state.students.push({
-                    id: `std-${Date.now()}`,
-                    name: name,
-                    gender: gender,
-                    cops: 0,
-                    minutes: 0,
-                    badges: []
-                });
-
-                document.getElementById('add-student-name-input').value = '';
-                closeModal('modal-add-student');
-                recalculateStudentCops();
-                saveStateToCloud();
-                showToast(`Murid ${name} berjaya ditambah!`, "emerald");
-            }
-        };
-
-        // DAILY SESSIONS PLANNER & FORM
-        window.populateBabDropdown = function() {
-            const levelSelect = document.getElementById('session-form-level');
-            const babSelect = document.getElementById('session-bab-input');
-            if (!levelSelect || !babSelect) return;
-
-            const list = levelSelect.value === '5' ? DEFAULT_BAB_T5 : DEFAULT_BAB_T4;
-            babSelect.innerHTML = list.map(b => `<option value="${b}">${b}</option>`).join('');
-        };
+            const list = level === '4' ? DEFAULT_BAB_T4 : DEFAULT_BAB_T5;
+            select.innerHTML = list.map(bab => `<option value="${bab}">${bab}</option>`).join('');
+        }
 
         window.renderDailyPlannerGrid = function() {
             const grid = document.getElementById('daily-planner-grid');
             if (!grid) return;
 
             const filterLevel = document.getElementById('filter-planner-form')?.value || 'ALL';
-            const searchBab = (document.getElementById('search-planner-bab')?.value || '').toLowerCase();
+            const query = (document.getElementById('search-planner-bab')?.value || '').toLowerCase();
 
             const filtered = state.sessions.filter(s => {
                 const matchLevel = filterLevel === 'ALL' || s.level === filterLevel;
-                const matchBab = s.bab.toLowerCase().includes(searchBab) || s.title.toLowerCase().includes(searchBab);
-                return matchLevel && matchBab;
+                const matchQuery = s.bab.toLowerCase().includes(query) || s.title.toLowerCase().includes(query);
+                return matchLevel && matchQuery;
             });
 
             document.getElementById('planner-total-count').innerText = `${filtered.length} Hari`;
 
             grid.innerHTML = filtered.map(s => `
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-md flex flex-col justify-between hover:border-emerald-500/50 transition">
+                <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition shadow-lg space-y-3">
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <span class="bg-emerald-500/20 text-emerald-400 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-500/30">${s.title}</span>
-                            <span class="bg-slate-800 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Tingkatan ${s.level}</span>
+                            <span class="bg-slate-800 text-amber-400 font-bold px-2.5 py-0.5 rounded-full text-[10px] border border-slate-700">${s.title}</span>
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-full text-[10px]">Tingkatan ${s.level}</span>
                         </div>
-                        <h4 class="text-xs font-bold text-white line-clamp-2">${s.bab}</h4>
+                        <h4 class="font-bold text-white text-xs leading-snug line-clamp-2">${s.bab}</h4>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-400">
-                        <span><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i>${s.flashcard}</span>
-                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 font-bold hover:underline">Edit</button>
+
+                    <div class="space-y-1.5 border-t border-slate-900 pt-2 text-[11px] text-slate-400">
+                        <div class="flex justify-between">
+                            <span>Flashcard:</span>
+                            <span class="text-purple-400 font-semibold">${s.flashcard}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Aktiviti:</span>
+                            <span class="text-amber-400 font-semibold">${s.activity}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex justify-end space-x-1 border-t border-slate-900">
+                        <button onclick="editSession('${s.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -1654,14 +1621,14 @@
             document.getElementById('session-count-tag').innerText = `${state.sessions.length} Sesi`;
 
             body.innerHTML = state.sessions.map(s => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-3 font-bold text-white">${s.title} <span class="text-amber-400 text-[10px] ml-1">(T${s.level})</span></td>
-                    <td class="p-3 text-slate-300 font-medium">${s.bab}</td>
+                <tr class="hover:bg-slate-800/50 transition">
+                    <td class="p-3 font-bold text-amber-400">${s.title}</td>
+                    <td class="p-3 text-white font-medium">T${s.level}: ${s.bab}</td>
                     <td class="p-3 text-purple-400 font-semibold">${s.flashcard}</td>
-                    <td class="p-3 text-slate-400">${s.activity}</td>
+                    <td class="p-3 text-emerald-400 font-semibold">${s.activity}</td>
                     <td class="p-3 text-right">
-                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 font-bold px-2 py-1 bg-emerald-500/10 rounded-lg hover:bg-emerald-500/20 mr-1">Edit</button>
-                        <button onclick="deleteSession('${s.id}')" class="admin-only text-rose-400 font-bold px-2 py-1 bg-rose-500/10 rounded-lg hover:bg-rose-500/20">Padam</button>
+                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 hover:text-emerald-300 font-bold mr-2"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteSession('${s.id}')" class="admin-only text-rose-400 hover:text-rose-300 font-bold"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -1669,20 +1636,23 @@
 
         window.handleSaveSession = function(e) {
             e.preventDefault();
-            if (!isAdmin) return showToast("Akses Terhad kepada Admin!", "amber");
+            if (!isAdmin) {
+                showToast("Hanya Admin boleh menyimpan sesi bab!", "amber");
+                return;
+            }
 
-            const idInput = document.getElementById('session-id-input').value;
-            const title = document.getElementById('session-title-input').value.trim();
+            const id = document.getElementById('session-id-input').value;
+            const title = document.getElementById('session-title-input').value;
             const level = document.getElementById('session-form-level').value;
             const bab = document.getElementById('session-bab-input').value;
-            const flashcard = document.getElementById('session-flashcard-input').value.trim() || 'Set 1';
+            const flashcard = document.getElementById('session-flashcard-input').value;
             const activity = document.getElementById('session-activity-input').value;
-            const notes = document.getElementById('session-notes-input').value.trim();
+            const notes = document.getElementById('session-notes-input').value;
 
-            if (idInput) {
-                const idx = state.sessions.findIndex(s => s.id === idInput);
-                if (idx !== -1) {
-                    state.sessions[idx] = { id: idInput, title, level, bab, flashcard, activity, notes };
+            if (id) {
+                const idx = state.sessions.findIndex(s => s.id === id);
+                if (idx > -1) {
+                    state.sessions[idx] = { id, title, level, bab, flashcard, activity, notes };
                 }
             } else {
                 const newId = `ses-${Date.now()}`;
@@ -1691,13 +1661,12 @@
 
             saveStateToCloud();
             resetSessionForm();
-            showToast("Sesi Bab Harian Berjaya Disimpan!", "emerald");
+            showToast("Sesi Bab Berjaya Disimpan!", "emerald");
         };
 
-        window.editSession = function(sessionId) {
-            const s = state.sessions.find(x => x.id === sessionId);
+        window.editSession = function(id) {
+            const s = state.sessions.find(x => x.id === id);
             if (!s) return;
-
             document.getElementById('session-id-input').value = s.id;
             document.getElementById('session-title-input').value = s.title;
             document.getElementById('session-form-level').value = s.level;
@@ -1706,259 +1675,299 @@
             document.getElementById('session-flashcard-input').value = s.flashcard;
             document.getElementById('session-activity-input').value = s.activity;
             document.getElementById('session-notes-input').value = s.notes || '';
-
             document.getElementById('session-form-title').innerText = "Kemaskini Sesi Bab";
         };
 
-        window.deleteSession = function(sessionId) {
-            if (!isAdmin) return showToast("Hanya Admin boleh memadam sesi!", "amber");
-            state.sessions = state.sessions.filter(s => s.id !== sessionId);
+        window.resetSessionForm = function() {
+            document.getElementById('session-id-input').value = '';
+            document.getElementById('session-title-input').value = `Hari ${state.sessions.length + 1}`;
+            document.getElementById('session-form-level').value = '4';
+            populateBabDropdown();
+            document.getElementById('session-flashcard-input').value = 'Set 1';
+            document.getElementById('session-notes-input').value = '';
+            document.getElementById('session-form-title').innerText = "Tambah / Tetap Bab Baru";
+        };
+
+        window.deleteSession = function(id) {
+            if (!isAdmin) return;
+            state.sessions = state.sessions.filter(s => s.id !== id);
             saveStateToCloud();
             showToast("Sesi dipadamkan!", "rose");
         };
 
-        window.resetSessionForm = function() {
-            document.getElementById('form-session').reset();
-            document.getElementById('session-id-input').value = '';
-            document.getElementById('session-form-title').innerText = "Kemaskini / Tetap Bab Hari Ini";
-            populateBabDropdown();
-        };
+        window.autoScheduleSPMSyllabus = function() {
+            if (!isAdmin) return;
+            state.sessions = [];
+            let dayCount = 1;
 
-        window.openAutoScheduleModal = function() {
-            if (!isAdmin) return showToast("Hanya Admin boleh menggunakan susunan auto!", "amber");
-            state.sessions = DEFAULT_BAB_T4.map((bab, idx) => ({
-                id: `ses-auto-${idx + 1}`,
-                title: `Hari ${idx + 1}`,
-                level: '4',
-                bab: bab,
-                flashcard: `Set ${(idx % 3) + 1}`,
-                activity: 'Recall Challenge',
-                notes: 'Susunan automatik sukatan'
-            }));
-            saveStateToCloud();
-            showToast("Jadual Sukatan SPM Auto Dihasilkan!", "emerald");
-        };
-
-        window.openAddNewDayModal = function() {
-            resetSessionForm();
-            document.getElementById('session-title-input').focus();
-        };
-
-        // CHARTS & ANALYTICS
-        function renderCharts() {
-            // F4 & F5 Coverage calculation
-            const f4Count = state.sessions.filter(s => s.level === '4').length;
-            const f5Count = state.sessions.filter(s => s.level === '5').length;
-
-            document.getElementById('coverage-f4-text').innerText = `${f4Count} / 15 Bab (${Math.round((f4Count / 15) * 100)}%)`;
-            document.getElementById('coverage-f5-text').innerText = `${f5Count} / 13 Bab (${Math.round((f5Count / 13) * 100)}%)`;
-
-            // Chart 1: Minutes per Student
-            const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
-            if (ctx1) {
-                if (chartMinutes) chartMinutes.destroy();
-                chartMinutes = new Chart(ctx1, {
-                    type: 'bar',
-                    data: {
-                        labels: state.students.length > 0 ? state.students.map(s => s.name) : ['Tiada Murid'],
-                        datasets: [{
-                            label: 'Jumlah Minit',
-                            data: state.students.length > 0 ? state.students.map(s => s.minutes || s.cops * 4) : [0],
-                            backgroundColor: '#10b981',
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                        }
-                    }
+            DEFAULT_BAB_T4.forEach(bab => {
+                state.sessions.push({
+                    id: `ses-t4-${dayCount}`,
+                    title: `Hari ${dayCount}`,
+                    level: '4',
+                    bab: bab,
+                    flashcard: 'Set 1',
+                    activity: 'Recall Challenge',
+                    notes: 'Sukatan SPM T4'
                 });
-            }
+                dayCount++;
+            });
+
+            DEFAULT_BAB_T5.forEach(bab => {
+                state.sessions.push({
+                    id: `ses-t5-${dayCount}`,
+                    title: `Hari ${dayCount}`,
+                    level: '5',
+                    bab: bab,
+                    flashcard: 'Set 1',
+                    activity: 'Beat The Clock',
+                    notes: 'Sukatan SPM T5'
+                });
+                dayCount++;
+            });
+
+            saveStateToCloud();
+            showToast("Jadual Sukatan SPM Berjaya Disusun Auto!", "emerald");
+        };
+
+        function renderCharts() {
+            const chartMinutesCanvas = document.getElementById('chart-minutes-per-student');
+            const chartBeltCanvas = document.getElementById('chart-belt-distribution');
+
+            if (!chartMinutesCanvas || !chartBeltCanvas) return;
+
+            // Coverage Calculation
+            const f4Covered = new Set(state.sessions.filter(s => s.level === '4').map(s => s.bab)).size;
+            const f5Covered = new Set(state.sessions.filter(s => s.level === '5').map(s => s.bab)).size;
+
+            document.getElementById('coverage-f4-text').innerText = `${f4Covered} / ${DEFAULT_BAB_T4.length} Bab (${Math.round((f4Covered/DEFAULT_BAB_T4.length)*100)}%)`;
+            document.getElementById('coverage-f5-text').innerText = `${f5Covered} / ${DEFAULT_BAB_T5.length} Bab (${Math.round((f5Covered/DEFAULT_BAB_T5.length)*100)}%)`;
+
+            // Chart 1: Minutes
+            const studentNames = state.students.map(s => s.name);
+            const studentMins = state.students.map(s => s.minutes || s.cops * 4);
+
+            if (chartMinutes) chartMinutes.destroy();
+            chartMinutes = new Chart(chartMinutesCanvas, {
+                type: 'bar',
+                data: {
+                    labels: studentNames,
+                    datasets: [{
+                        label: 'Minit Pembelajaran',
+                        data: studentMins,
+                        backgroundColor: '#10b981',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#334155' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
 
             // Chart 2: Belt Distribution
-            const ctx2 = document.getElementById('chart-belt-distribution')?.getContext('2d');
-            if (ctx2) {
-                if (chartBelt) chartBelt.destroy();
-                const beltCounts = {};
-                state.students.forEach(s => {
-                    const b = getBeltInfo(s.cops).name;
-                    beltCounts[b] = (beltCounts[b] || 0) + 1;
-                });
+            const beltCounts = { 'Novice': 0, 'Adept': 0, 'Intermediate': 0, 'Advance': 0, 'Master': 0, 'Legend': 0 };
+            state.students.forEach(s => {
+                if (s.cops >= 25) beltCounts['Legend']++;
+                else if (s.cops >= 20) beltCounts['Master']++;
+                else if (s.cops >= 15) beltCounts['Advance']++;
+                else if (s.cops >= 10) beltCounts['Intermediate']++;
+                else if (s.cops >= 5) beltCounts['Adept']++;
+                else beltCounts['Novice']++;
+            });
 
-                chartBelt = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(beltCounts).length > 0 ? Object.keys(beltCounts) : ['Tiada Murid'],
-                        datasets: [{
-                            data: Object.values(beltCounts).length > 0 ? Object.values(beltCounts) : [1],
-                            backgroundColor: ['#475569', '#059669', '#2563eb', '#78350f', '#0f172a', '#9333ea']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94a3b8' } } }
-                    }
-                });
-            }
+            if (chartBelt) chartBelt.destroy();
+            chartBelt = new Chart(chartBeltCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(beltCounts),
+                    datasets: [{
+                        data: Object.values(beltCounts),
+                        backgroundColor: ['#475569', '#059669', '#2563eb', '#78350f', '#0f172a', '#9333ea']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
+                }
+            });
         }
 
-        // STUDENT CARDS & PASSPORT
         function renderStudentCards() {
             const grid = document.getElementById('student-cards-grid');
             if (!grid) return;
 
-            if (state.students.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full p-8 bg-slate-950 border border-slate-800 rounded-2xl text-center text-slate-500">
-                        <i class="fa-solid fa-users text-4xl mb-3 text-slate-600 block"></i>
-                        <p class="text-sm font-bold text-slate-300">Belum ada senarai murid dalam sistem.</p>
-                        <p class="text-xs text-slate-500 mt-1">Sila gunakan butang <b>Import Pukal Nama</b> untuk memasukkan senarai nama murid kelas anda.</p>
-                    </div>
-                `;
-                return;
-            }
+            grid.innerHTML = state.students.map(s => {
+                const belt = getBeltInfo(s.cops);
+                const isMyAcc = s.id === currentStudentId;
 
-            grid.innerHTML = state.students.map(student => {
-                const belt = getBeltInfo(student.cops);
-                const isMyAcc = student.id === currentStudentId;
                 return `
-                    <div class="bg-slate-950 border ${isMyAcc ? 'border-blue-500/70' : 'border-slate-800'} rounded-2xl p-4 shadow-lg flex flex-col justify-between hover:border-emerald-500/50 transition relative">
-                        ${isMyAcc ? '<span class="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">Akaun Saya</span>' : ''}
+                    <div class="bg-slate-900 border ${isMyAcc ? 'border-blue-500 shadow-blue-500/20' : 'border-slate-800'} rounded-2xl p-4 shadow-lg space-y-3 relative flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center space-x-3 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 font-bold">
-                                    <i class="fa-solid ${student.gender === 'P' ? 'fa-user-nurse' : 'fa-user-ninja'} text-emerald-400"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white line-clamp-1">${student.name}</h4>
-                                    <span class="belt-badge ${belt.bg} text-[10px] mt-0.5"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
-                                </div>
+                            <div class="flex justify-between items-start">
+                                <span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
+                                ${isMyAcc ? '<span class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full border border-blue-500/30 font-bold">Saya</span>' : ''}
                             </div>
-                            <div class="grid grid-cols-2 gap-2 text-center text-xs bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                                <div>
-                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
-                                    <span class="text-base font-bold text-emerald-400">${student.cops}</span>
-                                </div>
-                                <div>
-                                    <span class="text-[10px] text-slate-400 block">Minit Belajar</span>
-                                    <span class="text-base font-bold text-amber-400">${student.minutes || student.cops * 4} Min</span>
-                                </div>
+                            <h4 class="text-base font-bold text-white mt-2">${s.name}</h4>
+                            <p class="text-xs text-slate-400">Jantina: ${s.gender === 'L' ? 'Lelaki' : 'Perempuan'}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 block">Jumlah Cop</span>
+                                <span class="text-base font-black text-emerald-400">${s.cops}</span>
+                            </div>
+                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 block">Minit Belajar</span>
+                                <span class="text-base font-black text-amber-400">${s.minutes || s.cops * 4}m</span>
                             </div>
                         </div>
-                        <div class="mt-3 pt-3 border-t border-slate-900 flex justify-between items-center text-xs">
-                            <button onclick="openStudentPassport('${student.id}')" class="text-emerald-400 font-bold hover:underline flex items-center space-x-1">
-                                <i class="fa-solid fa-id-card"></i>
-                                <span>Lihat Passport</span>
+
+                        <div class="pt-2 border-t border-slate-800 flex space-x-2">
+                            <button onclick="openStudentPassport('${s.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-id-card mr-1"></i> Buka Passport
                             </button>
-                            <button onclick="deleteStudent('${student.id}')" class="admin-only text-rose-400 font-semibold hover:underline">Padam</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        window.openStudentPassport = function(studentId) {
-            const student = state.students.find(s => s.id === studentId);
-            if (!student) return;
+        let selectedPassportStudentId = null;
 
-            selectedStudentForPassport = student;
-            const belt = getBeltInfo(student.cops);
+        window.openStudentPassport = function(id) {
+            const student = state.students.find(s => s.id === id);
+            if (!student) return;
+            selectedPassportStudentId = id;
 
             document.getElementById('passport-modal-name').innerText = student.name;
-            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
+            const belt = getBeltInfo(student.cops);
+            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg} text-xs"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
             document.getElementById('passport-modal-cops').innerText = student.cops;
-            document.getElementById('passport-modal-minutes').innerText = `${student.minutes || student.cops * 4} Min`;
             document.getElementById('passport-modal-cops-badge').innerText = `${student.cops} Cop`;
+            document.getElementById('passport-modal-minutes').innerText = `${student.minutes || student.cops * 4} Min`;
 
-            // Collect all bonus badges for this student
-            const badgesSet = new Set();
-            Object.values(state.attendance).forEach(sess => {
-                const rec = sess[student.id];
-                if (rec && rec.bonus) {
-                    rec.bonus.forEach(b => badgesSet.add(b));
-                }
-            });
-
-            const badgesArr = Array.from(badgesSet);
-            const badgesEl = document.getElementById('passport-modal-badges');
-            if (badgesArr.length > 0) {
-                badgesEl.innerHTML = badgesArr.map(b => `<span class="bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl font-bold">${b} Awarded</span>`).join('');
-            } else {
-                badgesEl.innerHTML = `<span class="text-slate-500 italic">Belum ada lencana bonus.</span>`;
-            }
+            const badgesContainer = document.getElementById('passport-modal-badges');
+            badgesContainer.innerHTML = (student.badges && student.badges.length) ? student.badges.map(b => `<span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-amber-300 font-bold">${b}</span>`).join('') : '<span class="text-slate-500 text-xs">Tiada lencana bonus lagi.</span>';
 
             openModal('modal-passport');
         };
 
         window.openStudentPassportFromPodium = function(podiumIndex) {
-            const sorted = [...state.students].sort((a, b) => b.cops - a.cops || b.minutes - a.minutes);
+            const sorted = [...state.students].sort((a, b) => b.cops - a.cops);
             if (sorted[podiumIndex]) {
                 openStudentPassport(sorted[podiumIndex].id);
             }
         };
 
         window.adjustStudentCop = function(delta) {
-            if (!isAdmin) return showToast("Hanya Admin boleh mengemaskini cop!", "amber");
-            if (!selectedStudentForPassport) return;
-
-            selectedStudentForPassport.cops = Math.max(0, selectedStudentForPassport.cops + delta);
-            selectedStudentForPassport.minutes = selectedStudentForPassport.cops * 4;
-
-            saveStateToCloud();
-            openStudentPassport(selectedStudentForPassport.id);
-            showToast("Cop murid telah dipinda!", "emerald");
+            if (!isAdmin) return;
+            const student = state.students.find(s => s.id === selectedPassportStudentId);
+            if (student) {
+                student.cops = Math.max(0, student.cops + delta);
+                student.minutes = student.cops * 4;
+                saveStateToCloud();
+                openStudentPassport(selectedPassportStudentId);
+            }
         };
 
         window.deleteCurrentStudentFromPassport = function() {
-            if (!isAdmin) return showToast("Hanya Admin boleh memadam murid!", "amber");
-            if (!selectedStudentForPassport) return;
-
-            deleteStudent(selectedStudentForPassport.id);
-            closeModal('modal-passport');
-        };
-
-        window.deleteStudent = function(studentId) {
-            if (!isAdmin) return showToast("Hanya Admin boleh memadam murid!", "amber");
-            state.students = state.students.filter(s => s.id !== studentId);
-            recalculateStudentCops();
+            if (!isAdmin) return;
+            state.students = state.students.filter(s => s.id !== selectedPassportStudentId);
             saveStateToCloud();
-            showToast("Rekod murid dipadamkan!", "rose");
+            closeModal('modal-passport');
+            showToast("Murid dipadamkan daripada senarai!", "rose");
         };
 
-        window.triggerConfetti = function() {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
+        window.openBulkImportModal = function() {
+            if (!isAdmin) {
+                showToast("Sila log masuk Admin terlebih dahulu!", "amber");
+                return;
+            }
+            openModal('modal-bulk-import');
+        };
+
+        window.handleExecuteBulkImport = function(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const text = document.getElementById('bulk-names-textarea').value.trim();
+            if (!text) return;
+
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let addedCount = 0;
+
+            lines.forEach(name => {
+                const newId = `std-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+                state.students.push({
+                    id: newId,
+                    name: name,
+                    gender: 'L',
+                    cops: 0,
+                    minutes: 0,
+                    badges: []
+                });
+                addedCount++;
             });
+
+            saveStateToCloud();
+            closeModal('modal-bulk-import');
+            document.getElementById('bulk-names-textarea').value = '';
+            showToast(`${addedCount} orang murid berjaya diimport!`, "emerald");
+        };
+
+        window.openAddStudentModal = function() {
+            if (!isAdmin) return;
+            openModal('modal-add-student');
+        };
+
+        window.handleAddSingleStudent = function(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const name = document.getElementById('add-student-name-input').value.trim();
+            const gender = document.getElementById('add-student-gender-input').value;
+
+            if (name) {
+                const newId = `std-${Date.now()}`;
+                state.students.push({ id: newId, name, gender, cops: 0, minutes: 0, badges: [] });
+                saveStateToCloud();
+                closeModal('modal-add-student');
+                document.getElementById('add-student-name-input').value = '';
+                showToast(`Murid ${name} berjaya ditambah!`, "emerald");
+            }
         };
 
         window.exportToCSV = function() {
-            if (state.students.length === 0) return showToast("Tiada data murid untuk dieksport!", "amber");
-
-            let csvContent = "data:text/csv;charset=utf-8,Nama Murid,Jumlah Cop,Minit Belajar,Tahap Belt\n";
-            state.students.forEach(s => {
-                const belt = getBeltInfo(s.cops).name;
-                csvContent += `"${s.name}",${s.cops},${s.minutes || s.cops * 4},"${belt}"\n`;
+            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Jantina,Jumlah Cop,Jumlah Minit,Tahap Belt\n";
+            state.students.forEach((s, idx) => {
+                const belt = getBeltInfo(s.cops);
+                csvContent += `${idx + 1},"${s.name}",${s.gender},${s.cops},${s.minutes || s.cops * 4},"${belt.name}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_BioDojo_100_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `Laporan_Bio_Dojo_Bookmark_100.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         };
 
+        window.triggerConfetti = function() {
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        };
+
         window.openResetModal = function() {
-            if (!isAdmin) return showToast("Akses Terhad!", "amber");
+            if (!isAdmin) return;
             openModal('modal-reset-confirm');
         };
 
@@ -1974,13 +1983,13 @@
             saveStateToCloud();
             closeModal('modal-reset-confirm');
             closeModal('modal-cloud-settings');
-            showToast("Semua data telah di-reset!", "rose");
+            showToast("Semua data telah direset!", "rose");
         };
 
-        // Global Window Event Listener
-        window.addEventListener('DOMContentLoaded', () => {
+        // On window startup
+        window.onload = function() {
             initFirebase();
-        });
+        };
     </script>
 </body>
 </html>
