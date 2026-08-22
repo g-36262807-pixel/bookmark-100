@@ -19,12 +19,6 @@
                             card: '#1e293b',
                             accent: '#10b981',
                             red: '#ef4444',
-                            beltStarter: '#e2e8f0',
-                            beltExplorer: '#22c55e',
-                            beltAchiever: '#3b82f6',
-                            beltMaster: '#8b5cf6',
-                            beltElite: '#334155',
-                            beltLegend: '#eab308',
                         }
                     },
                     fontFamily: {
@@ -80,22 +74,31 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
-
-        .toast-enter {
-            transform: translateY(-20px);
-            opacity: 0;
-        }
-        .toast-show {
-            transform: translateY(0);
-            opacity: 1;
-            transition: all 0.3s ease-out;
-        }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #modal-passport, #modal-passport * {
+                visibility: visible;
+            }
+            #modal-passport {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                color: black !important;
+            }
+            #btn-passport-print, #btn-passport-delete, #btn-passport-minus, #btn-passport-plus {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -119,10 +122,10 @@
                             </h1>
                             <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold hidden sm:inline-block">20 MIN/HARI</span>
                             
-                            <!-- Realtime Sync Status Indicator -->
-                            <span id="sync-status-badge" class="bg-slate-800 text-amber-400 border border-amber-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1">
-                                <i class="fa-solid fa-circle-notch fa-spin"></i>
-                                <span>Menghubungkan...</span>
+                            <!-- Status Indicator -->
+                            <span id="sync-status-badge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1 cursor-pointer" onclick="openModal('modal-cloud-settings')">
+                                <i class="fa-solid fa-hard-drive"></i>
+                                <span>Penyimpanan Lokal Aktif</span>
                             </span>
                         </div>
                         <p class="text-xs text-slate-400">Papan Pemuka Tetapan Bab Harian, Kehadiran & Pencapaian Murid Masa Nyata</p>
@@ -161,6 +164,9 @@
                     </button>
                     <button onclick="triggerConfetti()" title="Meraikan Pencapaian" class="p-2.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                    <button onclick="openModal('modal-cloud-settings')" title="Tetapan Awan & Firebase" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
+                        <i class="fa-solid fa-cloud"></i>
                     </button>
                     <button onclick="openResetModal()" title="Reset Data Pelajar" class="p-2.5 bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/40 rounded-xl transition">
                         <i class="fa-solid fa-rotate-right"></i>
@@ -635,7 +641,7 @@
                         <i class="fa-solid fa-chart-bar text-emerald-400"></i>
                         <span>Jumlah Minit Pembelajaran Mengikut Murid</span>
                     </h3>
-                    <div class="h-72">
+                    <div class="h-72 relative">
                         <canvas id="chart-minutes-per-student"></canvas>
                     </div>
                 </div>
@@ -646,7 +652,7 @@
                         <i class="fa-solid fa-chart-pie text-amber-400"></i>
                         <span>Agihan Tahap Pencapaian (Belt Ranks) Kelas</span>
                     </h3>
-                    <div class="h-72">
+                    <div class="h-72 relative">
                         <canvas id="chart-belt-distribution"></canvas>
                     </div>
                 </div>
@@ -658,7 +664,7 @@
                     <i class="fa-solid fa-chart-line text-blue-400"></i>
                     <span>Kadar Kehadiran & Penyelesaian Tugas Mengikut Sesi Harian</span>
                 </h3>
-                <div class="h-72">
+                <div class="h-72 relative">
                     <canvas id="chart-session-trend"></canvas>
                 </div>
             </div>
@@ -874,7 +880,7 @@
             </div>
             <div>
                 <h3 class="text-lg font-bold text-white">Sahkan Reset Data?</h3>
-                <p class="text-xs text-slate-400 mt-1">Tindakan ini akan mengembalikan data murid, sesi bab, dan kehadiran ke tetapan asal di cloud.</p>
+                <p class="text-xs text-slate-400 mt-1">Tindakan ini akan mengembalikan data murid, sesi bab, dan kehadiran ke tetapan asal.</p>
             </div>
             <div class="flex space-x-2 pt-2">
                 <button onclick="closeModal('modal-reset-confirm')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-bold">Batal</button>
@@ -900,25 +906,50 @@
         </div>
     </div>
 
-    <!-- Firebase Cloud Sync & Main JS Logic Module -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Modal: Cloud Sync / Firebase Settings -->
+    <div id="modal-cloud-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+            <button onclick="closeModal('modal-cloud-settings')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-        // Firebase Configuration & Setup
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bio-dojo-bookmark-100';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : { apiKey: "demo-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project" };
+            <div class="border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-cloud text-purple-400"></i>
+                    <span>Tetapan Penyimpanan & Awan</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Sistem menyokong Penyimpanan Lokal secara automatik. Anda juga boleh memuat naik / memuat turun data secara manual.</p>
+            </div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+            <div class="space-y-3 text-xs">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 block font-semibold">Status Penyimpanan:</span>
+                    <span id="storage-status-text" class="text-emerald-400 font-bold text-sm block mt-0.5">LocalStorage (Penyimpanan Pelayan Web Lokal)</span>
+                </div>
 
-        // Strict Public Data Doc Path as per Storage Rule 1
-        const mainStateDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'mainData');
+                <div class="flex flex-col space-y-2 pt-2">
+                    <button onclick="exportDataJSON()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-download text-emerald-400"></i>
+                        <span>Muat Turun Backup JSON</span>
+                    </button>
+                    <label class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2 border border-slate-700 cursor-pointer">
+                        <i class="fa-solid fa-upload text-blue-400"></i>
+                        <span>Muat Naik Restore JSON</span>
+                        <input type="file" accept=".json" onchange="importDataJSON(event)" class="hidden">
+                    </label>
+                </div>
+            </div>
 
+            <div class="flex justify-end pt-2">
+                <button onclick="closeModal('modal-cloud-settings')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JS Application Logic -->
+    <script>
         // SPM Biology Syllabus Database
         window.SYLLABUS = {
             4: [
@@ -1000,96 +1031,67 @@
             charts: {}
         };
 
-        let isAuthenticated = false;
-
-        async function initAuthAndSync() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+        // Initialize Application Data
+        function initData() {
+            const stored = localStorage.getItem('bio_dojo_app_state');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    window.AppState.students = parsed.students || INITIAL_STUDENTS;
+                    window.AppState.sessions = parsed.sessions || INITIAL_SESSIONS;
+                    window.AppState.attendance = parsed.attendance || INITIAL_ATTENDANCE;
+                } catch (e) {
+                    console.error("Failed to parse stored state, reverting to initial seed", e);
+                    loadDefaultSeed();
                 }
-                isAuthenticated = true;
-                updateSyncBadge("cloud", "Awan Terhubung (Masa Nyata)");
-
-                // Real-time listener across all devices
-                onSnapshot(mainStateDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        window.AppState.students = data.students || [];
-                        window.AppState.sessions = data.sessions || [];
-                        window.AppState.attendance = data.attendance || {};
-                        
-                        // Ensure valid default session
-                        if (!window.AppState.sessions.some(s => s.id === window.AppState.selectedSessionId)) {
-                            if (window.AppState.sessions.length > 0) {
-                                window.AppState.selectedSessionId = window.AppState.sessions[0].id;
-                            }
-                        }
-                    } else {
-                        // Seed initial default data if cloud database is empty
-                        seedDefaultCloudData();
-                    }
-                    renderAllViews();
-                }, (error) => {
-                    console.error("Cloud sync error:", error);
-                    updateSyncBadge("error", "Ralat Sambungan Awan");
-                });
-
-            } catch (err) {
-                console.error("Auth Failed:", err);
-                updateSyncBadge("error", "Tiada Sambungan Awan");
+            } else {
+                loadDefaultSeed();
             }
+
+            if (window.AppState.sessions.length > 0) {
+                window.AppState.selectedSessionId = window.AppState.sessions[0].id;
+            }
+            saveStateToStorage();
+            renderAllViews();
         }
 
-        async function seedDefaultCloudData() {
-            const initialPayload = {
-                students: INITIAL_STUDENTS,
-                sessions: INITIAL_SESSIONS,
-                attendance: INITIAL_ATTENDANCE,
-                updatedAt: new Date().toISOString()
-            };
-            try {
-                await setDoc(mainStateDocRef, initialPayload);
-                showToast("Pangkalan data awan telah diisi secara automatik!");
-            } catch (e) {
-                console.error("Error seeding default data:", e);
-            }
+        function loadDefaultSeed() {
+            window.AppState.students = JSON.parse(JSON.stringify(INITIAL_STUDENTS));
+            window.AppState.sessions = JSON.parse(JSON.stringify(INITIAL_SESSIONS));
+            window.AppState.attendance = JSON.parse(JSON.stringify(INITIAL_ATTENDANCE));
         }
 
-        async function pushStateToCloud() {
-            if (!isAuthenticated) return;
+        function saveStateToStorage() {
             try {
-                updateSyncBadge("saving", "Menyimpan...");
-                await setDoc(mainStateDocRef, {
+                const payload = {
                     students: window.AppState.students,
                     sessions: window.AppState.sessions,
                     attendance: window.AppState.attendance,
                     updatedAt: new Date().toISOString()
-                });
-                updateSyncBadge("cloud", "Awan Terhubung (Masa Nyata)");
+                };
+                localStorage.setItem('bio_dojo_app_state', JSON.stringify(payload));
             } catch (e) {
-                console.error("Push to cloud failed:", e);
-                updateSyncBadge("error", "Gagal Simpan ke Awan");
-                showToast("Ralat menyimpan ke pangkalan data!", "rose");
+                console.error("Error saving state to localStorage", e);
             }
         }
-        window.pushStateToCloud = pushStateToCloud;
+        window.saveStateToStorage = saveStateToStorage;
 
-        function updateSyncBadge(type, message) {
-            const badge = document.getElementById('sync-status-badge');
-            if (!badge) return;
-            if (type === 'cloud') {
-                badge.className = "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1";
-                badge.innerHTML = `<i class="fa-solid fa-cloud"></i> <span>${message}</span>`;
-            } else if (type === 'saving') {
-                badge.className = "bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1";
-                badge.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>${message}</span>`;
-            } else {
-                badge.className = "bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1";
-                badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>${message}</span>`;
-            }
+        // UI Toast Helper
+        function showToast(message, color = "emerald") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = color === "rose" ? "bg-rose-900/90 border-rose-500 text-rose-200" : "bg-emerald-900/90 border-emerald-500 text-emerald-200";
+            
+            toast.className = `px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl flex items-center space-x-2 transition-all transform duration-300 ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
+        window.showToast = showToast;
 
         // Calculations
         function calculateStudentStats(studentId) {
@@ -1111,12 +1113,12 @@
                         totalSessionsAttended += 1;
                     }
                     if (rec.badges && Array.isArray(rec.badges)) {
-                        cops += rec.badges.length; // Each badge gives +1 Cop
+                        cops += rec.badges.length;
                     }
                 }
             });
 
-            const minutes = cops * 20; // 5 cops = 100 minutes
+            const minutes = cops * 20;
             const totalSessions = window.AppState.sessions.length || 1;
             const attendanceRate = Math.round((totalSessionsAttended / totalSessions) * 100);
 
@@ -1138,6 +1140,25 @@
             return { rank: "Bio-Dojo Starter", color: "bg-slate-200 text-slate-900 border-slate-300", icon: "⚪" };
         }
 
+        // Navigation Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.className = "nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800";
+            });
+            const activeNav = document.getElementById(`tab-${tabId}`);
+            if (activeNav) {
+                activeNav.className = "nav-tab px-4 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all bg-emerald-600 text-white shadow-md";
+            }
+
+            if (tabId === 'analytics') {
+                renderAnalyticsCharts();
+            }
+        }
+        window.switchTab = switchTab;
+
         // Render Master Switch
         function renderAllViews() {
             renderDashboard();
@@ -1146,7 +1167,6 @@
             renderDailyPlannerGrid();
             renderSessionListTable();
             renderStudentCardsGrid();
-            renderAnalyticsCharts();
             populateBabDropdown();
             populateQuickBabDropdown();
         }
@@ -1169,35 +1189,24 @@
                 return { ...st, stats };
             });
 
-            // Sort by Cops descending, then Minutes
             studentRankings.sort((a, b) => b.stats.cops - a.stats.cops);
 
-            // Dashboard Stats
             document.getElementById('stat-total-cops').innerText = totalCopsSum;
             document.getElementById('stat-total-minutes').innerText = `${totalMinutesSum} min`;
             const avgAttendance = students.length > 0 ? Math.round(attendanceRatesSum / students.length) : 0;
             document.getElementById('stat-attendance-rate').innerText = `${avgAttendance}%`;
             document.getElementById('stat-legend-count').innerText = legendCount;
 
-            // Target Progress Bar
             const avgMinutes = students.length > 0 ? Math.round(totalMinutesSum / students.length) : 0;
             document.getElementById('avg-minutes-text').innerText = `${avgMinutes} / 100 Min`;
             const progressPercent = Math.min(100, Math.round((avgMinutes / 100) * 100));
             document.getElementById('avg-minutes-bar').style.width = `${progressPercent}%`;
 
-            // Podium Display Top 3
-            const p1 = studentRankings[0];
-            const p2 = studentRankings[1];
-            const p3 = studentRankings[2];
+            setPodiumCard(1, studentRankings[0]);
+            setPodiumCard(2, studentRankings[1]);
+            setPodiumCard(3, studentRankings[2]);
 
-            setPodiumCard(1, p1);
-            setPodiumCard(2, p2);
-            setPodiumCard(3, p3);
-
-            // Active Session Banner
             renderActiveSessionBanner();
-
-            // Render Leaderboard
             renderLeaderboard(studentRankings);
         }
 
@@ -1216,6 +1225,16 @@
                 beltEl.innerHTML = `<span class="text-xs text-slate-500">-</span>`;
             }
         }
+
+        function openStudentPassportFromPodium(index) {
+            const students = window.AppState.students || [];
+            const studentRankings = students.map(st => ({ ...st, stats: calculateStudentStats(st.id) }))
+                .sort((a, b) => b.stats.cops - a.stats.cops);
+            if (studentRankings[index]) {
+                openStudentPassport(studentRankings[index].id);
+            }
+        }
+        window.openStudentPassportFromPodium = openStudentPassportFromPodium;
 
         function renderActiveSessionBanner() {
             const banner = document.getElementById('active-session-banner');
@@ -1258,7 +1277,7 @@
                 return;
             }
 
-            tbody.innerHTML = filtered.map((st, index) => {
+            tbody.innerHTML = filtered.map((st) => {
                 const originalRank = rankedList.findIndex(r => r.id === st.id) + 1;
                 let rankBadge = `<span class="font-bold text-slate-400">#${originalRank}</span>`;
                 if (originalRank === 1) rankBadge = `<span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-xs shadow">🥇 1</span>`;
@@ -1325,7 +1344,7 @@
             window.AppState.selectedSessionId = select.value;
             updateSessionInfoBadge();
             renderAttendanceMatrix();
-            renderDashboard(); // refresh banner
+            renderDashboard();
         }
         window.loadAttendanceMatrix = loadAttendanceMatrix;
 
@@ -1400,7 +1419,7 @@
 
             window.AppState.attendance[sessionId][studentId].status = status;
             renderAttendanceMatrix();
-            pushStateToCloud();
+            saveStateToStorage();
         }
         window.setAttendanceStatus = setAttendanceStatus;
 
@@ -1423,7 +1442,7 @@
             }
 
             renderAttendanceMatrix();
-            pushStateToCloud();
+            saveStateToStorage();
         }
         window.toggleBadge = toggleBadge;
 
@@ -1438,7 +1457,7 @@
                 }
             });
             renderAttendanceMatrix();
-            pushStateToCloud();
+            saveStateToStorage();
             showToast("Semua murid ditandakan HADIR (✓)");
         }
         window.markAllPresent = markAllPresent;
@@ -1454,7 +1473,7 @@
                 }
             });
             renderAttendanceMatrix();
-            pushStateToCloud();
+            saveStateToStorage();
             showToast("Semua murid ditandakan TIDAK HADIR (A)", "rose");
         }
         window.markAllAbsent = markAllAbsent;
@@ -1463,14 +1482,14 @@
             const sessionId = window.AppState.selectedSessionId;
             delete window.AppState.attendance[sessionId];
             renderAttendanceMatrix();
-            pushStateToCloud();
+            saveStateToStorage();
             showToast("Rekod sesi ini di-reset!");
         }
         window.resetCurrentSessionAttendance = resetCurrentSessionAttendance;
 
         function saveAttendanceData() {
-            pushStateToCloud();
-            showToast("Rekod Kehadiran berjaya disimpan ke pangkalan data awan!");
+            saveStateToStorage();
+            showToast("Rekod Kehadiran berjaya disimpan!");
         }
         window.saveAttendanceData = saveAttendanceData;
 
@@ -1478,6 +1497,7 @@
         function populateBabDropdown() {
             const levelSelect = document.getElementById('session-form-level');
             const babSelect = document.getElementById('session-bab-input');
+            if (!levelSelect || !babSelect) return;
             const level = levelSelect.value;
 
             const list = window.SYLLABUS[level] || [];
@@ -1488,6 +1508,7 @@
         function populateQuickBabDropdown() {
             const levelSelect = document.getElementById('quick-session-level');
             const babSelect = document.getElementById('quick-session-bab');
+            if (!levelSelect || !babSelect) return;
             const level = levelSelect.value;
 
             const list = window.SYLLABUS[level] || [];
@@ -1503,6 +1524,7 @@
 
         function renderDailyPlannerGrid() {
             const grid = document.getElementById('daily-planner-grid');
+            if (!grid) return;
             const levelFilter = document.getElementById('filter-planner-form').value;
             const searchText = (document.getElementById('search-planner-bab')?.value || '').toLowerCase();
 
@@ -1566,6 +1588,7 @@
 
         function renderSessionListTable() {
             const tbody = document.getElementById('session-list-body');
+            if (!tbody) return;
             const sessions = window.AppState.sessions || [];
 
             document.getElementById('session-count-tag').innerText = `${sessions.length} Sesi`;
@@ -1607,19 +1630,18 @@
             const notes = document.getElementById('session-notes-input').value;
 
             if (idInput) {
-                // Edit existing
                 const idx = window.AppState.sessions.findIndex(s => s.id === idInput);
                 if (idx !== -1) {
                     window.AppState.sessions[idx] = { id: idInput, title, level, bab, flashcard, activity, notes };
                 }
             } else {
-                // New session
                 const newId = `day_${Date.now()}`;
                 window.AppState.sessions.push({ id: newId, title, level, bab, flashcard, activity, notes });
             }
 
             resetSessionForm();
-            pushStateToCloud();
+            saveStateToStorage();
+            renderAllViews();
             showToast("Jadual Sesi Bab disimpan!");
         }
         window.handleSaveSession = handleSaveSession;
@@ -1653,7 +1675,8 @@
             if (window.AppState.selectedSessionId === sessionId) {
                 if (window.AppState.sessions.length > 0) window.AppState.selectedSessionId = window.AppState.sessions[0].id;
             }
-            pushStateToCloud();
+            saveStateToStorage();
+            renderAllViews();
             showToast("Sesi dipadam!", "rose");
         }
         window.deleteSession = deleteSession;
@@ -1693,7 +1716,8 @@
                 s.notes = document.getElementById('quick-session-notes').value;
             }
             closeModal('modal-quick-chapter');
-            pushStateToCloud();
+            saveStateToStorage();
+            renderAllViews();
             showToast("Bab Sesi berjaya dikemaskini!");
         }
         window.handleSaveQuickChapter = handleSaveQuickChapter;
@@ -1716,7 +1740,6 @@
             const autoSessions = [];
             let dayCounter = 1;
 
-            // Form 4 Syllabus (15 Chapters)
             window.SYLLABUS[4].forEach(b => {
                 autoSessions.push({
                     id: `day_${dayCounter}`,
@@ -1730,7 +1753,6 @@
                 dayCounter++;
             });
 
-            // Form 5 Syllabus (13 Chapters)
             window.SYLLABUS[5].forEach(b => {
                 autoSessions.push({
                     id: `day_${dayCounter}`,
@@ -1748,7 +1770,8 @@
             if (autoSessions.length > 0) window.AppState.selectedSessionId = autoSessions[0].id;
 
             closeModal('modal-auto-schedule-confirm');
-            pushStateToCloud();
+            saveStateToStorage();
+            renderAllViews();
             showToast("Susunan Sukatan SPM (28 Hari) Berjaya Disusun!");
         }
         window.executeAutoScheduleSyllabus = executeAutoScheduleSyllabus;
@@ -1756,6 +1779,7 @@
         // --- STUDENTS & PASSPORT TAB ---
         function renderStudentCardsGrid() {
             const grid = document.getElementById('student-cards-grid');
+            if (!grid) return;
             const students = window.AppState.students || [];
 
             if (students.length === 0) {
@@ -1779,113 +1803,25 @@
 
                         <div class="grid grid-cols-2 gap-2 text-center text-xs">
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-slate-400 text-[10px] block">Jumlah Cop</span>
-                                <span class="text-emerald-400 font-extrabold text-sm">${stats.cops} Cop</span>
+                                <span class="text-slate-400 block text-[10px]">Terkumpul</span>
+                                <span class="font-bold text-emerald-400">${stats.cops} Cop</span>
                             </div>
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-slate-400 text-[10px] block">Minit Belajar</span>
-                                <span class="text-amber-400 font-extrabold text-sm">${stats.minutes} Min</span>
+                                <span class="text-slate-400 block text-[10px]">Minit</span>
+                                <span class="font-bold text-amber-400">${stats.minutes} Min</span>
                             </div>
                         </div>
 
-                        <button onclick="openStudentPassport('${st.id}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1">
-                            <i class="fa-solid fa-address-card"></i>
-                            <span>Buka Pasport 100</span>
+                        <button onclick="openStudentPassport('${st.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-slate-700">
+                            <i class="fa-solid fa-address-card text-emerald-400"></i>
+                            <span>Lihat Pasport 100</span>
                         </button>
                     </div>
                 `;
             }).join('');
         }
 
-        function openStudentPassportFromPodium(index) {
-            const students = (window.AppState.students || []).map(st => ({ ...st, stats: calculateStudentStats(st.id) }))
-                .sort((a, b) => b.stats.cops - a.stats.cops);
-            if (students[index]) {
-                openStudentPassport(students[index].id);
-            }
-        }
-        window.openStudentPassportFromPodium = openStudentPassportFromPodium;
-
-        function openStudentPassport(studentId) {
-            window.AppState.currentPassportStudentId = studentId;
-            const st = window.AppState.students.find(s => s.id === studentId);
-            if (!st) return;
-
-            const stats = calculateStudentStats(studentId);
-
-            document.getElementById('passport-modal-name').innerText = st.name;
-            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${stats.belt.color}">${stats.belt.icon} ${stats.belt.rank}</span>`;
-            document.getElementById('passport-modal-cops').innerText = stats.cops;
-            document.getElementById('passport-modal-minutes').innerText = `${stats.minutes} Min`;
-            document.getElementById('passport-modal-cops-badge').innerText = `${stats.cops} Cop`;
-
-            // Badges breakdown
-            const badgesDiv = document.getElementById('passport-modal-badges');
-            const userBadges = [];
-            const attendance = window.AppState.attendance || {};
-            Object.keys(attendance).forEach(sid => {
-                const rec = attendance[sid][studentId];
-                if (rec && rec.badges) userBadges.push(...rec.badges);
-            });
-
-            if (userBadges.length === 0) {
-                badgesDiv.innerHTML = `<span class="text-slate-500 italic">Belum mengumpul lencana bonus.</span>`;
-            } else {
-                badgesDiv.innerHTML = userBadges.map(b => `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md text-[10px] font-bold">⭐ ${b}</span>`).join(' ');
-            }
-
-            // Attendance History
-            const historyDiv = document.getElementById('passport-modal-history');
-            const history = [];
-            (window.AppState.sessions || []).forEach(s => {
-                const rec = attendance[s.id]?.[studentId];
-                if (rec) {
-                    history.push({ sessionTitle: s.title, status: rec.status, badges: rec.badges || [] });
-                }
-            });
-
-            if (history.length === 0) {
-                historyDiv.innerHTML = `<p class="text-slate-500 italic">Tiada rekod sesi lagi.</p>`;
-            } else {
-                historyDiv.innerHTML = history.map(h => `
-                    <div class="flex items-center justify-between bg-slate-950 p-2 rounded-lg border border-slate-800 text-[11px]">
-                        <span class="text-slate-300 font-semibold">${h.sessionTitle}</span>
-                        <span class="${h.status === 'HADIR' ? 'text-emerald-400 font-bold' : 'text-rose-400'}">${h.status === 'HADIR' ? '✓ Hadir' : 'A Ponteng'}</span>
-                    </div>
-                `).join('');
-            }
-
-            openModal('modal-passport');
-        }
-        window.openStudentPassport = openStudentPassport;
-
-        function adjustStudentCop(amount) {
-            const studentId = window.AppState.currentPassportStudentId;
-            const st = window.AppState.students.find(s => s.id === studentId);
-            if (!st) return;
-
-            if (!st.customOffset) st.customOffset = 0;
-            st.customOffset += amount;
-
-            pushStateToCloud();
-            openStudentPassport(studentId); // Refresh modal view
-            showToast(`Pelarasan Cop: ${amount > 0 ? '+' : ''}${amount}`);
-        }
-        window.adjustStudentCop = adjustStudentCop;
-
-        function deleteCurrentStudentFromPassport() {
-            const studentId = window.AppState.currentPassportStudentId;
-            if (!studentId) return;
-
-            window.AppState.students = window.AppState.students.filter(s => s.id !== studentId);
-            closeModal('modal-passport');
-            pushStateToCloud();
-            showToast("Murid berjaya dipadam!", "rose");
-        }
-        window.deleteCurrentStudentFromPassport = deleteCurrentStudentFromPassport;
-
         function openAddStudentModal() {
-            document.getElementById('new-student-name').value = "";
             openModal('modal-add-student');
         }
         window.openAddStudentModal = openAddStudentModal;
@@ -1897,186 +1833,269 @@
 
             if (!name) return;
 
-            const newStudent = {
-                id: `st_${Date.now()}`,
+            const newId = `s_${Date.now()}`;
+            window.AppState.students.push({
+                id: newId,
                 name,
                 gender,
                 customOffset: 0
-            };
+            });
 
-            window.AppState.students.push(newStudent);
+            document.getElementById('new-student-name').value = "";
             closeModal('modal-add-student');
-            pushStateToCloud();
-            showToast(`Murid ${name} didaftarkan!`);
+            saveStateToStorage();
+            renderAllViews();
+            showToast(`Murid ${name} berjaya didaftarkan!`);
         }
         window.handleAddNewStudent = handleAddNewStudent;
 
-        // --- ANALYTICS & CHARTS TAB ---
-        function renderAnalyticsCharts() {
-            // Syllabus Coverage
-            const sessions = window.AppState.sessions || [];
-            const f4Set = new Set(sessions.filter(s => s.level == 4).map(s => s.bab));
-            const f5Set = new Set(sessions.filter(s => s.level == 5).map(s => s.bab));
+        function openStudentPassport(studentId) {
+            const st = window.AppState.students.find(s => s.id === studentId);
+            if (!st) return;
 
-            const covF4 = Math.round((f4Set.size / 15) * 100);
-            const covF5 = Math.round((f5Set.size / 13) * 100);
+            window.AppState.currentPassportStudentId = studentId;
+            const stats = calculateStudentStats(studentId);
 
-            document.getElementById('coverage-f4-text').innerText = `${f4Set.size} / 15 Bab (${covF4}%)`;
-            document.getElementById('coverage-f5-text').innerText = `${f5Set.size} / 13 Bab (${covF5}%)`;
+            document.getElementById('passport-modal-name').innerText = st.name;
+            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${stats.belt.color}">${stats.belt.icon} ${stats.belt.rank}</span>`;
+            document.getElementById('passport-modal-cops').innerText = stats.cops;
+            document.getElementById('passport-modal-cops-badge').innerText = `${stats.cops} Cop`;
+            document.getElementById('passport-modal-minutes').innerText = `${stats.minutes} Min`;
 
-            // Chart 1: Minutes per Student Bar Chart
-            const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
-            if (ctx1) {
-                if (window.AppState.charts.chart1) window.AppState.charts.chart1.destroy();
-
-                const students = window.AppState.students || [];
-                const labels = students.map(s => s.name);
-                const dataMins = students.map(s => calculateStudentStats(s.id).minutes);
-
-                window.AppState.charts.chart1 = new Chart(ctx1, {
-                    type: 'bar',
-                    data: {
-                        labels,
-                        datasets: [{
-                            label: 'Jumlah Minit Belajar',
-                            data: dataMins,
-                            backgroundColor: '#10b981',
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-
-            // Chart 2: Belt Distribution Doughnut Chart
-            const ctx2 = document.getElementById('chart-belt-distribution')?.getContext('2d');
-            if (ctx2) {
-                if (window.AppState.charts.chart2) window.AppState.charts.chart2.destroy();
-
-                const students = window.AppState.students || [];
-                const rankCounts = { Starter: 0, Explorer: 0, Achiever: 0, Master: 0, Elite: 0, Legend: 0 };
-
-                students.forEach(s => {
-                    const rank = calculateStudentStats(s.id).belt.rank.replace("Bio-Dojo ", "");
-                    if (rankCounts[rank] !== undefined) rankCounts[rank]++;
-                });
-
-                window.AppState.charts.chart2 = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(rankCounts),
-                        datasets: [{
-                            data: Object.values(rankCounts),
-                            backgroundColor: ['#e2e8f0', '#22c55e', '#3b82f6', '#8b5cf6', '#334155', '#f59e0b']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#e2e8f0' } } }
-                    }
-                });
-            }
-
-            // Chart 3: Attendance Trend Line Chart
-            const ctx3 = document.getElementById('chart-session-trend')?.getContext('2d');
-            if (ctx3) {
-                if (window.AppState.charts.chart3) window.AppState.charts.chart3.destroy();
-
-                const sessionLabels = sessions.map(s => s.title);
-                const attendance = window.AppState.attendance || {};
-                const studentsCount = (window.AppState.students || []).length || 1;
-
-                const attendanceData = sessions.map(s => {
-                    const record = attendance[s.id] || {};
-                    const presentCount = Object.values(record).filter(r => r.status === 'HADIR').length;
-                    return Math.round((presentCount / studentsCount) * 100);
-                });
-
-                window.AppState.charts.chart3 = new Chart(ctx3, {
-                    type: 'line',
-                    data: {
-                        labels: sessionLabels,
-                        datasets: [{
-                            label: 'Kadar Kehadiran (%)',
-                            data: attendanceData,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            fill: true,
-                            tension: 0.3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { min: 0, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-        }
-
-        // Global Navigation Tab Switcher
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-tab').forEach(el => {
-                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
-                el.classList.add('text-slate-400');
+            // Badges breakdown
+            let allBadges = [];
+            const attendance = window.AppState.attendance || {};
+            Object.keys(attendance).forEach(sid => {
+                if (attendance[sid][studentId] && attendance[sid][studentId].badges) {
+                    allBadges = allBadges.concat(attendance[sid][studentId].badges);
+                }
             });
 
-            const activeView = document.getElementById(`view-${tabId}`);
-            if (activeView) activeView.classList.remove('hidden');
-
-            const activeTabBtn = document.getElementById(`tab-${tabId}`);
-            if (activeTabBtn) {
-                activeTabBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
-                activeTabBtn.classList.remove('text-slate-400');
+            const badgeContainer = document.getElementById('passport-modal-badges');
+            if (allBadges.length === 0) {
+                badgeContainer.innerHTML = `<span class="text-slate-500 italic">Belum ada lencana bonus</span>`;
+            } else {
+                const countMap = {};
+                allBadges.forEach(b => countMap[b] = (countMap[b] || 0) + 1);
+                badgeContainer.innerHTML = Object.keys(countMap).map(key => {
+                    let label = key;
+                    if (key === 'PERFECT_RECALL') label = "⭐ Perfect Recall";
+                    if (key === 'CHAMPION') label = "👑 Champion";
+                    if (key === 'EXPLAIN') label = "🧠 Terangkan Konsep";
+                    return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-lg font-bold">${label} (x${countMap[key]})</span>`;
+                }).join('');
             }
 
-            if (tabId === 'analytics') {
-                setTimeout(renderAnalyticsCharts, 100);
+            // Attendance History List
+            const historyContainer = document.getElementById('passport-modal-history');
+            const historyItems = [];
+
+            (window.AppState.sessions || []).forEach(session => {
+                const rec = attendance[session.id] && attendance[session.id][studentId];
+                if (rec) {
+                    let statusLabel = `<span class="text-rose-400 font-bold">A (Ponteng)</span>`;
+                    if (rec.status === 'HADIR') statusLabel = `<span class="text-emerald-400 font-bold">✓ (Hadir +1)</span>`;
+                    if (rec.status === 'INCOMPLETE') statusLabel = `<span class="text-amber-400 font-bold">P (Tak Lengkap)</span>`;
+
+                    historyItems.push(`
+                        <div class="flex justify-between items-center bg-slate-950 p-2 rounded-xl border border-slate-800">
+                            <div>
+                                <span class="font-bold text-white block">${session.title}</span>
+                                <span class="text-[10px] text-slate-400">${getBabTitle(session.level, session.bab)}</span>
+                            </div>
+                            <div>${statusLabel}</div>
+                        </div>
+                    `);
+                }
+            });
+
+            if (historyItems.length === 0) {
+                historyContainer.innerHTML = `<p class="text-slate-500 italic">Tiada rekod kehadiran sesi.</p>`;
+            } else {
+                historyContainer.innerHTML = historyItems.join('');
             }
-        }
-        window.switchTab = switchTab;
 
-        // Modal Helpers
-        function openModal(id) {
-            const m = document.getElementById(id);
-            if (m) m.classList.remove('hidden');
+            openModal('modal-passport');
         }
-        window.openModal = openModal;
+        window.openStudentPassport = openStudentPassport;
 
-        function closeModal(id) {
-            const m = document.getElementById(id);
-            if (m) m.classList.add('hidden');
+        function adjustStudentCop(delta) {
+            const studentId = window.AppState.currentPassportStudentId;
+            const st = window.AppState.students.find(s => s.id === studentId);
+            if (!st) return;
+
+            st.customOffset = (st.customOffset || 0) + delta;
+            saveStateToStorage();
+            renderAllViews();
+            openStudentPassport(studentId); // re-open modal to refresh
+            showToast(`Cop ${st.name} dikemaskini!`);
         }
-        window.closeModal = closeModal;
+        window.adjustStudentCop = adjustStudentCop;
 
-        // Reset Data
-        function openResetModal() {
-            openModal('modal-reset-confirm');
+        function deleteCurrentStudentFromPassport() {
+            const studentId = window.AppState.currentPassportStudentId;
+            window.AppState.students = window.AppState.students.filter(s => s.id !== studentId);
+            closeModal('modal-passport');
+            saveStateToStorage();
+            renderAllViews();
+            showToast("Murid telah dipadam!", "rose");
         }
-        window.openResetModal = openResetModal;
+        window.deleteCurrentStudentFromPassport = deleteCurrentStudentFromPassport;
 
-        function executeResetData() {
-            seedDefaultCloudData();
-            closeModal('modal-reset-confirm');
-            showToast("Data telah di-reset ke pangkalan asal!");
+        // --- ANALYTICS TAB & CHARTS ---
+        function renderAnalyticsCharts() {
+            const students = window.AppState.students || [];
+            const sessions = window.AppState.sessions || [];
+
+            // 1. Syllabus Coverage
+            const f4Count = sessions.filter(s => s.level == 4).length;
+            const f5Count = sessions.filter(s => s.level == 5).length;
+            document.getElementById('coverage-f4-text').innerText = `${f4Count} / 15 Bab (${Math.round((f4Count / 15) * 100)}%)`;
+            document.getElementById('coverage-f5-text').innerText = `${f5Count} / 13 Bab (${Math.round((f5Count / 13) * 100)}%)`;
+
+            // 2. Bar Chart: Student Minutes
+            const labels = students.map(s => s.name);
+            const minutesData = students.map(s => calculateStudentStats(s.id).minutes);
+
+            createChart('chart-minutes-per-student', 'bar', {
+                labels,
+                datasets: [{
+                    label: 'Minit Pembelajaran',
+                    data: minutesData,
+                    backgroundColor: '#10b981',
+                    borderRadius: 8
+                }]
+            }, {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#334155' } },
+                    x: { grid: { display: false } }
+                }
+            });
+
+            // 3. Pie Chart: Belt Ranks Distribution
+            const beltCounts = { Starter: 0, Explorer: 0, Achiever: 0, Master: 0, Elite: 0, Legend: 0 };
+            students.forEach(s => {
+                const stats = calculateStudentStats(s.id);
+                if (stats.cops >= 25) beltCounts.Legend++;
+                else if (stats.cops >= 20) beltCounts.Elite++;
+                else if (stats.cops >= 15) beltCounts.Master++;
+                else if (stats.cops >= 10) beltCounts.Achiever++;
+                else if (stats.cops >= 5) beltCounts.Explorer++;
+                else beltCounts.Starter++;
+            });
+
+            createChart('chart-belt-distribution', 'doughnut', {
+                labels: Object.keys(beltCounts),
+                datasets: [{
+                    data: Object.values(beltCounts),
+                    backgroundColor: ['#e2e8f0', '#22c55e', '#3b82f6', '#8b5cf6', '#334155', '#eab308']
+                }]
+            }, {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }
+            });
+
+            // 4. Line Chart: Session Attendance Trend
+            const sessionLabels = sessions.map(s => s.title);
+            const attendanceRates = sessions.map(s => {
+                const rec = window.AppState.attendance[s.id] || {};
+                let presentCount = 0;
+                students.forEach(st => {
+                    if (rec[st.id] && rec[st.id].status === 'HADIR') presentCount++;
+                });
+                return students.length > 0 ? Math.round((presentCount / students.length) * 100) : 0;
+            });
+
+            createChart('chart-session-trend', 'line', {
+                labels: sessionLabels,
+                datasets: [{
+                    label: 'Kadar Kehadiran (%)',
+                    data: attendanceRates,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            }, {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { color: '#334155' } },
+                    x: { grid: { display: false } }
+                }
+            });
         }
-        window.executeResetData = executeResetData;
 
-        // Confetti Celebration
+        function createChart(canvasId, type, data, options) {
+            if (window.AppState.charts[canvasId]) {
+                window.AppState.charts[canvasId].destroy();
+            }
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            window.AppState.charts[canvasId] = new Chart(ctx, { type, data, options });
+        }
+
+        // CSV Export
+        function exportToCSV() {
+            const students = window.AppState.students || [];
+            let csv = "Nama Murid,Jantina,Jumlah Cop,Jumlah Minit,Kehadiran %,Tahap Belt\n";
+
+            students.forEach(st => {
+                const stats = calculateStudentStats(st.id);
+                csv += `"${st.name}",${st.gender},${stats.cops},${stats.minutes},${stats.attendanceRate}%,"${stats.belt.rank}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Laporan_BioDojo_Bookmark100_${new Date().toISOString().slice(0,10)}.csv`);
+            a.click();
+            showToast("Laporan CSV berjaya dimuat turun!");
+        }
+        window.exportToCSV = exportToCSV;
+
+        // JSON Backup / Restore
+        function exportDataJSON() {
+            const jsonStr = JSON.stringify(window.AppState, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `BioDojo_Backup_${new Date().toISOString().slice(0,10)}.json`);
+            a.click();
+        }
+        window.exportDataJSON = exportDataJSON;
+
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.students && parsed.sessions) {
+                        window.AppState.students = parsed.students;
+                        window.AppState.sessions = parsed.sessions;
+                        window.AppState.attendance = parsed.attendance || {};
+                        saveStateToStorage();
+                        renderAllViews();
+                        closeModal('modal-cloud-settings');
+                        showToast("Data berjaya dipulihkan daripada fail JSON!");
+                    }
+                } catch (err) {
+                    showToast("Fail JSON tidak sah!", "rose");
+                }
+            };
+            reader.readAsText(file);
+        }
+        window.importDataJSON = importDataJSON;
+
+        // Confetti Trigger
         function triggerConfetti() {
             if (typeof confetti === 'function') {
                 confetti({
@@ -2088,53 +2107,36 @@
         }
         window.triggerConfetti = triggerConfetti;
 
-        // Toast Messages
-        function showToast(message, color = "emerald") {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast-enter bg-slate-900 border border-${color}-500/50 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2 text-xs font-semibold pointer-events-auto`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-${color}-400"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('toast-show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('toast-show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        // Modals Helper
+        function openModal(id) {
+            document.getElementById(id)?.classList.remove('hidden');
         }
-        window.showToast = showToast;
+        window.openModal = openModal;
 
-        // CSV Exporter
-        function exportToCSV() {
-            const students = window.AppState.students || [];
-            if (students.length === 0) {
-                showToast("Tiada data murid untuk dieksport", "rose");
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID Murid,Nama Murid,Jantina,Jumlah Cop,Jumlah Minit Belajar,Tahap Belt,Peratus Kehadiran\n";
-
-            students.forEach(st => {
-                const stats = calculateStudentStats(st.id);
-                csvContent += `"${st.id}","${st.name}","${st.gender}",${stats.cops},${stats.minutes},"${stats.belt.rank}",${stats.attendanceRate}%\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Bio_Dojo_Laporan_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("Fail CSV berjaya dimuat turun!");
+        function closeModal(id) {
+            document.getElementById(id)?.classList.add('hidden');
         }
-        window.exportToCSV = exportToCSV;
+        window.closeModal = closeModal;
 
-        // Boot App Initialization
-        window.onload = function() {
-            initAuthAndSync();
-        };
+        function openResetModal() {
+            openModal('modal-reset-confirm');
+        }
+        window.openResetModal = openResetModal;
+
+        function executeResetData() {
+            localStorage.removeItem('bio_dojo_app_state');
+            loadDefaultSeed();
+            saveStateToStorage();
+            closeModal('modal-reset-confirm');
+            renderAllViews();
+            showToast("Semua data telah dikembalikan ke tetapan asal!", "rose");
+        }
+        window.executeResetData = executeResetData;
+
+        // Start App
+        window.addEventListener('DOMContentLoaded', () => {
+            initData();
+        });
     </script>
 </body>
 </html>
