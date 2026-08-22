@@ -122,7 +122,7 @@
                             </h1>
                             <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold hidden sm:inline-block">20 MIN/HARI</span>
                             
-                            <!-- Realtime Sync Status Badge (Automatik Masa Nyata) -->
+                            <!-- Realtime Sync Status Badge -->
                             <span id="sync-status-badge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center space-x-1 cursor-pointer" onclick="openModal('modal-cloud-settings')">
                                 <i class="fa-solid fa-bolt text-xs animate-pulse"></i>
                                 <span id="sync-status-text">Awan Masa Nyata</span>
@@ -182,7 +182,8 @@
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </button>
                     
-                    <button onclick="openModal('modal-cloud-settings')" title="Info Awan Masa Nyata & PIN Admin" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
+                    <!-- Butang Perisai / Status Awan -->
+                    <button onclick="openModal('modal-cloud-settings')" title="Info Awan Masa Nyata & Tetapan Firebase" class="p-2.5 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/40 rounded-xl transition">
                         <i class="fa-solid fa-shield-halved"></i>
                     </button>
                 </div>
@@ -403,10 +404,6 @@
                 <div class="w-full md:w-auto flex-1">
                     <div class="flex items-center justify-between mb-1">
                         <label for="select-attendance-session" class="block text-xs font-semibold text-slate-400">PILIH HARI / SESI UJIAN:</label>
-                        <button onclick="openQuickEditCurrentSession()" class="admin-only text-[11px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center space-x-1">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span>Kemaskini Bab Hari Ini</span>
-                        </button>
                     </div>
                     <select id="select-attendance-session" onchange="loadAttendanceMatrix()" class="bg-slate-950 border border-slate-700 text-emerald-400 font-bold rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 w-full">
                         <!-- Populated dynamically -->
@@ -500,10 +497,6 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="autoScheduleSPMSyllabus()" class="admin-only bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Susun Auto Sukatan SPM</span>
-                    </button>
                     <button onclick="resetSessionForm()" class="admin-only bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
                         <i class="fa-solid fa-plus"></i>
                         <span>Tambah Sesi Baru</span>
@@ -542,7 +535,7 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
                     <h3 class="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
                         <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
-                        <span id="session-form-title">Kemaskini / Tetap Bab Hari Ini</span>
+                        <span id="session-form-title">Tambah / Kemaskini Sesi</span>
                     </h3>
 
                     <form id="form-session" onsubmit="handleSaveSession(event)" class="space-y-3 text-xs">
@@ -832,7 +825,7 @@
 
             <div>
                 <h3 class="text-lg font-bold text-white">Log Masuk Admin</h3>
-                <p class="text-xs text-slate-400 mt-1">Masukkan Kata Laluan / PIN Admin untuk kemaskini data (PIN Lalai: <span class="font-bold text-amber-300">1234</span>)</p>
+                <p class="text-xs text-slate-400 mt-1">Masukkan Kata Laluan / PIN Admin (PIN Lalai: <span class="font-bold text-amber-300">1234</span>)</p>
             </div>
 
             <form onsubmit="handleAdminAuth(event)" class="space-y-3">
@@ -919,8 +912,8 @@
         </div>
     </div>
 
-    <!-- Modal: INFO AWAN MASA NYATA & TUKAR PIN ADMIN -->
-    <div id="modal-cloud-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <!-- Modal: INFO AWAN MASA NYATA & TETAPAN FIREBASE CONFIG JSON -->
+    <div id="modal-cloud-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden overflow-y-auto max-h-screen py-10">
         <div class="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 relative">
             <button onclick="closeModal('modal-cloud-settings')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
                 <i class="fa-solid fa-xmark"></i>
@@ -929,21 +922,43 @@
             <div class="border-b border-slate-800 pb-3">
                 <h3 class="text-lg font-bold text-white flex items-center space-x-2">
                     <i class="fa-solid fa-shield-halved text-purple-400"></i>
-                    <span>Status Awan Masa Nyata & Keselamatan Admin</span>
+                    <span>Sambungkan Firestore Awan</span>
                 </h3>
+                <p class="text-xs text-slate-400 mt-1">Sediakan pangkalan data Firestore awan tersuai bagi penyelarasan peranti secara live.</p>
             </div>
 
             <div class="space-y-4 text-xs">
+                <!-- Status Sambungan Firestore -->
                 <div class="bg-purple-950/40 border border-purple-500/30 rounded-2xl p-4 space-y-2">
                     <h4 class="font-bold text-purple-300 flex items-center space-x-2">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Pangkalan Data Masa Nyata Automatik</span>
+                        <span>Status Awan Masa Nyata</span>
                     </h4>
                     <p class="text-slate-300 leading-relaxed">
-                        Aplikasi ini dikemas kini secara automatik menerusi pangkalan data awan berpusat (*live snapshot*). Murid tidak perlu membuat apa-apa tetapan berulang. Sebaik sahaja guru mengemaskini kehadiran atau markah, paparan peranti murid akan bertukar secara automatik.
+                        Aplikasi ini akan menyelaras data secara automatik melalui Firestore Snapshot. Sekiranya tiada sambungan, data disimpan secara automatik dalam simpanan peranti tempatan (LocalStorage).
                     </p>
                 </div>
 
+                <!-- Input Box Tetapan Firebase Config JSON -->
+                <div class="space-y-2 border-t border-slate-800 pt-3">
+                    <div class="flex items-center justify-between">
+                        <label class="font-bold text-amber-300 block">Firebase Config JSON Projek Anda:</label>
+                        <span id="custom-firebase-status-badge" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700">Guna Lalai</span>
+                    </div>
+                    <textarea id="input-firebase-config-json" rows="6" placeholder='{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "projek-anda.firebaseapp.com",&#10;  "projectId": "projek-anda",&#10;  "storageBucket": "projek-anda.appspot.com",&#10;  "messagingSenderId": "1234567890",&#10;  "appId": "1:1234567890:web:abc123def456"&#10;}' class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-emerald-400 font-mono text-xs focus:outline-none focus:border-purple-500 leading-relaxed"></textarea>
+                    
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="saveFirebaseConfigJSON()" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg flex items-center justify-center space-x-1">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Simpan Kunci Firebase & Muat Semula</span>
+                        </button>
+                        <button onclick="clearFirebaseConfigJSON()" class="bg-slate-800 hover:bg-slate-700 text-rose-400 font-medium px-3 py-2.5 rounded-xl transition" title="Padam Kunci Custom">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tukar PIN Admin -->
                 <div class="admin-only space-y-2 border-t border-slate-800 pt-3">
                     <h4 class="font-bold text-white">Tukar PIN Admin</h4>
                     <div class="flex space-x-2">
@@ -954,9 +969,10 @@
                     </div>
                 </div>
 
+                <!-- Reset Data -->
                 <div class="admin-only border-t border-slate-800 pt-3 flex justify-between items-center">
                     <div>
-                        <span class="font-bold text-rose-400 block">Reset Semua Data</span>
+                        <span class="font-bold text-rose-400 block">Reset Semua Data Rekod</span>
                         <span class="text-[11px] text-slate-500">Padam semua rekod & kembali ke tetapan asal</span>
                     </div>
                     <button onclick="openResetModal()" class="bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 border border-rose-500/40 font-bold px-3 py-1.5 rounded-xl transition">
@@ -1060,28 +1076,40 @@
 
         async function initFirebase() {
             try {
-                let firebaseConfig;
+                let firebaseConfig = {
+                    apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
+                    authDomain: "bio-dojo-bookmark.firebaseapp.com",
+                    projectId: "bio-dojo-bookmark",
+                    storageBucket: "bio-dojo-bookmark.appspot.com"
+                };
+
                 if (typeof __firebase_config !== 'undefined') {
-                    firebaseConfig = JSON.parse(__firebase_config);
-                } else {
-                    firebaseConfig = {
-                        apiKey: "AIzaSyDummyKeyForDemoModeOnly123456",
-                        authDomain: "bio-dojo-bookmark.firebaseapp.com",
-                        projectId: "bio-dojo-bookmark",
-                        storageBucket: "bio-dojo-bookmark.appspot.com"
-                    };
+                    try { firebaseConfig = JSON.parse(__firebase_config); } catch(e){}
                 }
 
+                // Semak custom Firebase Config dari LocalStorage jika ada
                 const customConfig = localStorage.getItem('bio_dojo_custom_firebase');
                 if (customConfig) {
-                    try { firebaseConfig = JSON.parse(customConfig); } catch(e){}
+                    try { 
+                        firebaseConfig = JSON.parse(customConfig); 
+                        const badge = document.getElementById('custom-firebase-status-badge');
+                        const textarea = document.getElementById('input-firebase-config-json');
+                        if (badge) {
+                            badge.innerText = "Kunci Tersuai";
+                            badge.className = "text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30 font-bold";
+                        }
+                        if (textarea) {
+                            textarea.value = JSON.stringify(firebaseConfig, null, 2);
+                        }
+                    } catch(e) {
+                        console.error("Firebase custom config JSON tidak sah", e);
+                    }
                 }
 
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Auth before Firestore operations (Rule 3)
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
@@ -1100,6 +1128,39 @@
             }
         }
 
+        // Fungsi Simpan JSON Config Firebase dari Modal
+        window.saveFirebaseConfigJSON = function() {
+            const jsonText = document.getElementById('input-firebase-config-json').value.trim();
+            if (!jsonText) {
+                showToast("Sila masukkan string JSON config Firebase!", "amber");
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(jsonText);
+                if (!parsed.projectId || !parsed.apiKey) {
+                    showToast("JSON mesti mempunyai 'apiKey' dan 'projectId'!", "rose");
+                    return;
+                }
+
+                localStorage.setItem('bio_dojo_custom_firebase', JSON.stringify(parsed));
+                showToast("Kunci Firebase Disimpan! Memuat semula halaman...", "emerald");
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } catch (err) {
+                showToast("Format JSON tidak sah! Sila semak semula kurungan dan tanda petik.", "rose");
+            }
+        };
+
+        window.clearFirebaseConfigJSON = function() {
+            localStorage.removeItem('bio_dojo_custom_firebase');
+            showToast("Kunci tersuai dipadam. Memuat semula ke mod asal...", "amber");
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        };
+
         function setupRealtimeListener() {
             if (!db) {
                 renderAllViews();
@@ -1108,7 +1169,6 @@
 
             if (unsubscribeRealtime) unsubscribeRealtime();
 
-            // Strict collection path for public shared data (Rule 1)
             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_dojo_app', 'main_state');
 
             unsubscribeRealtime = onSnapshot(docRef, (snapshot) => {
@@ -1561,14 +1621,14 @@
             showToast("Rekod Kehadiran Berjaya Disimpan!", "emerald");
         };
 
-        function populateBabDropdown() {
+        window.populateBabDropdown = function() {
             const level = document.getElementById('session-form-level')?.value || '4';
             const select = document.getElementById('session-bab-input');
             if (!select) return;
 
-            const list = level === '4' ? DEFAULT_BAB_T4 : DEFAULT_BAB_T5;
-            select.innerHTML = list.map(bab => `<option value="${bab}">${bab}</option>`).join('');
-        }
+            const babList = level === '4' ? DEFAULT_BAB_T4 : DEFAULT_BAB_T5;
+            select.innerHTML = babList.map(b => `<option value="${b}">${b}</option>`).join('');
+        };
 
         window.renderDailyPlannerGrid = function() {
             const grid = document.getElementById('daily-planner-grid');
@@ -1577,39 +1637,35 @@
             const filterLevel = document.getElementById('filter-planner-form')?.value || 'ALL';
             const query = (document.getElementById('search-planner-bab')?.value || '').toLowerCase();
 
-            const filtered = state.sessions.filter(s => {
+            const filteredSessions = state.sessions.filter(s => {
                 const matchLevel = filterLevel === 'ALL' || s.level === filterLevel;
                 const matchQuery = s.bab.toLowerCase().includes(query) || s.title.toLowerCase().includes(query);
                 return matchLevel && matchQuery;
             });
 
-            document.getElementById('planner-total-count').innerText = `${filtered.length} Hari`;
+            document.getElementById('planner-total-count').innerText = `${filteredSessions.length} Hari`;
 
-            grid.innerHTML = filtered.map(s => `
-                <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition shadow-lg space-y-3">
+            if (filteredSessions.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 text-xs">Tiada sesi bab dijumpai.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredSessions.map(s => `
+                <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition group shadow-md">
                     <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="bg-slate-800 text-amber-400 font-bold px-2.5 py-0.5 rounded-full text-[10px] border border-slate-700">${s.title}</span>
-                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-full text-[10px]">Tingkatan ${s.level}</span>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">${s.title}</span>
+                            <span class="text-[10px] font-extrabold ${s.level === '4' ? 'text-emerald-400' : 'text-blue-400'} bg-slate-900 px-2 py-0.5 rounded-full">Tingkatan ${s.level}</span>
                         </div>
-                        <h4 class="font-bold text-white text-xs leading-snug line-clamp-2">${s.bab}</h4>
-                    </div>
-
-                    <div class="space-y-1.5 border-t border-slate-900 pt-2 text-[11px] text-slate-400">
-                        <div class="flex justify-between">
-                            <span>Flashcard:</span>
-                            <span class="text-purple-400 font-semibold">${s.flashcard}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Aktiviti:</span>
-                            <span class="text-amber-400 font-semibold">${s.activity}</span>
+                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-1 mb-2 group-hover:text-emerald-400 transition">${s.bab}</h4>
+                        <div class="space-y-1 text-[11px] text-slate-400">
+                            <p><i class="fa-solid fa-layer-group text-purple-400 mr-1"></i> ${s.flashcard}</p>
+                            <p><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> ${s.activity}</p>
                         </div>
                     </div>
-
-                    <div class="pt-2 flex justify-end space-x-1 border-t border-slate-900">
-                        <button onclick="editSession('${s.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-semibold">
-                            <i class="fa-solid fa-pen"></i> Edit
-                        </button>
+                    <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-500 truncate max-w-[120px]">${s.notes || 'Tiada nota'}</span>
+                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 hover:underline text-xs font-bold">Edit</button>
                     </div>
                 </div>
             `).join('');
@@ -1618,17 +1674,18 @@
         window.renderSessionTable = function() {
             const body = document.getElementById('session-list-body');
             if (!body) return;
+
             document.getElementById('session-count-tag').innerText = `${state.sessions.length} Sesi`;
 
             body.innerHTML = state.sessions.map(s => `
                 <tr class="hover:bg-slate-800/50 transition">
-                    <td class="p-3 font-bold text-amber-400">${s.title}</td>
-                    <td class="p-3 text-white font-medium">T${s.level}: ${s.bab}</td>
-                    <td class="p-3 text-purple-400 font-semibold">${s.flashcard}</td>
-                    <td class="p-3 text-emerald-400 font-semibold">${s.activity}</td>
+                    <td class="p-3 font-semibold text-amber-400">${s.title} <span class="text-[10px] text-slate-400 block">Tingkatan ${s.level}</span></td>
+                    <td class="p-3 font-medium text-white max-w-xs truncate">${s.bab}</td>
+                    <td class="p-3 text-purple-300 font-semibold">${s.flashcard}</td>
+                    <td class="p-3 text-emerald-300 font-semibold">${s.activity}</td>
                     <td class="p-3 text-right">
-                        <button onclick="editSession('${s.id}')" class="admin-only text-emerald-400 hover:text-emerald-300 font-bold mr-2"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteSession('${s.id}')" class="admin-only text-rose-400 hover:text-rose-300 font-bold"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="editSession('${s.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-1 rounded-lg text-xs font-semibold mr-1 border border-slate-700">Edit</button>
+                        <button onclick="deleteSession('${s.id}')" class="admin-only bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 px-2 py-1 rounded-lg text-xs font-semibold border border-rose-500/30">Padam</button>
                     </td>
                 </tr>
             `).join('');
@@ -1636,18 +1693,15 @@
 
         window.handleSaveSession = function(e) {
             e.preventDefault();
-            if (!isAdmin) {
-                showToast("Hanya Admin boleh menyimpan sesi bab!", "amber");
-                return;
-            }
+            if (!isAdmin) return;
 
             const id = document.getElementById('session-id-input').value;
-            const title = document.getElementById('session-title-input').value;
+            const title = document.getElementById('session-title-input').value.trim();
             const level = document.getElementById('session-form-level').value;
             const bab = document.getElementById('session-bab-input').value;
-            const flashcard = document.getElementById('session-flashcard-input').value;
+            const flashcard = document.getElementById('session-flashcard-input').value.trim() || 'Set 1';
             const activity = document.getElementById('session-activity-input').value;
-            const notes = document.getElementById('session-notes-input').value;
+            const notes = document.getElementById('session-notes-input').value.trim();
 
             if (id) {
                 const idx = state.sessions.findIndex(s => s.id === id);
@@ -1659,14 +1713,15 @@
                 state.sessions.push({ id: newId, title, level, bab, flashcard, activity, notes });
             }
 
-            saveStateToCloud();
             resetSessionForm();
-            showToast("Sesi Bab Berjaya Disimpan!", "emerald");
+            saveStateToCloud();
+            showToast("Jadual bab harian berjaya disimpan!", "emerald");
         };
 
         window.editSession = function(id) {
-            const s = state.sessions.find(x => x.id === id);
+            const s = state.sessions.find(item => item.id === id);
             if (!s) return;
+
             document.getElementById('session-id-input').value = s.id;
             document.getElementById('session-title-input').value = s.title;
             document.getElementById('session-form-level').value = s.level;
@@ -1675,219 +1730,125 @@
             document.getElementById('session-flashcard-input').value = s.flashcard;
             document.getElementById('session-activity-input').value = s.activity;
             document.getElementById('session-notes-input').value = s.notes || '';
-            document.getElementById('session-form-title').innerText = "Kemaskini Sesi Bab";
-        };
 
-        window.resetSessionForm = function() {
-            document.getElementById('session-id-input').value = '';
-            document.getElementById('session-title-input').value = `Hari ${state.sessions.length + 1}`;
-            document.getElementById('session-form-level').value = '4';
-            populateBabDropdown();
-            document.getElementById('session-flashcard-input').value = 'Set 1';
-            document.getElementById('session-notes-input').value = '';
-            document.getElementById('session-form-title').innerText = "Tambah / Tetap Bab Baru";
+            document.getElementById('session-form-title').innerText = "Kemaskini Sesi Harian";
+            switchTab('sessions');
         };
 
         window.deleteSession = function(id) {
             if (!isAdmin) return;
             state.sessions = state.sessions.filter(s => s.id !== id);
             saveStateToCloud();
-            showToast("Sesi dipadamkan!", "rose");
+            showToast("Sesi dipadam!", "amber");
         };
 
-        window.autoScheduleSPMSyllabus = function() {
-            if (!isAdmin) return;
-            state.sessions = [];
-            let dayCount = 1;
-
-            DEFAULT_BAB_T4.forEach(bab => {
-                state.sessions.push({
-                    id: `ses-t4-${dayCount}`,
-                    title: `Hari ${dayCount}`,
-                    level: '4',
-                    bab: bab,
-                    flashcard: 'Set 1',
-                    activity: 'Recall Challenge',
-                    notes: 'Sukatan SPM T4'
-                });
-                dayCount++;
-            });
-
-            DEFAULT_BAB_T5.forEach(bab => {
-                state.sessions.push({
-                    id: `ses-t5-${dayCount}`,
-                    title: `Hari ${dayCount}`,
-                    level: '5',
-                    bab: bab,
-                    flashcard: 'Set 1',
-                    activity: 'Beat The Clock',
-                    notes: 'Sukatan SPM T5'
-                });
-                dayCount++;
-            });
-
-            saveStateToCloud();
-            showToast("Jadual Sukatan SPM Berjaya Disusun Auto!", "emerald");
+        window.resetSessionForm = function() {
+            document.getElementById('session-id-input').value = '';
+            document.getElementById('session-title-input').value = '';
+            document.getElementById('session-notes-input').value = '';
+            document.getElementById('session-form-title').innerText = "Tambah / Kemaskini Sesi";
         };
 
-        function renderCharts() {
-            const chartMinutesCanvas = document.getElementById('chart-minutes-per-student');
-            const chartBeltCanvas = document.getElementById('chart-belt-distribution');
-
-            if (!chartMinutesCanvas || !chartBeltCanvas) return;
-
-            // Coverage Calculation
-            const f4Covered = new Set(state.sessions.filter(s => s.level === '4').map(s => s.bab)).size;
-            const f5Covered = new Set(state.sessions.filter(s => s.level === '5').map(s => s.bab)).size;
-
-            document.getElementById('coverage-f4-text').innerText = `${f4Covered} / ${DEFAULT_BAB_T4.length} Bab (${Math.round((f4Covered/DEFAULT_BAB_T4.length)*100)}%)`;
-            document.getElementById('coverage-f5-text').innerText = `${f5Covered} / ${DEFAULT_BAB_T5.length} Bab (${Math.round((f5Covered/DEFAULT_BAB_T5.length)*100)}%)`;
-
-            // Chart 1: Minutes
-            const studentNames = state.students.map(s => s.name);
-            const studentMins = state.students.map(s => s.minutes || s.cops * 4);
-
-            if (chartMinutes) chartMinutes.destroy();
-            chartMinutes = new Chart(chartMinutesCanvas, {
-                type: 'bar',
-                data: {
-                    labels: studentNames,
-                    datasets: [{
-                        label: 'Minit Pembelajaran',
-                        data: studentMins,
-                        backgroundColor: '#10b981',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#334155' } },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-
-            // Chart 2: Belt Distribution
-            const beltCounts = { 'Novice': 0, 'Adept': 0, 'Intermediate': 0, 'Advance': 0, 'Master': 0, 'Legend': 0 };
-            state.students.forEach(s => {
-                if (s.cops >= 25) beltCounts['Legend']++;
-                else if (s.cops >= 20) beltCounts['Master']++;
-                else if (s.cops >= 15) beltCounts['Advance']++;
-                else if (s.cops >= 10) beltCounts['Intermediate']++;
-                else if (s.cops >= 5) beltCounts['Adept']++;
-                else beltCounts['Novice']++;
-            });
-
-            if (chartBelt) chartBelt.destroy();
-            chartBelt = new Chart(chartBeltCanvas, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(beltCounts),
-                    datasets: [{
-                        data: Object.values(beltCounts),
-                        backgroundColor: ['#475569', '#059669', '#2563eb', '#78350f', '#0f172a', '#9333ea']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
-                }
-            });
-        }
-
-        function renderStudentCards() {
+        window.renderStudentCards = function() {
             const grid = document.getElementById('student-cards-grid');
             if (!grid) return;
+
+            if (state.students.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500 text-xs">Tiada rekod murid.</div>`;
+                return;
+            }
 
             grid.innerHTML = state.students.map(s => {
                 const belt = getBeltInfo(s.cops);
                 const isMyAcc = s.id === currentStudentId;
-
                 return `
-                    <div class="bg-slate-900 border ${isMyAcc ? 'border-blue-500 shadow-blue-500/20' : 'border-slate-800'} rounded-2xl p-4 shadow-lg space-y-3 relative flex flex-col justify-between">
+                    <div class="bg-slate-950 border ${isMyAcc ? 'border-blue-500/80 shadow-blue-500/10' : 'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden">
+                        ${isMyAcc ? '<span class="absolute top-2 right-2 bg-blue-500 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full">SAYA</span>' : ''}
                         <div>
-                            <div class="flex justify-between items-start">
-                                <span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
-                                ${isMyAcc ? '<span class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full border border-blue-500/30 font-bold">Saya</span>' : ''}
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center font-bold text-slate-300">
+                                    <i class="fa-solid fa-user-ninja"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white line-clamp-1">${s.name}</h4>
+                                    <span class="belt-badge ${belt.bg} text-[10px] mt-0.5"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>
+                                </div>
                             </div>
-                            <h4 class="text-base font-bold text-white mt-2">${s.name}</h4>
-                            <p class="text-xs text-slate-400">Jantina: ${s.gender === 'L' ? 'Lelaki' : 'Perempuan'}</p>
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs py-2 bg-slate-900/60 rounded-xl border border-slate-800">
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
+                                    <span class="font-bold text-emerald-400 text-base">${s.cops || 0}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Minit</span>
+                                    <span class="font-bold text-amber-400 text-base">${s.minutes || (s.cops * 4)} Min</span>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
-                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                                <span class="text-slate-500 block">Jumlah Cop</span>
-                                <span class="text-base font-black text-emerald-400">${s.cops}</span>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                                <span class="text-slate-500 block">Minit Belajar</span>
-                                <span class="text-base font-black text-amber-400">${s.minutes || s.cops * 4}m</span>
-                            </div>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-800 flex space-x-2">
-                            <button onclick="openStudentPassport('${s.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs transition">
-                                <i class="fa-solid fa-id-card mr-1"></i> Buka Passport
+                        <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center">
+                            <span class="text-xs text-slate-400 font-semibold">${(s.badges || []).join(' ')}</span>
+                            <button onclick="openStudentPassport('${s.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow">
+                                Lihat Passport
                             </button>
                         </div>
                     </div>
                 `;
             }).join('');
-        }
+        };
 
-        let selectedPassportStudentId = null;
+        let activePassportStudentId = null;
 
-        window.openStudentPassport = function(id) {
-            const student = state.students.find(s => s.id === id);
-            if (!student) return;
-            selectedPassportStudentId = id;
+        window.openStudentPassport = function(studentId) {
+            activePassportStudentId = studentId;
+            const s = state.students.find(item => item.id === studentId);
+            if (!s) return;
 
-            document.getElementById('passport-modal-name').innerText = student.name;
-            const belt = getBeltInfo(student.cops);
-            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg} text-xs"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
-            document.getElementById('passport-modal-cops').innerText = student.cops;
-            document.getElementById('passport-modal-cops-badge').innerText = `${student.cops} Cop`;
-            document.getElementById('passport-modal-minutes').innerText = `${student.minutes || student.cops * 4} Min`;
+            document.getElementById('passport-modal-name').innerText = s.name;
+            const belt = getBeltInfo(s.cops);
+            document.getElementById('passport-modal-belt').innerHTML = `<span class="belt-badge ${belt.bg}"><i class="fa-solid ${belt.icon} mr-1"></i>${belt.name}</span>`;
+            document.getElementById('passport-modal-cops').innerText = s.cops || 0;
+            document.getElementById('passport-modal-cops-badge').innerText = `${s.cops || 0} Cop`;
+            document.getElementById('passport-modal-minutes').innerText = `${s.minutes || (s.cops * 4)} Min`;
 
             const badgesContainer = document.getElementById('passport-modal-badges');
-            badgesContainer.innerHTML = (student.badges && student.badges.length) ? student.badges.map(b => `<span class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-amber-300 font-bold">${b}</span>`).join('') : '<span class="text-slate-500 text-xs">Tiada lencana bonus lagi.</span>';
+            if (s.badges && s.badges.length) {
+                badgesContainer.innerHTML = s.badges.map(b => `<span class="bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-white font-bold">${b} Badge</span>`).join('');
+            } else {
+                badgesContainer.innerHTML = `<span class="text-slate-500 text-xs">Belum ada lencana bonus</span>`;
+            }
 
             openModal('modal-passport');
         };
 
-        window.openStudentPassportFromPodium = function(podiumIndex) {
+        window.openStudentPassportFromPodium = function(index) {
             const sorted = [...state.students].sort((a, b) => b.cops - a.cops);
-            if (sorted[podiumIndex]) {
-                openStudentPassport(sorted[podiumIndex].id);
+            if (sorted[index]) {
+                openStudentPassport(sorted[index].id);
             }
         };
 
         window.adjustStudentCop = function(delta) {
-            if (!isAdmin) return;
-            const student = state.students.find(s => s.id === selectedPassportStudentId);
-            if (student) {
-                student.cops = Math.max(0, student.cops + delta);
-                student.minutes = student.cops * 4;
+            if (!isAdmin || !activePassportStudentId) return;
+            const s = state.students.find(item => item.id === activePassportStudentId);
+            if (s) {
+                s.cops = Math.max(0, (s.cops || 0) + delta);
+                s.minutes = s.cops * 4;
                 saveStateToCloud();
-                openStudentPassport(selectedPassportStudentId);
+                openStudentPassport(activePassportStudentId);
             }
         };
 
         window.deleteCurrentStudentFromPassport = function() {
-            if (!isAdmin) return;
-            state.students = state.students.filter(s => s.id !== selectedPassportStudentId);
+            if (!isAdmin || !activePassportStudentId) return;
+            state.students = state.students.filter(s => s.id !== activePassportStudentId);
             saveStateToCloud();
             closeModal('modal-passport');
-            showToast("Murid dipadamkan daripada senarai!", "rose");
+            showToast("Murid dipadam!", "rose");
         };
 
         window.openBulkImportModal = function() {
             if (!isAdmin) {
-                showToast("Sila log masuk Admin terlebih dahulu!", "amber");
+                promptAdminLogin();
                 return;
             }
             openModal('modal-bulk-import');
@@ -1900,30 +1861,34 @@
             const text = document.getElementById('bulk-names-textarea').value.trim();
             if (!text) return;
 
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const names = text.split('\n').map(n => n.trim()).filter(n => n.length > 0);
             let addedCount = 0;
 
-            lines.forEach(name => {
-                const newId = `std-${Date.now()}-${Math.floor(Math.random()*1000)}`;
-                state.students.push({
-                    id: newId,
-                    name: name,
-                    gender: 'L',
-                    cops: 0,
-                    minutes: 0,
-                    badges: []
-                });
-                addedCount++;
+            names.forEach(name => {
+                if (!state.students.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+                    state.students.push({
+                        id: `std-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+                        name,
+                        gender: 'L',
+                        cops: 0,
+                        minutes: 0,
+                        badges: []
+                    });
+                    addedCount++;
+                }
             });
 
-            saveStateToCloud();
-            closeModal('modal-bulk-import');
             document.getElementById('bulk-names-textarea').value = '';
-            showToast(`${addedCount} orang murid berjaya diimport!`, "emerald");
+            closeModal('modal-bulk-import');
+            saveStateToCloud();
+            showToast(`${addedCount} murid baru berjaya diimport!`, "emerald");
         };
 
         window.openAddStudentModal = function() {
-            if (!isAdmin) return;
+            if (!isAdmin) {
+                promptAdminLogin();
+                return;
+            }
             openModal('modal-add-student');
         };
 
@@ -1935,34 +1900,19 @@
             const gender = document.getElementById('add-student-gender-input').value;
 
             if (name) {
-                const newId = `std-${Date.now()}`;
-                state.students.push({ id: newId, name, gender, cops: 0, minutes: 0, badges: [] });
-                saveStateToCloud();
-                closeModal('modal-add-student');
+                state.students.push({
+                    id: `std-${Date.now()}`,
+                    name,
+                    gender,
+                    cops: 0,
+                    minutes: 0,
+                    badges: []
+                });
+
                 document.getElementById('add-student-name-input').value = '';
-                showToast(`Murid ${name} berjaya ditambah!`, "emerald");
-            }
-        };
-
-        window.exportToCSV = function() {
-            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Jantina,Jumlah Cop,Jumlah Minit,Tahap Belt\n";
-            state.students.forEach((s, idx) => {
-                const belt = getBeltInfo(s.cops);
-                csvContent += `${idx + 1},"${s.name}",${s.gender},${s.cops},${s.minutes || s.cops * 4},"${belt.name}"\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_Bio_Dojo_Bookmark_100.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-
-        window.triggerConfetti = function() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                closeModal('modal-add-student');
+                saveStateToCloud();
+                showToast("Murid baru didaftarkan!", "emerald");
             }
         };
 
@@ -1980,13 +1930,106 @@
                 attendance: {},
                 adminPin: '1234'
             };
-            saveStateToCloud();
             closeModal('modal-reset-confirm');
             closeModal('modal-cloud-settings');
-            showToast("Semua data telah direset!", "rose");
+            saveStateToCloud();
+            showToast("Semua data telah direset!", "amber");
         };
 
-        // On window startup
+        window.exportToCSV = function() {
+            if (state.students.length === 0) {
+                showToast("Tiada data murid untuk dieksport!", "amber");
+                return;
+            }
+
+            let csv = "Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Tahap Belt\n";
+            state.students.forEach((s, idx) => {
+                const belt = getBeltInfo(s.cops);
+                csv += `"${idx + 1}","${s.name}","${s.cops}","${s.minutes || s.cops * 4}","${belt.name}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `BioDojo_Bookmark100_Laporan_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+        };
+
+        window.triggerConfetti = function() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        };
+
+        function renderCharts() {
+            const ctxMinutes = document.getElementById('chart-minutes-per-student')?.getContext('2d');
+            const ctxBelt = document.getElementById('chart-belt-distribution')?.getContext('2d');
+
+            if (chartMinutes) chartMinutes.destroy();
+            if (chartBelt) chartBelt.destroy();
+
+            const studentNames = state.students.map(s => s.name);
+            const studentMins = state.students.map(s => s.minutes || (s.cops * 4));
+
+            if (ctxMinutes) {
+                chartMinutes = new Chart(ctxMinutes, {
+                    type: 'bar',
+                    data: {
+                        labels: studentNames,
+                        datasets: [{
+                            label: 'Jumlah Minit Belajar',
+                            data: studentMins,
+                            backgroundColor: '#10b981',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            const beltCounts = { 'White': 0, 'Green': 0, 'Blue': 0, 'Brown': 0, 'Black': 0, 'Legend': 0 };
+            state.students.forEach(s => {
+                const belt = getBeltInfo(s.cops);
+                if (belt.name.includes('White')) beltCounts['White']++;
+                else if (belt.name.includes('Green')) beltCounts['Green']++;
+                else if (belt.name.includes('Blue')) beltCounts['Blue']++;
+                else if (belt.name.includes('Brown')) beltCounts['Brown']++;
+                else if (belt.name.includes('Black')) beltCounts['Black']++;
+                else if (belt.name.includes('Legend')) beltCounts['Legend']++;
+            });
+
+            if (ctxBelt) {
+                chartBelt = new Chart(ctxBelt, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(beltCounts),
+                        datasets: [{
+                            data: Object.values(beltCounts),
+                            backgroundColor: ['#475569', '#059669', '#2563eb', '#78350f', '#0f172a', '#9333ea']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#94a3b8' } } }
+                    }
+                });
+            }
+        }
+
         window.onload = function() {
             initFirebase();
         };
