@@ -2,10 +2,9 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Papan Pemuka Bio-Dojo Bookmark 100 (Real-Time)</title>
 
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -45,47 +44,38 @@
 
     <style>
         .podium-1 {
-            height: 180px;
+            height: 220px;
             background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
         }
         .podium-2 {
-            height: 140px;
+            height: 170px;
             background: linear-gradient(180deg, #94a3b8 0%, #475569 100%);
         }
         .podium-3 {
-            height: 110px;
+            height: 130px;
             background: linear-gradient(180deg, #d97706 0%, #78350f 100%);
-        }
-        @media (min-width: 640px) {
-            .podium-1 { height: 220px; }
-            .podium-2 { height: 170px; }
-            .podium-3 { height: 130px; }
         }
         .belt-badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.2rem 0.5rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 9999px;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: 700;
         }
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
             background: #475569;
-            border-radius: 3px;
+            border-radius: 4px;
         }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
         .toast-enter {
             transform: translateY(-20px);
@@ -97,52 +87,54 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col relative overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col relative">
 
-    <div id="toast-container" class="fixed top-4 right-4 left-4 sm:left-auto z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <!-- Custom Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    <!-- Sticky Header -->
     <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
-                <div class="flex items-center space-x-2.5 min-w-0">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-900/40 border border-emerald-400/30 shrink-0">
-                        <i class="fa-solid fa-dna text-white text-xl sm:text-2xl animate-pulse"></i>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-900/40 border border-emerald-400/30">
+                        <i class="fa-solid fa-dna text-white text-2xl animate-pulse"></i>
                     </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center space-x-1.5 truncate">
-                            <h1 class="text-sm sm:text-xl md:text-2xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 font-dojo truncate">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 font-dojo">
                                 BIO-DOJO BOOKMARK 100
                             </h1>
+                            <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-semibold hidden sm:inline-block">20 MIN/HARI</span>
                         </div>
                         <div class="flex items-center space-x-2 mt-0.5">
-                            <span id="cloud-sync-status" class="inline-flex items-center space-x-1 text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
-                                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-ping mr-1"></span>
-                                <span id="sync-status-text">Cloud Aktif</span>
+                            <span id="cloud-sync-status" class="inline-flex items-center space-x-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1"></span>
+                                <span id="sync-status-text">Memuatkan Cloud Data...</span>
                             </span>
+                            <p class="text-xs text-slate-400 hidden md:inline">• Tetapan Kehadiran Harian, Bab & Pencapaian</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Desktop Navigation Tabs -->
-                <nav class="hidden lg:flex space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all bg-emerald-600 text-white shadow-md">
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center space-x-1.5 transition-all bg-emerald-600 text-white shadow-md whitespace-nowrap">
                         <i class="fa-solid fa-trophy"></i>
-                        <span>Pentas</span>
+                        <span>Pentas & Utama</span>
                     </button>
-                    <button onclick="switchTab('attendance')" id="tab-attendance" class="nav-tab px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                    <button onclick="switchTab('attendance')" id="tab-attendance" class="nav-tab px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center space-x-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-calendar-check"></i>
                         <span>Kehadiran</span>
                     </button>
-                    <button onclick="switchTab('sessions')" id="tab-sessions" class="nav-tab px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                    <button onclick="switchTab('sessions')" id="tab-sessions" class="nav-tab px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center space-x-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-book-open"></i>
-                        <span>Jadual Bab</span>
+                        <span>Bab Harian</span>
                     </button>
-                    <button onclick="switchTab('analytics')" id="tab-analytics" class="nav-tab px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                    <button onclick="switchTab('analytics')" id="tab-analytics" class="nav-tab px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center space-x-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>Graf</span>
                     </button>
-                    <button onclick="switchTab('students')" id="tab-students" class="nav-tab px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                    <button onclick="switchTab('students')" id="tab-students" class="nav-tab px-3 py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center space-x-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-users"></i>
                         <span>Murid</span>
                     </button>
@@ -150,949 +142,1732 @@
 
                 <!-- Quick Actions & Mode Switch -->
                 <div class="flex items-center space-x-1.5 sm:space-x-2">
-                    <button id="admin-mode-btn" onclick="toggleAdminMode()" title="Mod Admin" class="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-xl transition flex items-center space-x-1 text-xs font-bold shrink-0">
-                        <i class="fa-solid fa-user-shield text-xs sm:text-sm"></i>
-                        <span id="admin-mode-text" class="hidden sm:inline">Admin</span>
+                    <button id="admin-mode-btn" onclick="toggleAdminMode()" title="Tukar Mod Admin / Murid" class="px-2.5 sm:px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-xl transition flex items-center space-x-1 text-xs font-bold whitespace-nowrap">
+                        <i class="fa-solid fa-user-shield text-sm"></i>
+                        <span id="admin-mode-text" class="hidden xl:inline">Mod Admin</span>
                     </button>
-                    <button onclick="exportToCSV()" title="Eksport CSV" class="p-2 sm:px-3 sm:py-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center space-x-1 text-xs font-semibold shrink-0">
-                        <i class="fa-solid fa-file-csv text-sm"></i>
-                        <span class="hidden md:inline">Eksport</span>
+                    <button onclick="exportToCSV()" title="Eksport Laporan Kehadiran (CSV)" class="p-2 sm:px-3 sm:py-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition flex items-center space-x-1 text-xs font-semibold whitespace-nowrap">
+                        <i class="fa-solid fa-file-csv text-base"></i>
+                        <span class="hidden xl:inline">Eksport CSV</span>
                     </button>
-                    <button onclick="triggerConfetti()" title="Raikan" class="p-2 sm:p-2.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition shrink-0">
+                    <button onclick="triggerConfetti()" title="Meraikan Pencapaian" class="p-2 sm:p-2.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 rounded-xl transition">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                    <button onclick="resetDataConfirmation()" title="Reset Data Pelajar" class="admin-only p-2 sm:p-2.5 bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/40 rounded-xl transition">
+                        <i class="fa-solid fa-rotate-right"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Mobile Navigation Bar -->
-            <div class="lg:hidden flex overflow-x-auto py-2 space-x-2 border-t border-slate-800 text-xs no-scrollbar">
-                <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium shrink-0">Pentas</button>
-                <button onclick="switchTab('attendance')" id="mtab-attendance" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 shrink-0">Kehadiran</button>
-                <button onclick="switchTab('sessions')" id="mtab-sessions" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 shrink-0">Jadual Bab</button>
-                <button onclick="switchTab('analytics')" id="mtab-analytics" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 shrink-0">Graf</button>
-                <button onclick="switchTab('students')" id="mtab-students" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 shrink-0">Murid</button>
+            <div class="md:hidden flex overflow-x-auto py-2 space-x-2 border-t border-slate-800 text-xs no-scrollbar">
+                <button onclick="switchTab('dashboard')" id="mtab-dashboard" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium">Podium & Utama</button>
+                <button onclick="switchTab('attendance')" id="mtab-attendance" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Rekod Kehadiran</button>
+                <button onclick="switchTab('sessions')" id="mtab-sessions" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Jadual Bab Harian</button>
+                <button onclick="switchTab('analytics')" id="mtab-analytics" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Graf Pencapaian</button>
+                <button onclick="switchTab('students')" id="mtab-students" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300">Senarai Murid</button>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- TAB 1: DASHBOARD & PODIUM -->
-        <section id="view-dashboard" class="tab-content space-y-6">
-            <div class="bg-gradient-to-r from-slate-900 via-emerald-950/60 to-slate-900 border border-emerald-500/30 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+        <!-- ================= TAB 1: DASHBOARD & PODIUM ================= -->
+        <div id="section-dashboard" class="tab-content space-y-6">
+            
+            <!-- Banner / Hero Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
                     <div>
-                        <div class="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold mb-2">
-                            <i class="fa-solid fa-bullseye"></i>
-                            <span>SASARAN 100 MINIT SEMINGGU</span>
-                        </div>
-                        <h2 class="text-lg sm:text-2xl font-bold text-white">Papan Pemuka Interaktif Bio-Dojo</h2>
-                        <p class="text-slate-400 text-xs sm:text-sm mt-1">1 Kehadiran = 20 Minit • Rekod Kehadiran Pantas & Tepat</p>
+                        <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Jumlah Pelajar</p>
+                        <h3 id="stat-total-students" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</h3>
+                        <p class="text-xs text-emerald-400 mt-1"><i class="fa-solid fa-user-check"></i> Aktif Berdaftar</p>
                     </div>
-                    <div class="w-full sm:w-80 bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-slate-400">Purata Minit Kelas</span>
-                            <span id="avg-minutes-text" class="text-emerald-400 font-bold">0 / 100 Min</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700">
-                            <div id="avg-minutes-bar" class="bg-gradient-to-r from-emerald-500 to-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 text-xl">
+                        <i class="fa-solid fa-users"></i>
                     </div>
                 </div>
-            </div>
 
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center space-x-3">
-                    <div class="p-2.5 sm:p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl shrink-0">
-                        <i class="fa-solid fa-stamp text-xl sm:text-2xl"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[11px] sm:text-xs text-slate-400 truncate">Jumlah Cop</p>
-                        <h3 id="stat-total-cops" class="text-xl sm:text-2xl font-bold text-white">0</h3>
-                    </div>
-                </div>
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center space-x-3">
-                    <div class="p-2.5 sm:p-3 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-xl shrink-0">
-                        <i class="fa-solid fa-stopwatch text-xl sm:text-2xl"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[11px] sm:text-xs text-slate-400 truncate">Jumlah Minit</p>
-                        <h3 id="stat-total-minutes" class="text-xl sm:text-2xl font-bold text-white">0</h3>
-                    </div>
-                </div>
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center space-x-3">
-                    <div class="p-2.5 sm:p-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-xl shrink-0">
-                        <i class="fa-solid fa-user-check text-xl sm:text-2xl"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[11px] sm:text-xs text-slate-400 truncate">Purata Kehadiran</p>
-                        <h3 id="stat-attendance-rate" class="text-xl sm:text-2xl font-bold text-white">0%</h3>
-                    </div>
-                </div>
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center space-x-3">
-                    <div class="p-2.5 sm:p-3 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-xl shrink-0">
-                        <i class="fa-solid fa-award text-xl sm:text-2xl"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[11px] sm:text-xs text-slate-400 truncate">Bio-Dojo Legend</p>
-                        <h3 id="stat-legend-count" class="text-xl sm:text-2xl font-bold text-amber-400">0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Podium -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div class="text-center max-w-xl mx-auto mb-6">
-                    <h2 class="text-xl sm:text-3xl font-extrabold font-dojo text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600">
-                        <i class="fa-solid fa-crown text-amber-400 mr-2"></i> PENTAS JUARA BIO-DOJO <i class="fa-solid fa-crown text-amber-400 ml-2"></i>
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Kedudukan murid tertinggi berdasarkan kehadiran & minit</p>
-                </div>
-                <div class="flex justify-center items-end max-w-2xl mx-auto min-h-[240px] sm:min-h-[300px] pt-8 pb-2 gap-2 sm:gap-6">
-                    <!-- 2nd -->
-                    <div class="flex flex-col items-center flex-1 max-w-[140px] sm:max-w-[180px]">
-                        <div id="podium-2-card" class="flex flex-col items-center mb-2 sm:mb-3">
-                            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-800 border-2 border-slate-400 flex items-center justify-center text-slate-300 text-lg sm:text-xl font-bold shadow-lg relative">
-                                <span class="absolute -top-2.5 sm:-top-3 bg-slate-700 text-slate-200 border border-slate-400 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-full">#2</span>
-                                <i class="fa-solid fa-user-ninja text-slate-300 text-xl sm:text-2xl"></i>
-                            </div>
-                            <h4 id="podium-2-name" class="text-xs sm:text-sm font-bold text-slate-200 mt-1.5 sm:mt-2 text-center truncate w-full px-1">---</h4>
-                            <span id="podium-2-cops" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-semibold">0 Cop</span>
-                            <div id="podium-2-belt" class="mt-1 scale-90"></div>
-                        </div>
-                        <div class="podium-2 w-full rounded-t-xl flex flex-col items-center justify-start pt-2.5 border-t border-slate-400/40 shadow-xl">
-                            <span class="text-xl sm:text-2xl font-black text-slate-200">2</span>
-                            <span class="text-[9px] sm:text-[10px] tracking-widest text-slate-400 font-bold uppercase">PERAK</span>
-                        </div>
-                    </div>
-                    <!-- 1st -->
-                    <div class="flex flex-col items-center flex-1 max-w-[150px] sm:max-w-[200px]">
-                        <div id="podium-1-card" class="flex flex-col items-center mb-2 sm:mb-3">
-                            <div class="relative">
-                                <i class="fa-solid fa-crown text-amber-400 text-xl sm:text-2xl absolute -top-5 sm:-top-6 left-1/2 -translate-x-1/2 animate-bounce"></i>
-                                <div class="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-amber-950/60 border-2 sm:border-4 border-amber-400 flex items-center justify-center text-amber-300 text-xl sm:text-2xl font-bold shadow-xl">
-                                    <i class="fa-solid fa-user-ninja text-amber-400 text-2xl sm:text-3xl"></i>
-                                </div>
-                            </div>
-                            <h4 id="podium-1-name" class="text-xs sm:text-base font-extrabold text-amber-300 mt-1.5 sm:mt-2 text-center truncate w-full px-1">---</h4>
-                            <span id="podium-1-cops" class="text-[11px] sm:text-sm text-amber-400 font-bold mt-0.5">0 Cop</span>
-                            <div id="podium-1-belt" class="mt-1"></div>
-                        </div>
-                        <div class="podium-1 w-full rounded-t-xl flex flex-col items-center justify-start pt-2.5 border-t border-amber-300 shadow-2xl">
-                            <span class="text-2xl sm:text-3xl font-black text-amber-950">1</span>
-                            <span class="text-[10px] sm:text-xs tracking-widest text-amber-950 font-black uppercase">EMAS</span>
-                        </div>
-                    </div>
-                    <!-- 3rd -->
-                    <div class="flex flex-col items-center flex-1 max-w-[140px] sm:max-w-[180px]">
-                        <div id="podium-3-card" class="flex flex-col items-center mb-2 sm:mb-3">
-                            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-800 border-2 border-amber-700 flex items-center justify-center text-amber-600 text-lg sm:text-xl font-bold shadow-lg relative">
-                                <span class="absolute -top-2.5 sm:-top-3 bg-amber-900 text-amber-200 border border-amber-700 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-full">#3</span>
-                                <i class="fa-solid fa-user-ninja text-amber-600 text-xl sm:text-2xl"></i>
-                            </div>
-                            <h4 id="podium-3-name" class="text-xs sm:text-sm font-bold text-slate-200 mt-1.5 sm:mt-2 text-center truncate w-full px-1">---</h4>
-                            <span id="podium-3-cops" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-semibold">0 Cop</span>
-                            <div id="podium-3-belt" class="mt-1 scale-90"></div>
-                        </div>
-                        <div class="podium-3 w-full rounded-t-xl flex flex-col items-center justify-start pt-2.5 border-t border-amber-700/50 shadow-xl">
-                            <span class="text-xl sm:text-2xl font-black text-amber-200">3</span>
-                            <span class="text-[9px] sm:text-[10px] tracking-widest text-amber-300 font-bold uppercase">GANGSA</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Active Session Banner -->
-            <div id="active-session-banner" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg"></div>
-
-            <!-- Leaderboard Table -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
                     <div>
-                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-ranking-star text-emerald-400"></i>
-                            <span>Senarai Kedudukan Terkini</span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Susunan merit dan tahap tali pinggang murid</p>
+                        <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Purata Sesi Selesai</p>
+                        <h3 id="stat-avg-sessions" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">0 / 100</h3>
+                        <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-book-bookmark"></i> Sasaran Bookmark 100</p>
                     </div>
-                    <div class="w-full sm:w-auto">
-                        <input type="text" id="dash-search-input" oninput="filterDashboardLeaderboard()" placeholder="Cari nama murid..." class="w-full sm:w-64 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 text-xl">
+                        <i class="fa-solid fa-star"></i>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
-                            <tr>
-                                <th class="py-3 px-3">Rank</th>
-                                <th class="py-3 px-3">Nama Murid</th>
-                                <th class="py-3 px-3 text-center">Tali Pinggang</th>
-                                <th class="py-3 px-3 text-center">Cop</th>
-                                <th class="py-3 px-3 text-right">Minit</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboard-leaderboard-tbody" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Kehadiran Hari Ini</p>
+                        <h3 id="stat-today-attendance" class="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1">0%</h3>
+                        <p class="text-xs text-teal-400 mt-1"><i class="fa-solid fa-calendar-day"></i> 20 Minit / Hari</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20 text-xl">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Puncak Gelgang</p>
+                        <h3 id="stat-top-student" class="text-lg font-bold text-amber-400 mt-1 truncate max-w-[150px]">-</h3>
+                        <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-medal"></i> Pendahulu Utama</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20 text-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- TAB 2: ATTENDANCE -->
-        <section id="view-attendance" class="tab-content space-y-6 hidden">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <!-- Podium Top 3 & Top Champions Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Podium Visual (2 columns) -->
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                                <i class="fa-solid fa-podium text-amber-400"></i>
+                                <span>Podium Pahlawan Bio-Dojo</span>
+                            </h2>
+                            <p class="text-xs text-slate-400">Tiga pahlawan biologi teratas berdasarkan pencapaian Bab & Masa latihan</p>
+                        </div>
+                        <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs rounded-full font-semibold">Live Ranking</span>
+                    </div>
+
+                    <!-- Podium Arena Container -->
+                    <div id="podium-container" class="grid grid-cols-3 gap-3 items-end pt-8 pb-4 px-4 bg-slate-950/50 rounded-xl border border-slate-800/60 min-h-[280px]">
+                        <!-- Rendered dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Quick Attendance Check-in Widget for Today -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
                     <div>
-                        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-calendar-check text-emerald-400"></i>
-                            <span>Modul Rekod Kehadiran Harian</span>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                                <i class="fa-solid fa-clock text-emerald-400"></i>
+                                <span>Kehadiran Hari Ini</span>
+                            </h2>
+                            <span id="current-date-display" class="text-xs text-slate-400 font-medium"></span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">Tandakan kehadiran pantas 20 minit biologi untuk pelajar hari ini.</p>
+                        
+                        <div class="space-y-3 max-h-[220px] overflow-y-auto pr-1" id="quick-attendance-list">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 mt-4 flex justify-between items-center">
+                        <span class="text-xs text-slate-400" id="quick-attendance-count">0 / 0 Hadir</span>
+                        <button onclick="switchTab('attendance')" class="text-xs text-emerald-400 hover:underline font-semibold">Buka Rekod Penuh &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Table Section -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-ranking-star text-amber-400"></i>
+                            <span>Papan Pendahulu Keseluruhan (Bookmark 100)</span>
                         </h2>
-                        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Tandakan kehadiran sesi harian (20 minit setiap sesi)</p>
+                        <p class="text-xs text-slate-400">Senarai pencapaian bab biologi & pinggang/belt pelajar</p>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <select id="attendance-session-select" onchange="renderAttendanceSheet()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-semibold text-emerald-400 focus:outline-none focus:border-emerald-500"></select>
-                        <button onclick="markAllAttendance(true)" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1 shadow">
-                            <i class="fa-solid fa-check-double"></i>
-                            <span>Hadir Semua</span>
-                        </button>
-                        <button onclick="markAllAttendance(false)" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition flex items-center space-x-1">
-                            <i class="fa-solid fa-xmark"></i>
-                            <span>Nyahpilih</span>
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <div class="relative flex-grow sm:flex-grow-0">
+                            <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input type="text" id="leaderboard-search" oninput="renderDashboard()" placeholder="Cari nama pelajar..." class="w-full sm:w-64 bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <button onclick="openAddStudentModal()" class="admin-only px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1 whitespace-nowrap">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Tambah Murid</span>
                         </button>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
-                    <div class="relative flex-grow">
-                        <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="text" id="attendance-search" oninput="renderAttendanceSheet()" placeholder="Cari nama murid..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="changeAttendanceSessionOffset(-1)" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs text-slate-300"><i class="fa-solid fa-chevron-left"></i> Sesi Sebelumnya</button>
-                        <button onclick="changeAttendanceSessionOffset(1)" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs text-slate-300">Sesi Seterusnya <i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                </div>
+
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
-                            <tr>
-                                <th class="py-3 px-3">Bil</th>
-                                <th class="py-3 px-3">Nama Murid</th>
-                                <th class="py-3 px-3 text-center">Tali Pinggang</th>
-                                <th class="py-3 px-3 text-center">Status Kehadiran (+20 Min)</th>
-                                <th class="py-3 px-3 text-right">Tindakan Pantas</th>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
+                                <th class="py-3 px-4">Rank</th>
+                                <th class="py-3 px-4">Nama Pelajar</th>
+                                <th class="py-3 px-4">Kelas</th>
+                                <th class="py-3 px-4">Tali Pinggang (Belt)</th>
+                                <th class="py-3 px-4">Bab Selesai</th>
+                                <th class="py-3 px-4">Markah / XP</th>
+                                <th class="py-3 px-4 text-right">Tindakan Cepat</th>
                             </tr>
                         </thead>
-                        <tbody id="attendance-tbody" class="divide-y divide-slate-800/60"></tbody>
+                        <tbody id="leaderboard-tbody" class="divide-y divide-slate-800/60 text-sm">
+                            <!-- Rendered dynamically -->
+                        </tbody>
                     </table>
                 </div>
-                <div class="mt-6 flex justify-end">
-                    <button onclick="saveAttendanceChanges()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg flex items-center space-x-2">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Simpan Rekod Sesi Ini</span>
-                    </button>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: ATTENDANCE RECORD ================= -->
+        <div id="section-attendance" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-calendar-days text-teal-400"></i>
+                            <span>Rekod Kehadiran Harian & Sesi 20 Minit</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Semak dan kemaskini kehadiran harian murid untuk setiap sesi biologi</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Pilih Tarikh:</label>
+                            <input type="date" id="attendance-date-picker" onchange="loadAttendanceForDate()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                        <button onclick="markAllAttendance(true)" class="admin-only px-3 py-2 bg-teal-600/20 text-teal-400 hover:bg-teal-600/30 border border-teal-500/40 rounded-xl text-xs font-semibold mt-5">
+                            Tandakan Semua Hadir
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
+                                <th class="py-3 px-4">Nama Pelajar</th>
+                                <th class="py-3 px-4">Kelas</th>
+                                <th class="py-3 px-4 text-center">Status Kehadiran (20 Minit)</th>
+                                <th class="py-3 px-4">Nota / Catatan Singkat</th>
+                                <th class="py-3 px-4 text-right">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-tbody" class="divide-y divide-slate-800/60 text-sm">
+                            <!-- Rendered dynamically -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </section>
-
-        <!-- TAB 3: SESSIONS -->
+        </div>
+        <!-- ================= TAB 3: TETAPAN BAB & SESI ================= -->
         <section id="view-sessions" class="tab-content space-y-6 hidden">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-book-open text-emerald-400"></i>
-                            <span>Jadual Bab Harian (1 hingga 100 Sesi)</span>
-                        </h2>
-                        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Senarai topik biologi bagi setiap sesi pembelajaran</p>
-                    </div>
-                    <button onclick="addNewSessionPrompt()" class="admin-only px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow">
+            
+            <!-- Quick Actions Header for Daily Chapter Management -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-calendar-days text-amber-400"></i>
+                        <span>Tetapan Bab Yang Diuji Setiap Hari</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Pilih & tetapkan topik Biologi Tingkatan 4 atau 5 yang diuji untuk setiap sesi harian murid.
+                    </p>
+                </div>
+                
+                <div class="admin-only flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="autoScheduleSyllabusConfirm()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Susun Auto Sukatan SPM</span>
+                    </button>
+                    <button onclick="openAddNewDayModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Tambah Sesi Baru</span>
+                        <span>Tambah Hari Baru</span>
                     </button>
                 </div>
-                <div class="mb-6">
-                    <input type="text" id="session-search-input" oninput="renderSessionsList()" placeholder="Cari tajuk bab atau nombor sesi..." class="w-full sm:w-80 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
-                </div>
-                <div id="sessions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
-        </section>
 
-        <!-- TAB 4: ANALYTICS -->
-        <section id="view-analytics" class="tab-content space-y-6 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                    <h3 class="text-base font-bold text-white mb-2 flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-bar text-emerald-400"></i>
-                        <span>Taburan Kehadiran Mengikut Sesi</span>
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-4">Jumlah murid hadir bagi setiap sesi pembelajaran</p>
-                    <div class="relative h-64 sm:h-80"><canvas id="attendanceChart"></canvas></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                    <h3 class="text-base font-bold text-white mb-2 flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie text-amber-400"></i>
-                        <span>Taburan Tahap Tali Pinggang Murid</span>
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-4">Pecahan tahap penguasaan murid dalam Bio-Dojo</p>
-                    <div class="relative h-64 sm:h-80 flex items-center justify-center"><canvas id="beltChart"></canvas></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 5: STUDENTS DIRECTORY -->
-        <section id="view-students" class="tab-content space-y-6 hidden">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-users text-emerald-400"></i>
-                            <span>Direktori & Pengurusan Murid</span>
-                        </h2>
-                        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Tambah, padam atau edit maklumat pelajar dalam dojo</p>
+            <!-- VISUAL DAILY CHAPTER PLANNER GRID -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm font-bold text-white">Grid Kad Bab Harian</span>
+                        <span id="planner-total-count" class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold">30 Hari</span>
                     </div>
-                    <button onclick="openAddStudentModal()" class="admin-only px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center space-x-2 shadow">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Tambah Murid Baru</span>
-                    </button>
+
+                    <!-- Filter Controls -->
+                    <div class="flex items-center space-x-2 text-xs w-full sm:w-auto">
+                        <select id="filter-planner-form" onchange="renderDailyPlannerGrid()" class="bg-slate-950 border border-slate-800 text-slate-300 rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500">
+                            <option value="ALL">Semua Tingkatan</option>
+                            <option value="4">Tingkatan 4</option>
+                            <option value="5">Tingkatan 5</option>
+                        </select>
+                        <input type="text" id="search-planner-bab" onkeyup="renderDailyPlannerGrid()" placeholder="Cari bab..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 w-full sm:w-48">
+                    </div>
                 </div>
-                <div class="mb-6">
-                    <input type="text" id="student-dir-search" oninput="renderStudentsDirectory()" placeholder="Cari nama atau kelas murid..." class="w-full sm:w-80 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+
+                <div id="daily-planner-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- Tabular List View & Custom Edit Form -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form to Add/Edit Session -->
+                <div class="admin-only bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
+                        <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
+                        <span id="session-form-title">Kemaskini / Tetap Bab Hari Ini</span>
+                    </h3>
+
+                    <form id="form-session" onsubmit="handleSaveSession(event)" class="space-y-3 text-xs">
+                        <input type="hidden" id="session-id-input" value="">
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Label Hari / Sesi</label>
+                            <input type="text" id="session-title-input" required placeholder="Cth: Hari 1 (Isnin)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Tarikh Kehadiran</label>
+                            <input type="date" id="session-date-input" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Tingkatan</label>
+                            <select id="session-form-level" onchange="populateBabDropdown()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                                <option value="4">Tingkatan 4</option>
+                                <option value="5">Tingkatan 5</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Bab Biologi Diuji</label>
+                            <select id="session-bab-input" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Set Flashcard</label>
+                            <input type="text" id="session-flashcard-input" placeholder="Cth: Set 1 / Set 2" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="Set 1">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Jenis Aktiviti 20 Minit</label>
+                            <select id="session-activity-input" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                                <option value="Recall Challenge">Recall Challenge</option>
+                                <option value="Beat The Clock">Beat The Clock</option>
+                                <option value="Hot Seat">Hot Seat</option>
+                                <option value="Explain Like A Teacher">Explain Like A Teacher</option>
+                                <option value="Peer Challenge">Peer Challenge</option>
+                                <option value="Mystery Flashcard">Mystery Flashcard</option>
+                                <option value="Rapid Fire">Rapid Fire</option>
+                                <option value="Bio Relay">Bio Relay</option>
+                                <option value="Bio-Dojo Master Challenge">Bio-Dojo Master Challenge</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Nota Khusus Sesi</label>
+                            <input type="text" id="session-notes-input" placeholder="Cth: Fokus soalan struktur & lukisan rajah" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                        </div>
+
+                        <div class="pt-2 flex space-x-2">
+                            <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg shadow-emerald-900/40 flex items-center justify-center space-x-1">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Simpan Sesi</span>
+                            </button>
+                            <button type="button" onclick="resetSessionForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-3 py-2.5 rounded-xl transition">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
-                            <tr>
-                                <th class="py-3 px-3">Bil</th>
-                                <th class="py-3 px-3">Nama Murid</th>
-                                <th class="py-3 px-3 text-center">Kelas</th>
-                                <th class="py-3 px-3 text-center">Tali Pinggang</th>
-                                <th class="py-3 px-3 text-center">Jumlah Cop</th>
-                                <th class="py-3 px-3 text-right">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="students-dir-tbody" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
+
+                <!-- Session Schedule Table -->
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check text-emerald-400"></i>
+                            <span>Senarai Jadual Rekod Bab Harian</span>
+                        </h3>
+                        <span id="session-count-tag" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full font-semibold">0 Sesi</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-3">Hari / Tarikh</th>
+                                    <th class="p-3">Bab Terlibat</th>
+                                    <th class="p-3">Flashcard</th>
+                                    <th class="p-3">Aktiviti</th>
+                                    <th class="p-3 text-right">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="session-list-body" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: GRAF PENCAPAIAN ================= -->
+        <section id="view-analytics" class="tab-content space-y-6 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-400 block font-semibold">Cakupan Bab Tingkatan 4</span>
+                        <h4 id="coverage-f4-text" class="text-xl font-bold text-emerald-400 mt-1">0 / 15 Bab (0%)</h4>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-extrabold text-lg">
+                        T4
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-400 block font-semibold">Cakupan Bab Tingkatan 5</span>
+                        <h4 id="coverage-f5-text" class="text-xl font-bold text-amber-400 mt-1">0 / 13 Bab (0%)</h4>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-extrabold text-lg">
+                        T5
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                    <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-bar text-emerald-400"></i>
+                        <span>Jumlah Minit Pembelajaran Mengikut Murid</span>
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="chart-minutes-per-student"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                    <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                        <span>Agihan Tahap Pencapaian (Belt Ranks) Kelas</span>
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="chart-belt-distribution"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-chart-line text-blue-400"></i>
+                    <span>Trend Kehadiran Murid Mengikut Sesi Harian</span>
+                </h3>
+                <div class="h-72">
+                    <canvas id="chart-session-trend"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: SENARAI MURID & PASSPORT ================= -->
+        <section id="view-students" class="tab-content space-y-6 hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-id-card text-emerald-400"></i>
+                            <span>Bio-Dojo Passport 100 - Senarai Murid</span>
+                        </h3>
+                        <p class="text-xs text-slate-400">Semak status passport, cop kehadiran terkumpul, dan belt rank setiap murid</p>
+                    </div>
+
+                    <div class="admin-only flex space-x-2 w-full sm:w-auto">
+                        <button onclick="openAddStudentModal()" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1 shadow-md">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Tambah Murid Baru</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="student-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-xs text-slate-500 mt-auto">
-        <p>Bio-Dojo Bookmark 100 • Sistem Pemantauan Kehadiran & Pencapaian Biologi Real-Time</p>
-    </footer>
+    <!-- Modal: Individual Student Passport Card View -->
+    <div id="modal-passport" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative space-y-5">
+            <button onclick="closeModal('modal-passport')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-    <!-- Student Modal -->
-    <div id="student-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-            <h3 id="student-modal-title" class="text-lg font-bold text-white mb-4">Tambah Murid Baru</h3>
-            <input type="hidden" id="modal-student-id">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Penuh Murid</label>
-                    <input type="text" id="modal-student-name" placeholder="Cth: Ahmad Zulfikar" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Kelas</label>
-                    <input type="text" id="modal-student-class" placeholder="Cth: 5 Arif" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
-                </div>
+            <div class="text-center border-b border-slate-800 pb-4">
+                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-500/30">
+                    BIO-DOJO PASSPORT 100
+                </span>
+                <h3 id="passport-modal-name" class="text-xl font-black text-white mt-2">NAMA MURID</h3>
+                <p id="passport-modal-belt" class="mt-1"></p>
             </div>
-            <div class="flex justify-end space-x-3 mt-6">
-                <button onclick="closeStudentModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition">Batal</button>
-                <button onclick="saveStudentModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow">Simpan</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Custom Modal -->
-    <div id="custom-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl text-center">
-            <div id="custom-modal-icon" class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
-                <i class="fa-solid fa-info"></i>
-            </div>
-            <h3 id="custom-modal-title" class="text-base font-bold text-white mb-1">Mesej</h3>
-            <p id="custom-modal-text" class="text-xs text-slate-400 mb-6">Penerangan ringkas di sini.</p>
-            <div id="custom-modal-buttons" class="flex justify-center space-x-2">
-                <button id="custom-modal-ok" onclick="closeCustomModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        let isAdminMode = false;
-        let currentActiveTab = 'dashboard';
-        let currentAttendanceSessionId = 1;
-        let attendanceChartInstance = null;
-        let beltChartInstance = null;
-
-        const defaultStudents = [
-            { id: 's1', name: 'Aina Sofea binti Razman', class: '5 Sains', cops: 5, belt: 'Hitam' },
-            { id: 's2', name: 'Muhammad Farhan bin Rosli', class: '5 Sains', cops: 4, belt: 'Merah' },
-            { id: 's3', name: 'Nurul Huda binti Kamal', class: '5 Akaun', cops: 4, belt: 'Merah' },
-            { id: 's4', name: 'Darren Lee Wei Khang', class: '5 Sains', cops: 3, belt: 'Biru' },
-            { id: 's5', name: 'Siti Sarah binti Abdullah', class: '5 Grafik', cops: 3, belt: 'Biru' },
-            { id: 's6', name: 'Vimal Kumar a/l Selvaraj', class: '5 Sains', cops: 2, belt: 'Hijau' },
-            { id: 's7', name: 'Nur Anis Zulaikha', class: '5 Sastera', cops: 2, belt: 'Hijau' },
-            { id: 's8', name: 'Haikal Hakim bin Azman', class: '5 Akaun', cops: 1, belt: 'Putih' },
-            { id: 's9', name: 'Chloe Tan Xin Yi', class: '5 Sains', cops: 1, belt: 'Putih' },
-            { id: 's10', name: 'Amirul Asyraf bin Zulkifli', class: '5 Sastera', cops: 0, belt: 'Putih' }
-        ];
-
-        const defaultSessions = Array.from({ length: 100 }, (_, i) => {
-            const num = i + 1;
-            let title = `Sesi ${num}: Ulangan & Latihan Pengukuhan Biologi`;
-            if (num <= 15) title = `Sesi ${num}: Bab 1 & 2 - Struktur Sel & Organel (T4)`;
-            else if (num <= 30) title = `Sesi ${num}: Bab 3 & 4 - Pergerakan Bahan Merentasi Membran Plasma`;
-            else if (num <= 45) title = `Sesi ${num}: Bab 5 & 6 - Enzim & Metabolisme Sel`;
-            else if (num <= 60) title = `Sesi ${num}: Bab 7 & 8 - Mitosis, Meiosis & Pewarisan Genetik`;
-            else if (num <= 75) title = `Sesi ${num}: Bab 9 & 10 - Ekosistem & Kelestarian Alam Sekitar`;
-            else if (num <= 90) title = `Sesi ${num}: Bab T5 - Fisiologi Manusia & Koordinasi Badan`;
-            return { id: num, title: title, active: num === 1 };
-        });
-
-        let appData = {
-            students: JSON.parse(JSON.stringify(defaultStudents)),
-            sessions: JSON.parse(JSON.stringify(defaultSessions)),
-            attendance: {}
-        };
-
-        let db = null;
-        try {
-            const firebaseConfig = { databaseURL: "https://bio-dojo-bookmark-default-rtdb.firebaseio.com/" };
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            setupRealtimeSync();
-        } catch (e) {
-            console.warn("Firebase tidak diaktifkan, menggunakan LocalStorage.", e);
-            loadFromLocalStorage();
-        }
-
-        function setupRealtimeSync() {
-            const statusText = document.getElementById('sync-status-text');
-            const syncBadge = document.getElementById('cloud-sync-status');
-
-            db.ref('.info/connected').on('value', function(snapshot) {
-                if (snapshot.val() === true) {
-                    statusText.innerText = "Cloud Online (Live)";
-                    syncBadge.classList.remove('bg-amber-500/10', 'text-amber-400');
-                    syncBadge.classList.add('bg-emerald-500/10', 'text-emerald-400');
-                } else {
-                    statusText.innerText = "Offline / Menyambung...";
-                    syncBadge.classList.remove('bg-emerald-500/10', 'text-emerald-400');
-                    syncBadge.classList.add('bg-amber-500/10', 'text-amber-400');
-                }
-            });
-
-            db.ref('biodojo/students').on('value', (snapshot) => {
-                const val = snapshot.val();
-                if (val) {
-                    appData.students = val;
-                    refreshAllViews();
-                } else {
-                    db.ref('biodojo/students').set(defaultStudents);
-                }
-            });
-
-            db.ref('biodojo/attendance').on('value', (snapshot) => {
-                const val = snapshot.val();
-                if (val) {
-                    appData.attendance = val;
-                    recalculateStudentCopsAndBelts();
-                    refreshAllViews();
-                }
-            });
-        }
-
-        function loadFromLocalStorage() {
-            const local = localStorage.getItem('biodojo_data_v1');
-            if (local) {
-                try { appData = JSON.parse(local); } catch(e) {}
-            }
-            document.getElementById('sync-status-text').innerText = "Mod Storan Lokal";
-            refreshAllViews();
-        }
-
-        function saveToCloudOrLocal() {
-            recalculateStudentCopsAndBelts();
-            if (db) {
-                db.ref('biodojo/students').set(appData.students);
-                db.ref('biodojo/attendance').set(appData.attendance);
-            } else {
-                localStorage.setItem('biodojo_data_v1', JSON.stringify(appData));
-            }
-            refreshAllViews();
-        }
-
-        function calculateBelt(cops) {
-            if (cops >= 15) return { name: 'Hitam', color: 'bg-slate-900 text-slate-100 border border-slate-600' };
-            if (cops >= 10) return { name: 'Merah', color: 'bg-rose-950 text-rose-300 border border-rose-600' };
-            if (cops >= 6) return { name: 'Biru', color: 'bg-blue-950 text-blue-300 border border-blue-600' };
-            if (cops >= 3) return { name: 'Hijau', color: 'bg-emerald-950 text-emerald-300 border border-emerald-600' };
-            return { name: 'Putih', color: 'bg-slate-800 text-slate-300 border border-slate-600' };
-        }
-
-        function recalculateStudentCopsAndBelts() {
-            appData.students.forEach(student => {
-                let totalCops = 0;
-                Object.keys(appData.attendance).forEach(sessionId => {
-                    if (appData.attendance[sessionId] && appData.attendance[sessionId][student.id] === true) {
-                        totalCops++;
-                    }
-                });
-                student.cops = totalCops;
-                student.belt = calculateBelt(totalCops).name;
-            });
-        }
-
-        function switchTab(tabId) {
-            currentActiveTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-tab').forEach(btn => {
-                btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
-                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
-            });
-            const activeDesktopBtn = document.getElementById(`tab-${tabId}`);
-            if (activeDesktopBtn) {
-                activeDesktopBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
-                activeDesktopBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
-            }
-
-            ['dashboard', 'attendance', 'sessions', 'analytics', 'students'].forEach(id => {
-                const mbtn = document.getElementById(`mtab-${id}`);
-                if (mbtn) {
-                    if (id === tabId) {
-                        mbtn.className = "px-3 py-1.5 rounded-lg whitespace-nowrap bg-emerald-600 text-white font-medium shrink-0";
-                    } else {
-                        mbtn.className = "px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 shrink-0";
-                    }
-                }
-            });
-
-            if (tabId === 'analytics') renderCharts();
-        }
-
-        function refreshAllViews() {
-            renderDashboard();
-            renderAttendanceSelect();
-            renderAttendanceSheet();
-            renderSessionsList();
-            renderStudentsDirectory();
-            if (currentActiveTab === 'analytics') renderCharts();
-        }
-
-        function toggleAdminMode() {
-            isAdminMode = !isAdminMode;
-            const btn = document.getElementById('admin-mode-btn');
-            const text = document.getElementById('admin-mode-text');
-            if (isAdminMode) {
-                btn.classList.remove('bg-slate-800', 'text-amber-400');
-                btn.classList.add('bg-amber-600', 'text-white');
-                text.innerText = "Admin (Aktif)";
-                showToast("Mod Admin Diaktifkan", "success");
-            } else {
-                btn.classList.remove('bg-amber-600', 'text-white');
-                btn.classList.add('bg-slate-800', 'text-amber-400');
-                text.innerText = "Admin";
-                showToast("Mod Admin Ditutup", "info");
-            }
-            document.querySelectorAll('.admin-only').forEach(el => {
-                el.style.display = isAdminMode ? 'inline-flex' : 'none';
-            });
-        }
-
-        function renderDashboard() {
-            recalculateStudentCopsAndBelts();
-            const sorted = [...appData.students].sort((a, b) => b.cops - a.cops);
-
-            const totalCops = sorted.reduce((acc, s) => acc + s.cops, 0);
-            const totalMinutes = totalCops * 20;
-            const avgMinutes = sorted.length > 0 ? Math.round(totalMinutes / sorted.length) : 0;
-            const progressPercent = Math.min(100, Math.round((avgMinutes / 100) * 100));
-
-            document.getElementById('stat-total-cops').innerText = totalCops;
-            document.getElementById('stat-total-minutes').innerText = `${totalMinutes}m`;
-            document.getElementById('stat-attendance-rate').innerText = `${Math.min(100, Math.round((totalCops / (sorted.length * 5 || 1)) * 100))}%`;
-            document.getElementById('stat-legend-count').innerText = sorted.filter(s => s.cops >= 15).length;
-
-            document.getElementById('avg-minutes-text').innerText = `${avgMinutes} / 100 Min`;
-            document.getElementById('avg-minutes-bar').style.width = `${progressPercent}%`;
-
-            const p1 = sorted[0] || { name: '---', cops: 0, belt: 'Putih' };
-            const p2 = sorted[1] || { name: '---', cops: 0, belt: 'Putih' };
-            const p3 = sorted[2] || { name: '---', cops: 0, belt: 'Putih' };
-
-            document.getElementById('podium-1-name').innerText = p1.name;
-            document.getElementById('podium-1-cops').innerText = `${p1.cops} Cop (${p1.cops * 20}m)`;
-            document.getElementById('podium-1-belt').innerHTML = `<span class="belt-badge ${calculateBelt(p1.cops).color}">${p1.belt}</span>`;
-
-            document.getElementById('podium-2-name').innerText = p2.name;
-            document.getElementById('podium-2-cops').innerText = `${p2.cops} Cop (${p2.cops * 20}m)`;
-            document.getElementById('podium-2-belt').innerHTML = `<span class="belt-badge ${calculateBelt(p2.cops).color}">${p2.belt}</span>`;
-
-            document.getElementById('podium-3-name').innerText = p3.name;
-            document.getElementById('podium-3-cops').innerText = `${p3.cops} Cop (${p3.cops * 20}m)`;
-            document.getElementById('podium-3-belt').innerHTML = `<span class="belt-badge ${calculateBelt(p3.cops).color}">${p3.belt}</span>`;
-
-            const activeSession = appData.sessions.find(s => s.active) || appData.sessions[0];
-            document.getElementById('active-session-banner').innerHTML = `
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl">
-                            <i class="fa-solid fa-book-bookmark text-xl"></i>
-                        </div>
-                        <div>
-                            <span class="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Sesi Pembelajaran Aktif</span>
-                            <h4 class="text-sm sm:text-base font-bold text-white">${activeSession.title}</h4>
-                        </div>
-                    </div>
-                    <button onclick="switchTab('attendance')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow">
-                        Ambil Kehadiran Sesi Ini <i class="fa-solid fa-arrow-right ml-1"></i>
+            <div class="admin-only bg-slate-950/80 p-3 rounded-2xl border border-slate-800 flex items-center justify-between">
+                <span class="text-xs text-slate-400 font-semibold">Pelarasan Cop Manual:</span>
+                <div class="flex items-center space-x-2">
+                    <button id="btn-passport-minus" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 font-bold border border-rose-500/40 flex items-center justify-center transition">
+                        <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <span id="passport-modal-cops-badge" class="text-sm font-bold text-emerald-400 px-2">0 Cop</span>
+                    <button id="btn-passport-plus" class="w-8 h-8 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 font-bold border border-emerald-500/40 flex items-center justify-center transition">
+                        <i class="fa-solid fa-plus text-xs"></i>
                     </button>
                 </div>
-            `;
+            </div>
 
-            const filterText = (document.getElementById('dash-search-input')?.value || '').toLowerCase();
-            const filtered = sorted.filter(s => s.name.toLowerCase().includes(filterText) || s.class.toLowerCase().includes(filterText));
-            
-            let tbodyHtml = '';
-            filtered.forEach((student, index) => {
-                const beltInfo = calculateBelt(student.cops);
-                tbodyHtml += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="py-3 px-3 font-bold text-slate-400">#${index + 1}</td>
-                        <td class="py-3 px-3 font-semibold text-white">${student.name} <span class="text-xs text-slate-400 font-normal">(${student.class})</span></td>
-                        <td class="py-3 px-3 text-center"><span class="belt-badge ${beltInfo.color}">${student.belt}</span></td>
-                        <td class="py-3 px-3 text-center font-bold text-emerald-400">${student.cops}</td>
-                        <td class="py-3 px-3 text-right font-bold text-amber-400">${student.cops * 20}m</td>
-                    </tr>
-                `;
-            });
-            document.getElementById('dashboard-leaderboard-tbody').innerHTML = tbodyHtml || `<tr><td colspan="5" class="text-center py-6 text-slate-500">Tiada rekod dijumpai</td></tr>`;
-        }
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <span class="text-xs text-slate-400 block">Jumlah Cop</span>
+                    <span id="passport-modal-cops" class="text-2xl font-black text-emerald-400">0</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <span class="text-xs text-slate-400 block">Jumlah Minit</span>
+                    <span id="passport-modal-minutes" class="text-2xl font-black text-amber-400">0 Min</span>
+                </div>
+            </div>
 
-        function filterDashboardLeaderboard() { renderDashboard(); }
+            <div>
+                <h4 class="text-xs font-bold text-slate-300 uppercase mb-2 tracking-wider">Lencana Pencapaian:</h4>
+                <div id="passport-modal-badges" class="flex flex-wrap gap-2 text-xs"></div>
+            </div>
 
-        function renderAttendanceSelect() {
-            const select = document.getElementById('attendance-session-select');
-            let html = '';
-            appData.sessions.forEach(sess => {
-                const isSelected = sess.id === currentAttendanceSessionId ? 'selected' : '';
-                html += `<option value="${sess.id}" ${isSelected}>Sesi ${sess.id}: ${sess.title}</option>`;
-            });
-            select.innerHTML = html;
-        }
+            <div>
+                <h4 class="text-xs font-bold text-slate-300 uppercase mb-2 tracking-wider">Sejarah Kehadiran Harian:</h4>
+                <div id="passport-modal-history" class="max-h-36 overflow-y-auto space-y-1 text-xs pr-1"></div>
+            </div>
 
-        function renderAttendanceSheet() {
-            const selectVal = document.getElementById('attendance-session-select');
-            if (selectVal) currentAttendanceSessionId = parseInt(selectVal.value) || 1;
+            <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+                <button id="btn-passport-print" onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center space-x-1">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Cetak Kad</span>
+                </button>
+                <button onclick="closeModal('modal-passport')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-xl text-xs transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
 
-            const searchKey = (document.getElementById('attendance-search')?.value || '').toLowerCase();
-            const filtered = appData.students.filter(s => s.name.toLowerCase().includes(searchKey) || s.class.toLowerCase().includes(searchKey));
-            
-            const sessionKey = `session_${currentAttendanceSessionId}`;
-            if (!appData.attendance[sessionKey]) appData.attendance[sessionKey] = {};
+    <!-- Modal: Quick Change Chapter -->
+    <div id="modal-quick-chapter" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+            <button onclick="closeModal('modal-quick-chapter')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-            let html = '';
-            filtered.forEach((student, idx) => {
-                const isPresent = !!appData.attendance[sessionKey][student.id];
-                const beltInfo = calculateBelt(student.cops);
+            <div class="border-b border-slate-800 pb-3">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
+                    PENUKAR BAB PANTAS
+                </span>
+                <h3 id="quick-modal-day-title" class="text-lg font-bold text-white mt-1">Hari 1</h3>
+            </div>
 
-                html += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="py-3 px-3 text-slate-400">${idx + 1}</td>
-                        <td class="py-3 px-3 font-semibold text-white">${student.name} <span class="text-xs text-slate-400 font-normal">(${student.class})</span></td>
-                        <td class="py-3 px-3 text-center"><span class="belt-badge ${beltInfo.color}">${student.belt}</span></td>
-                        <td class="py-3 px-3 text-center">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" onchange="toggleAttendanceCheckbox('${student.id}', this.checked)" ${isPresent ? 'checked' : ''} class="sr-only peer">
-                                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                            </label>
-                        </td>
-                        <td class="py-3 px-3 text-right">
-                            <button onclick="quickToggleAttendance('${student.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition">
-                                ${isPresent ? 'Buang Cop (-20m)' : 'Beri Cop (+20m)'}
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            document.getElementById('attendance-tbody').innerHTML = html || `<tr><td colspan="5" class="text-center py-6 text-slate-500">Tiada murid dijumpai</td></tr>`;
-        }
+            <form onsubmit="handleSaveQuickChapter(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="quick-session-id" value="">
 
-        function toggleAttendanceCheckbox(studentId, isChecked) {
-            const sessionKey = `session_${currentAttendanceSessionId}`;
-            if (!appData.attendance[sessionKey]) appData.attendance[sessionKey] = {};
-            appData.attendance[sessionKey][studentId] = isChecked;
-        }
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Tarikh Kehadiran</label>
+                    <input type="date" id="quick-session-date" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                </div>
 
-        function quickToggleAttendance(studentId) {
-            const sessionKey = `session_${currentAttendanceSessionId}`;
-            if (!appData.attendance[sessionKey]) appData.attendance[sessionKey] = {};
-            appData.attendance[sessionKey][studentId] = !appData.attendance[sessionKey][studentId];
-            renderAttendanceSheet();
-        }
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Tingkatan</label>
+                    <select id="quick-session-level" onchange="populateQuickBabDropdown()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                        <option value="4">Tingkatan 4</option>
+                        <option value="5">Tingkatan 5</option>
+                    </select>
+                </div>
 
-        function markAllAttendance(status) {
-            const sessionKey = `session_${currentAttendanceSessionId}`;
-            if (!appData.attendance[sessionKey]) appData.attendance[sessionKey] = {};
-            appData.students.forEach(s => { appData.attendance[sessionKey][s.id] = status; });
-            renderAttendanceSheet();
-            showToast(status ? "Semua murid ditanda hadir" : "Semua kehadiran dikosongkan", "info");
-        }
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Bab Biologi Diuji</label>
+                    <select id="quick-session-bab" required class="w-full bg-slate-950 border border-slate-700 text-emerald-300 font-medium rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500"></select>
+                </div>
 
-        function changeAttendanceSessionOffset(offset) {
-            let nextId = currentAttendanceSessionId + offset;
-            if (nextId < 1) nextId = 1;
-            if (nextId > 100) nextId = 100;
-            currentAttendanceSessionId = nextId;
-            document.getElementById('attendance-session-select').value = nextId;
-            renderAttendanceSheet();
-        }
-
-        function saveAttendanceChanges() {
-            saveToCloudOrLocal();
-            showToast("Rekod kehadiran berjaya disimpan ke Cloud!", "success");
-            triggerConfetti();
-        }
-
-        function renderSessionsList() {
-            const search = (document.getElementById('session-search-input')?.value || '').toLowerCase();
-            const filtered = appData.sessions.filter(s => s.title.toLowerCase().includes(search) || s.id.toString().includes(search));
-
-            let html = '';
-            filtered.forEach(sess => {
-                const sessionKey = `session_${sess.id}`;
-                let presentCount = 0;
-                if (appData.attendance[sessionKey]) {
-                    presentCount = Object.values(appData.attendance[sessionKey]).filter(val => val === true).length;
-                }
-
-                html += `
-                    <div class="bg-slate-950 border ${sess.active ? 'border-emerald-500/60 shadow-lg shadow-emerald-950/40' : 'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-extrabold px-2.5 py-1 rounded-full ${sess.active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'}">
-                                    Sesi ${sess.id}
-                                </span>
-                                <span class="text-xs font-semibold text-slate-400 flex items-center space-x-1">
-                                    <i class="fa-solid fa-user-check text-emerald-400"></i>
-                                    <span>${presentCount} Hadir</span>
-                                </span>
-                            </div>
-                            <h4 class="text-sm font-bold text-white mb-3">${sess.title}</h4>
-                        </div>
-                        <div class="flex items-center justify-between pt-3 border-t border-slate-900 text-xs">
-                            <button onclick="jumpToAttendanceSession(${sess.id})" class="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center space-x-1">
-                                <i class="fa-solid fa-clipboard-user"></i>
-                                <span>Ambil Kehadiran</span>
-                            </button>
-                            <button onclick="toggleActiveSession(${sess.id})" class="admin-only px-2.5 py-1 rounded-lg ${sess.active ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-                                ${sess.active ? 'Sesi Aktif' : 'Jadikan Aktif'}
-                            </button>
-                        </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Set Flashcard</label>
+                        <input type="text" id="quick-session-flashcard" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="Set 1">
                     </div>
-                `;
-            });
-            document.getElementById('sessions-grid').innerHTML = html || `<div class="col-span-full text-center py-6 text-slate-500">Tiada sesi dijumpai</div>`;
-            document.querySelectorAll('.admin-only').forEach(el => { el.style.display = isAdminMode ? 'inline-flex' : 'none'; });
-        }
+                    <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Aktiviti</label>
+                        <select id="quick-session-activity" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                            <option value="Recall Challenge">Recall Challenge</option>
+                            <option value="Beat The Clock">Beat The Clock</option>
+                            <option value="Hot Seat">Hot Seat</option>
+                            <option value="Explain Like A Teacher">Explain Like A Teacher</option>
+                            <option value="Peer Challenge">Peer Challenge</option>
+                            <option value="Rapid Fire">Rapid Fire</option>
+                            <option value="Bio Relay">Bio Relay</option>
+                        </select>
+                    </div>
+                </div>
 
-        function jumpToAttendanceSession(sessionId) {
-            currentAttendanceSessionId = sessionId;
-            switchTab('attendance');
-            document.getElementById('attendance-session-select').value = sessionId;
-            renderAttendanceSheet();
-        }
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Nota Khusus Sesi</label>
+                    <input type="text" id="quick-session-notes" placeholder="Cth: Fokus Soalan SPM Kertas 2" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                </div>
 
-        function toggleActiveSession(sessionId) {
-            appData.sessions.forEach(s => { s.active = (s.id === sessionId); });
-            saveToCloudOrLocal();
-            showToast(`Sesi ${sessionId} ditetapkan sebagai Sesi Aktif`, "success");
-        }
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-quick-chapter')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl">Batal</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl">Simpan Bab Hari Ini</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        function addNewSessionPrompt() {
-            showCustomModal("Tambah Sesi", "Sila edit kod sumber jika anda ingin menambah sesi baru secara kekal.", "info");
-        }
+    <!-- Modal: Edit Student Name -->
+    <div id="modal-edit-student" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
+                <span>Kemaskini Maklumat Murid</span>
+            </h3>
 
-        function renderStudentsDirectory() {
-            const search = (document.getElementById('student-dir-search')?.value || '').toLowerCase();
-            const filtered = appData.students.filter(s => s.name.toLowerCase().includes(search) || s.class.toLowerCase().includes(search));
+            <input type="hidden" id="edit-student-id-input" value="">
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Penuh Murid</label>
+                <input type="text" id="edit-student-name-input" placeholder="Masukkan nama murid..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            </div>
 
-            let html = '';
-            filtered.forEach((student, idx) => {
-                const beltInfo = calculateBelt(student.cops);
-                html += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="py-3 px-3 text-slate-400">${idx + 1}</td>
-                        <td class="py-3 px-3 font-semibold text-white">${student.name}</td>
-                        <td class="py-3 px-3 text-center text-slate-300">${student.class}</td>
-                        <td class="py-3 px-3 text-center"><span class="belt-badge ${beltInfo.color}">${student.belt}</span></td>
-                        <td class="py-3 px-3 text-center font-bold text-emerald-400">${student.cops} (${student.cops * 20}m)</td>
-                        <td class="py-3 px-3 text-right space-x-1">
-                            <button onclick="openEditStudentModal('${student.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-blue-400 rounded-lg text-xs font-bold transition">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteStudent('${student.id}')" class="admin-only px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-lg text-xs font-bold transition">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            document.getElementById('students-dir-tbody').innerHTML = html || `<tr><td colspan="6" class="text-center py-6 text-slate-500">Tiada murid dijumpai</td></tr>`;
-            document.querySelectorAll('.admin-only').forEach(el => { el.style.display = isAdminMode ? 'inline-flex' : 'none'; });
-        }
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeModal('modal-edit-student')" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 px-4 py-2 rounded-xl">Batal</button>
+                <button onclick="handleSaveEditStudent()" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-2 rounded-xl">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
 
-        function openAddStudentModal() {
-            document.getElementById('student-modal-title').innerText = "Tambah Murid Baru";
-            document.getElementById('modal-student-id').value = '';
-            document.getElementById('modal-student-name').value = '';
-            document.getElementById('modal-student-class').value = '';
-            document.getElementById('student-modal').classList.remove('hidden');
-        }
+    <!-- Modal: Add Student -->
+    <div id="modal-add-student" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-user-plus text-emerald-400"></i>
+                <span>Tambah Murid Baru</span>
+            </h3>
 
-        function openEditStudentModal(studentId) {
-            const student = appData.students.find(s => s.id === studentId);
-            if (!student) return;
-            document.getElementById('student-modal-title').innerText = "Kemaskini Maklumat Murid";
-            document.getElementById('modal-student-id').value = student.id;
-            document.getElementById('modal-student-name').value = student.name;
-            document.getElementById('modal-student-class').value = student.class;
-            document.getElementById('student-modal').classList.remove('hidden');
-        }
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Penuh Murid</label>
+                <input type="text" id="new-student-name-input" placeholder="Masukkan nama murid..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            </div>
 
-        function closeStudentModal() { document.getElementById('student-modal').classList.add('hidden'); }
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeModal('modal-add-student')" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 px-4 py-2 rounded-xl">Batal</button>
+                <button onclick="handleAddStudent()" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-2 rounded-xl">Simpan Murid</button>
+            </div>
+        </div>
+    </div>
 
-        function saveStudentModal() {
-            const id = document.getElementById('modal-student-id').value;
-            const name = document.getElementById('modal-student-name').value.trim();
-            const studentClass = document.getElementById('modal-student-class').value.trim();
+    <!-- General Confirmation Modal -->
+    <div id="modal-confirm" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="confirm-modal-title" class="text-lg font-bold text-white">Pengesahan</h3>
+            <p id="confirm-modal-msg" class="text-xs text-slate-300">Adakah anda pasti untuk meneruskan tindakan ini?</p>
+            <div class="flex justify-center space-x-3 pt-2">
+                <button onclick="closeModal('modal-confirm')" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 px-5 py-2.5 rounded-xl font-semibold">Batal</button>
+                <button id="btn-confirm-action" class="bg-amber-600 hover:bg-amber-500 text-xs text-white font-bold px-5 py-2.5 rounded-xl">Ya, Teruskan</button>
+            </div>
+        </div>
+    </div>
 
-            if (!name) { showToast("Sila masukkan nama murid", "error"); return; }
+    <!-- Main Application Logic & Realtime Sync Script -->
+    <script>
+        // ================= FIREBASE REALTIME DB CONFIGURATION =================
+        // Gantikan konfigurasi ini dengan Firebase Project anda sendiri untuk pangkalan data sendiri!
+        const firebaseConfig = {
+  apiKey: "AIzaSyBwq_qGW1XNfFUZDYlpST-z5HTF_31u4xo",
+  authDomain: "bookmark-100.firebaseapp.com",
+  databaseURL: "https://bookmark-100-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bookmark-100",
+  storageBucket: "bookmark-100.firebasestorage.app",
+  messagingSenderId: "979522637887",
+  appId: "1:979522637887:web:3e6066b5649f40674be88a",
+  measurementId: "G-K40KDXYR0N"
+};
 
-            if (id) {
-                const student = appData.students.find(s => s.id === id);
-                if (student) { student.name = name; student.class = studentClass || student.class; }
-            } else {
-                const newId = 's_' + Date.now();
-                appData.students.push({ id: newId, name: name, class: studentClass || '5 Sains', cops: 0, belt: 'Putih' });
+        let db = null;
+        let isFirebaseActive = false;
+
+        try {
+            if (typeof firebase !== 'undefined' && firebaseConfig.databaseURL) {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                isFirebaseActive = true;
             }
-
-            saveToCloudOrLocal();
-            closeStudentModal();
-            showToast("Maklumat murid berjaya disimpan", "success");
+        } catch(e) {
+            console.warn("Firebase tidak diaktifkan, guna LocalStorage fallback:", e);
         }
 
-        function deleteStudent(studentId) {
-            if (!isAdminMode) { showToast("Sila aktifkan Mod Admin untuk memadam murid", "error"); return; }
-            appData.students = appData.students.filter(s => s.id !== studentId);
-            saveToCloudOrLocal();
-            showToast("Murid berjaya dipadam", "info");
+        // State Global
+        let isAdmin = true;
+
+        const DEFAULT_STUDENTS = [
+            "ABDUL DANISH BIN ABDULLAH",
+            "AHMAD SYAHZANIRULLAH BIN AHMAD ZAIDI",
+            "NUR NADIRAH SYAHIRAH BINTI ABDULLAH",
+            "MOHAMAD ASYRAF IQBAL BIN M ARIF",
+            "MOHAMMAD SYAZWAN SHAH BIN NORDIN",
+            "MUHAMMAD HERRY BIN ABDULLAH",
+            "MUHAMMAD SALAHUDDIN AL-AYYUBI BIN AZHAR",
+            "MUHAMMAD SYAHIR BIN ABDULLAH",
+            "MUHAMMAD SYAKIR ASYRAF BIN AMIRUDDIN",
+            "MUHAMMAD YUSUF RAZIQ BIN KAMIL",
+            "NUR ASRINA SYAZWANI BINTI AISHAH RIZAL",
+            "NUR SYUHADAH BINTI SATAR",
+            "NURSYIRAH BINTI ABDULLAH",
+            "NURUL AIN HIDAYAH BINTI KOSASI",
+            "NURUL SHAHFARIIQAH ARENI SHAHZIMAH BINTI JIMI",
+            "SITI ATIKAH BINTI SABTURANI",
+            "SYAMIRUL AQIF BIN ABDULLAH"
+        ];
+
+        const SYLLABUS = {
+            "4": [
+                "1.0 Pengenalan kepada Biologi dan Peraturan Makmal",
+                "2.0 Biologi Sel dan Organisasi Sel",
+                "3.0 Pergerakan Bahan Merentasi Membran Plasma",
+                "4.0 Komposisi Kimia dalam Sel",
+                "5.0 Metabolisme dan Enzim",
+                "6.0 Pembahagian Sel",
+                "7.0 Respirasi Sel",
+                "8.0 Sistem Respirasi dalam Manusia dan Haiwan",
+                "9.0 Nutrisi dan Sistem Pencernaan Manusia",
+                "10.0 Pengangkutan dalam Manusia dan Haiwan",
+                "11.0 Keimunan Manusia",
+                "12.0 Koordinasi dan Gerak Balas dalam Manusia",
+                "13.0 Homeostasis dan Sistem Urinari Manusia",
+                "14.0 Sokongan dan Pergerakan dalam Manusia dan Haiwan",
+                "15.0 Pembiakan Seks, Perkembangan dan Pertumbuhan"
+            ],
+            "5": [
+                "1.0 Organisasi Tisu Tumbuhan dan Pertumbuhan",
+                "2.0 Struktur dan Fungsi Daun",
+                "3.0 Nutrisi dalam Tumbuhan",
+                "4.0 Pengangkutan dalam Tumbuhan",
+                "5.0 Gerak Balas dalam Tumbuhan",
+                "6.0 Pembiakan Seks dalam Tumbuhan Berbunga",
+                "7.0 Penyesuaian Tumbuhan pada Habitat Berlainan",
+                "8.0 Biodiversiti",
+                "9.0 Ekosistem",
+                "10.0 Kelestarian Alam Sekitar",
+                "11.0 Pewarisan",
+                "12.0 Variasi",
+                "13.0 Kejuruteraan Genetik dan Bioteknologi"
+            ]
+        };
+
+        const ACTIVITIES_LIST = [
+            "Recall Challenge", "Beat The Clock", "Hot Seat",
+            "Explain Like A Teacher", "Peer Challenge", "Mystery Flashcard",
+            "Rapid Fire", "Bio Relay", "Bio-Dojo Master Challenge"
+        ];
+
+        function getFormattedDate(offsetDays = 0) {
+            const d = new Date();
+            d.setDate(d.getDate() + offsetDays);
+            return d.toISOString().split('T')[0];
         }
 
-        function renderCharts() {
-            const sessionLabels = [];
-            const attendanceCounts = [];
-            for (let i = 1; i <= 15; i++) {
-                sessionLabels.push(`Sesi ${i}`);
-                const sessionKey = `session_${i}`;
-                let count = 0;
-                if (appData.attendance[sessionKey]) {
-                    count = Object.values(appData.attendance[sessionKey]).filter(v => v === true).length;
-                }
-                attendanceCounts.push(count);
-            }
+        const DEFAULT_SESSIONS = Array.from({ length: 30 }, (_, i) => {
+            const dayNum = i + 1;
+            const form = dayNum <= 15 ? "4" : "5";
+            const babList = SYLLABUS[form];
+            const bab = babList[(dayNum - 1) % babList.length];
+            const activity = ACTIVITIES_LIST[i % ACTIVITIES_LIST.length];
 
-            const ctxBar = document.getElementById('attendanceChart').getContext('2d');
-            if (attendanceChartInstance) attendanceChartInstance.destroy();
-            attendanceChartInstance = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: sessionLabels,
-                    datasets: [{ label: 'Jumlah Hadir', data: attendanceCounts, backgroundColor: '#10b981', borderRadius: 6 }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+            return {
+                id: `s${dayNum}`,
+                title: `Hari ${dayNum}`,
+                date: getFormattedDate(i),
+                form: form,
+                bab: bab,
+                flashcard: `Set ${(i % 3) + 1}`,
+                activity: activity,
+                notes: ""
+            };
+        });
+
+        let students = [];
+        let sessions = [];
+        let attendanceRecords = {};
+        let manualCops = {};
+
+        let minutesChart = null;
+        let beltChart = null;
+        let trendChart = null;
+
+        // Init Application
+        window.addEventListener('DOMContentLoaded', () => {
+            initRealtimeSync();
+        });
+
+        function initRealtimeSync() {
+            const statusEl = document.getElementById('sync-status-text');
+
+            if (isFirebaseActive && db) {
+                statusEl.innerText = "Disinkronkan Masa Nyata (Cloud)";
+                
+                // Mendengar perubahan pada Realtime Database (Auto push ke peranti murid!)
+                db.ref('biodojo_data').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        students = data.students || DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
+                        sessions = data.sessions || [...DEFAULT_SESSIONS];
+                        attendanceRecords = data.attendanceRecords || {};
+                        manualCops = data.manualCops || {};
+                    } else {
+                        // Pertama kali jalankan, hantar data awal ke Firebase
+                        students = DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
+                        sessions = [...DEFAULT_SESSIONS];
+                        attendanceRecords = {};
+                        manualCops = {};
+                        saveDataToCloud();
                     }
-                }
-            });
-
-            const beltCounts = { 'Hitam': 0, 'Merah': 0, 'Biru': 0, 'Hijau': 0, 'Putih': 0 };
-            appData.students.forEach(s => { if (beltCounts[s.belt] !== undefined) beltCounts[s.belt]++; });
-
-            const ctxPie = document.getElementById('beltChart').getContext('2d');
-            if (beltChartInstance) beltChartInstance.destroy();
-            beltChartInstance = new Chart(ctxPie, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Hitam', 'Merah', 'Biru', 'Hijau', 'Putih'],
-                    datasets: [{
-                        data: [beltCounts['Hitam'], beltCounts['Merah'], beltCounts['Biru'], beltCounts['Hijau'], beltCounts['Putih']],
-                        backgroundColor: ['#0f172a', '#e11d48', '#2563eb', '#059669', '#64748b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } }
-                }
-            });
+                    refreshAllUI();
+                });
+            } else {
+                statusEl.innerText = "Mod Luar Talian (LocalStorage)";
+                loadLocalData();
+                refreshAllUI();
+            }
         }
 
-        function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Kelas,Jumlah Cop,Jumlah Minit,Tali Pinggang\n";
-            appData.students.forEach((s, idx) => {
-                csvContent += `${idx + 1},"${s.name}","${s.class}",${s.cops},${s.cops * 20},"${s.belt}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Laporan_Bio_Dojo_100.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("Laporan CSV berjaya dimuat turun!", "success");
+        function saveDataToCloud() {
+            const payload = {
+                students: students,
+                sessions: sessions,
+                attendanceRecords: attendanceRecords,
+                manualCops: manualCops,
+                lastUpdated: Date.now()
+            };
+
+            // Simpan ke LocalStorage sebagai backup
+            localStorage.setItem('biodojo_students', JSON.stringify(students));
+            localStorage.setItem('biodojo_sessions', JSON.stringify(sessions));
+            localStorage.setItem('biodojo_attendance', JSON.stringify(attendanceRecords));
+            localStorage.setItem('biodojo_manualCops', JSON.stringify(manualCops));
+
+            // Jika Firebase aktif, muat naik ke Cloud secara nyata!
+            if (isFirebaseActive && db) {
+                db.ref('biodojo_data').set(payload).catch(err => {
+                    console.error("Gagal menyimpan ke Cloud:", err);
+                });
+            }
         }
 
-        function triggerConfetti() {
-            if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        function loadLocalData() {
+            const savedStudents = localStorage.getItem('biodojo_students');
+            students = savedStudents ? JSON.parse(savedStudents) : DEFAULT_STUDENTS.map((name, index) => ({ id: 'std_' + (index + 1), name }));
+
+            const savedSessions = localStorage.getItem('biodojo_sessions');
+            sessions = savedSessions ? JSON.parse(savedSessions) : [...DEFAULT_SESSIONS];
+
+            const savedAttendance = localStorage.getItem('biodojo_attendance');
+            attendanceRecords = savedAttendance ? JSON.parse(savedAttendance) : {};
+
+            const savedManualCops = localStorage.getItem('biodojo_manualCops');
+            manualCops = savedManualCops ? JSON.parse(savedManualCops) : {};
         }
 
-        function showToast(message, type = 'info') {
+        function refreshAllUI() {
+            populateBabDropdown();
+            renderDailyPlannerGrid();
+            renderSessionList();
+            populateAttendanceSessionDropdown();
+            loadAttendanceMatrix();
+            updateDashboard();
+            if (!document.getElementById('view-analytics').classList.contains('hidden')) updateCharts();
+            if (!document.getElementById('view-students').classList.contains('hidden')) renderStudentCards();
+        }
+
+        function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-emerald-900 border-emerald-500 text-emerald-200' : (type === 'error' ? 'bg-rose-900 border-rose-500 text-rose-200' : 'bg-slate-900 border-slate-700 text-slate-200');
+            const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'warning' ? 'bg-amber-600 text-white' : 'bg-blue-600 text-white';
             
-            toast.className = `p-4 rounded-xl border ${bgColor} shadow-2xl flex items-center space-x-3 transition-all duration-300 toast-enter`;
-            toast.innerHTML = `
-                <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-400' : (type === 'error' ? 'fa-circle-exclamation text-rose-400' : 'fa-circle-info text-blue-400')} text-lg"></i>
-                <span class="text-xs font-bold">${message}</span>
-            `;
+            toast.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold transition-all duration-300 toast-enter flex items-center space-x-2 pointer-events-auto`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'} text-sm"></i> <span>${msg}</span>`;
+            
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('toast-show'), 10);
             setTimeout(() => {
                 toast.classList.remove('toast-show');
-                setTimeout(() => container.removeChild(toast), 300);
+                setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        function showCustomModal(title, text, type = 'info') {
-            document.getElementById('custom-modal-title').innerText = title;
-            document.getElementById('custom-modal-text').innerText = text;
-            document.getElementById('custom-modal').classList.remove('hidden');
+        function showConfirmModal(title, msg, onConfirm) {
+            document.getElementById('confirm-modal-title').innerText = title;
+            document.getElementById('confirm-modal-msg').innerText = msg;
+            
+            const btn = document.getElementById('btn-confirm-action');
+            btn.onclick = function() {
+                closeModal('modal-confirm');
+                onConfirm();
+            };
+
+            document.getElementById('modal-confirm').classList.remove('hidden');
         }
 
-        function closeCustomModal() { document.getElementById('custom-modal').classList.add('hidden'); }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
 
-        window.onload = function () { refreshAllViews(); };
+function toggleAdminMode() {
+    if (!isAdmin) {
+        // Jika sedang berada dalam mod murid dan ingin masuk ke mod admin
+        const passwordInput = prompt("Sila masukkan kata laluan admin:");
+        
+        // TETAPKAN KATA LALUAN ANDA DI SINI
+        const ADMIN_PASSWORD = "biodojo2026"; 
+
+        if (passwordInput === null) {
+            return; // Pengguna menekan butang Batal (Cancel)
+        }
+
+        if (passwordInput !== ADMIN_PASSWORD) {
+            showToast("Kata laluan admin tidak sah!", "error");
+            return;
+        }
+
+        isAdmin = true;
+        showToast("Mod Admin Diaktifkan dengan Jayanya!");
+    } else {
+        // Jika sedang dalam mod admin dan ingin keluar ke mod murid
+        isAdmin = false;
+        showToast("Mod Murid Diaktifkan.");
+    }
+
+    // Kemaskini paparan antara muka
+    document.getElementById('admin-mode-text').innerText = isAdmin ? "Mod Admin" : "Mod Murid";
+    document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden', !isAdmin));
+    
+    // Segarkan paparan kad murid jika perlu
+    if (typeof renderStudentCards === 'function') {
+        renderStudentCards();
+    }
+}
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
+                el.classList.add('text-slate-400');
+            });
+            const activeTabBtn = document.getElementById(`tab-${tabId}`);
+            if(activeTabBtn) {
+                activeTabBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+                activeTabBtn.classList.remove('text-slate-400');
+            }
+
+            if (tabId === 'analytics') updateCharts();
+            else if (tabId === 'dashboard') updateDashboard();
+            else if (tabId === 'students') renderStudentCards();
+            else if (tabId === 'sessions') renderDailyPlannerGrid();
+        }
+
+        function calculateStudentStats(studentId) {
+            let totalCops = manualCops[studentId] || 0;
+            let attendedSessions = 0;
+            let badges = { perfectRecall: 0, champion: 0, explainConcept: 0 };
+
+            Object.keys(attendanceRecords).forEach(sessionId => {
+                const rec = attendanceRecords[sessionId]?.[studentId];
+                if (rec) {
+                    if (rec.status === '✓') {
+                        totalCops += 1;
+                        attendedSessions += 1;
+                    } else if (rec.status === 'P') {
+                        attendedSessions += 1;
+                    }
+
+                    if (rec.perfectRecall) badges.perfectRecall += 1;
+                    if (rec.champion) badges.champion += 1;
+                    if (rec.explainConcept) badges.explainConcept += 1;
+                }
+            });
+
+            totalCops = Math.max(0, totalCops);
+            const totalMinutes = totalCops * 20;
+            const belt = getBeltInfo(totalCops);
+            const attendancePct = Math.round((attendedSessions / Math.max(1, sessions.length)) * 100);
+
+            return { totalCops, totalMinutes, belt, attendancePct, attendedSessions, badges };
+        }
+
+        function getBeltInfo(cops) {
+            if (cops >= 50) return { title: "BIO-DOJO LEGEND", icon: "🏆", bgClass: "bg-amber-500/20 text-amber-400 border-amber-500/40" };
+            if (cops >= 40) return { title: "ELITE", icon: "⬛", bgClass: "bg-slate-800 text-slate-200 border-slate-600" };
+            if (cops >= 30) return { title: "MASTER", icon: "🟤", bgClass: "bg-amber-900/30 text-amber-300 border-amber-800" };
+            if (cops >= 20) return { title: "ACHIEVER", icon: "🔵", bgClass: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
+            if (cops >= 10) return { title: "EXPLORER", icon: "🟢", bgClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
+            return { title: "STARTER", icon: "⚪", bgClass: "bg-slate-800 text-slate-400 border-slate-700" };
+        }
+
+        function updateDashboard() {
+            let studentRankings = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
+            studentRankings.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
+
+            const totalCopsSum = studentRankings.reduce((acc, curr) => acc + curr.totalCops, 0);
+            const totalMinutesSum = totalCopsSum * 20;
+            const avgAttendance = Math.round(studentRankings.reduce((acc, curr) => acc + curr.attendancePct, 0) / (students.length || 1));
+            const legendCount = studentRankings.filter(s => s.totalCops >= 50).length;
+
+            document.getElementById('stat-total-cops').innerText = totalCopsSum;
+            document.getElementById('stat-total-minutes').innerText = totalMinutesSum + ' Min';
+            document.getElementById('stat-attendance-rate').innerText = avgAttendance + '%';
+            document.getElementById('stat-legend-count').innerText = legendCount;
+
+            const avgMins = Math.round(totalMinutesSum / (students.length || 1));
+            document.getElementById('avg-minutes-text').innerText = `${avgMins} / 100 Min Purata`;
+            document.getElementById('avg-minutes-bar').style.width = Math.min(100, Math.round((avgMins / 100) * 100)) + '%';
+
+            if (studentRankings.length > 0) setPodiumData('podium-1', studentRankings[0]);
+            if (studentRankings.length > 1) setPodiumData('podium-2', studentRankings[1]);
+            if (studentRankings.length > 2) setPodiumData('podium-3', studentRankings[2]);
+
+            renderActiveSessionBanner();
+            renderLeaderboard(studentRankings);
+        }
+
+        function setPodiumData(podiumPrefix, student) {
+            document.getElementById(`${podiumPrefix}-name`).innerText = student.name;
+            document.getElementById(`${podiumPrefix}-cops`).innerText = `${student.totalCops} Cop (${student.totalMinutes} Min)`;
+            document.getElementById(`${podiumPrefix}-belt`).innerHTML = `
+                <span class="belt-badge ${student.belt.bgClass}">
+                    ${student.belt.icon} ${student.belt.title}
+                </span>
+            `;
+        }
+
+        function renderActiveSessionBanner() {
+            const activeSessionId = document.getElementById('select-attendance-session')?.value || sessions[0]?.id;
+            const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+
+            const container = document.getElementById('active-session-banner');
+            if (!activeSession) {
+                container.innerHTML = `<p class="text-xs text-slate-400">Tiada sesi didaftarkan.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                                UJIAN BAB HARI INI: ${activeSession.title}
+                            </span>
+                            <span class="text-xs text-slate-400">Tingkatan ${activeSession.form} ${activeSession.date ? `• Tarikh: ${activeSession.date}` : ''}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mt-1">
+                            <i class="fa-solid fa-book-bookmark text-amber-400 mr-2"></i> ${activeSession.bab}
+                        </h3>
+                        ${activeSession.notes ? `<p class="text-xs text-slate-300 mt-1 italic"><i class="fa-solid fa-note-sticky text-amber-400 mr-1"></i>${activeSession.notes}</p>` : ''}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+                            <span class="text-slate-400">Flashcard:</span>
+                            <span class="text-emerald-400 font-bold ml-1">${activeSession.flashcard}</span>
+                        </div>
+                        <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+                            <span class="text-slate-400">Aktiviti:</span>
+                            <span class="text-amber-400 font-bold ml-1">${activeSession.activity}</span>
+                        </div>
+                        <button onclick="openQuickChapterModal('${activeSession.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold px-3 py-2 rounded-xl border border-slate-700 transition">
+                            <i class="fa-solid fa-pen-to-square"></i> Tukar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLeaderboard(customList = null) {
+            let list = customList;
+            if (!list) {
+                list = students.map(std => ({ ...std, ...calculateStudentStats(std.id) }));
+                list.sort((a, b) => b.totalCops - a.totalCops || a.name.localeCompare(b.name));
+            }
+
+            const searchKey = document.getElementById('search-leaderboard')?.value.toLowerCase() || '';
+            if (searchKey) list = list.filter(s => s.name.toLowerCase().includes(searchKey));
+
+            const tbody = document.getElementById('leaderboard-table-body');
+            tbody.innerHTML = list.map((std, idx) => `
+                <tr class="hover:bg-slate-800/50 transition">
+                    <td class="p-3 text-center font-bold ${idx < 3 ? 'text-amber-400' : 'text-slate-400'}">#${idx + 1}</td>
+                    <td class="p-3 font-semibold text-white">${std.name}</td>
+                    <td class="p-3 text-center">
+                        <span class="belt-badge ${std.belt.bgClass}">
+                            ${std.belt.icon} ${std.belt.title}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center font-bold text-emerald-400">
+                        <div class="inline-flex items-center space-x-1">
+                            <button onclick="quickAddCop('${std.id}', -1)" title="Tolak 1 Cop" class="admin-only w-5 h-5 bg-slate-800 hover:bg-rose-600/30 text-rose-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">-</button>
+                            <span class="px-1 text-sm">${std.totalCops}</span>
+                            <button onclick="quickAddCop('${std.id}', 1)" title="Tambah 1 Cop" class="admin-only w-5 h-5 bg-slate-800 hover:bg-emerald-600/30 text-emerald-400 rounded flex items-center justify-center text-[10px] transition border border-slate-700">+</button>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center text-slate-300 font-semibold">${std.totalMinutes} Min</td>
+                    <td class="p-3 text-center text-slate-300">${std.attendancePct}%</td>
+                    <td class="p-3 text-right">
+                        <div class="flex justify-end space-x-1">
+                            <button onclick="viewStudentPassport('${std.id}')" title="Lihat Passport" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-id-card mr-1"></i> Passport
+                            </button>
+                            <button onclick="openEditStudentModal('${std.id}')" title="Sunting Nama" class="admin-only text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 px-2 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteStudentConfirm('${std.id}')" title="Padam Murid" class="admin-only text-xs bg-slate-800 hover:bg-slate-700 text-rose-400 px-2 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function populateAttendanceSessionDropdown() {
+            const select = document.getElementById('select-attendance-session');
+            const currentVal = select.value;
+            select.innerHTML = sessions.map(s => `
+                <option value="${s.id}">${s.title} — ${s.bab} (${s.date || 'Belum Ditetapkan'})</option>
+            `).join('');
+
+            if (currentVal && sessions.some(s => s.id === currentVal)) {
+                select.value = currentVal;
+            }
+        }
+
+        function loadAttendanceMatrix() {
+            const select = document.getElementById('select-attendance-session');
+            const sessionId = select.value || sessions[0]?.id;
+            const currentSession = sessions.find(s => s.id === sessionId);
+
+            if (currentSession) {
+                document.getElementById('attendance-date-picker').value = currentSession.date || getFormattedDate();
+                document.getElementById('session-info-badge').innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-slate-300 gap-1">
+                        <div><strong class="text-white">Bab Diuji:</strong> ${currentSession.bab} (Ting. ${currentSession.form})</div>
+                        <div><strong class="text-emerald-400">Flashcard:</strong> ${currentSession.flashcard} | <strong class="text-amber-400">Aktiviti:</strong> ${currentSession.activity}</div>
+                    </div>
+                `;
+            }
+
+            const currentAttData = attendanceRecords[sessionId] || {};
+            const tbody = document.getElementById('attendance-matrix-body');
+
+            tbody.innerHTML = students.map((std, idx) => {
+                const rec = currentAttData[std.id] || { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+                const overallStats = calculateStudentStats(std.id);
+
+                return `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-3 text-center text-slate-500">${idx + 1}</td>
+                        <td class="p-3 font-semibold text-slate-200">${std.name}</td>
+                        <td class="p-3 text-center">
+                            <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 space-x-1">
+                                <button onclick="setStudentStatus('${std.id}', '✓')" ${!isAdmin ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === '✓' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">✓ Hadir</button>
+                                <button onclick="setStudentStatus('${std.id}', 'P')" ${!isAdmin ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'P' ? 'bg-amber-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">P Tak Lengkap</button>
+                                <button onclick="setStudentStatus('${std.id}', 'A')" ${!isAdmin ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg font-bold text-xs transition ${rec.status === 'A' ? 'bg-rose-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}">A Ponteng</button>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center space-x-1">
+                            <button onclick="toggleBadge('${std.id}', 'perfectRecall')" ${!isAdmin ? 'disabled' : ''} title="Perfect Recall (10/10)" class="p-1.5 rounded-lg border transition ${rec.perfectRecall ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">⭐</button>
+                            <button onclick="toggleBadge('${std.id}', 'champion')" ${!isAdmin ? 'disabled' : ''} title="Champion" class="p-1.5 rounded-lg border transition ${rec.champion ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">👑</button>
+                            <button onclick="toggleBadge('${std.id}', 'explainConcept')" ${!isAdmin ? 'disabled' : ''} title="Terangkan Konsep" class="p-1.5 rounded-lg border transition ${rec.explainConcept ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-950 text-slate-600 border-slate-800'}">🧠</button>
+                        </td>
+                        <td class="p-3 text-center font-bold ${rec.status === '✓' ? 'text-emerald-400' : 'text-slate-500'}">
+                            ${rec.status === '✓' ? '+1 Cop' : '0 Cop'}
+                        </td>
+                        <td class="p-3 text-center font-bold text-emerald-400">${overallStats.totalCops}</td>
+                        <td class="p-3 text-center text-slate-300 font-medium">${overallStats.totalMinutes} Min</td>
+                        <td class="p-3 text-center">
+                            <span class="belt-badge ${overallStats.belt.bgClass}">
+                                ${overallStats.belt.icon} ${overallStats.belt.title}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function setStudentStatus(studentId, status) {
+            if (!isAdmin) return;
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            if (!attendanceRecords[sessionId][studentId]) {
+                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+            }
+            attendanceRecords[sessionId][studentId].status = status;
+
+            saveDataToCloud();
+            loadAttendanceMatrix();
+            updateDashboard();
+        }
+
+        function toggleBadge(studentId, badgeKey) {
+            if (!isAdmin) return;
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            if (!attendanceRecords[sessionId][studentId]) {
+                attendanceRecords[sessionId][studentId] = { status: '✓', perfectRecall: false, champion: false, explainConcept: false };
+            }
+            attendanceRecords[sessionId][studentId][badgeKey] = !attendanceRecords[sessionId][studentId][badgeKey];
+
+            saveDataToCloud();
+            loadAttendanceMatrix();
+            updateDashboard();
+        }
+
+        function updateSessionDate() {
+            const sessionId = document.getElementById('select-attendance-session').value;
+            const selectedDate = document.getElementById('attendance-date-picker').value;
+            const idx = sessions.findIndex(s => s.id === sessionId);
+            if (idx !== -1) {
+                sessions[idx].date = selectedDate;
+                saveDataToCloud();
+                populateAttendanceSessionDropdown();
+                renderDailyPlannerGrid();
+                renderSessionList();
+                showToast(`Tarikh bagi ${sessions[idx].title} telah dikemaskini (${selectedDate})`);
+            }
+        }
+
+        function setTodayDate() {
+            const todayStr = getFormattedDate();
+            document.getElementById('attendance-date-picker').value = todayStr;
+            updateSessionDate();
+        }
+
+        function markAllPresent() {
+            if (!isAdmin) return;
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            students.forEach(std => {
+                const current = attendanceRecords[sessionId][std.id] || { perfectRecall: false, champion: false, explainConcept: false };
+                attendanceRecords[sessionId][std.id] = { ...current, status: '✓' };
+            });
+
+            saveDataToCloud();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Semua murid ditandakan HADIR (✓)");
+        }
+
+        function markAllAbsent() {
+            if (!isAdmin) return;
+            const sessionId = document.getElementById('select-attendance-session').value;
+            if (!attendanceRecords[sessionId]) attendanceRecords[sessionId] = {};
+            students.forEach(std => {
+                const current = attendanceRecords[sessionId][std.id] || { perfectRecall: false, champion: false, explainConcept: false };
+                attendanceRecords[sessionId][std.id] = { ...current, status: 'A' };
+            });
+
+            saveDataToCloud();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Semua murid ditandakan PONTENG (A)", "warning");
+        }
+
+        function resetCurrentSessionAttendance() {
+            if (!isAdmin) return;
+            const sessionId = document.getElementById('select-attendance-session').value;
+            delete attendanceRecords[sessionId];
+
+            saveDataToCloud();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Rekod kehadiran sesi ini telah direset");
+        }
+
+        function saveAttendanceData() {
+            saveDataToCloud();
+            showToast("Rekod kehadiran berjaya disimpan ke Cloud & Peranti Murid!");
+        }
+
+        function quickAddCop(studentId, delta) {
+            if (!isAdmin) return;
+            manualCops[studentId] = (manualCops[studentId] || 0) + delta;
+            saveDataToCloud();
+            updateDashboard();
+            loadAttendanceMatrix();
+            showToast(`Cop manual dikemaskini (${delta > 0 ? '+' : ''}${delta})`);
+        }
+
+        function renderDailyPlannerGrid() {
+            const container = document.getElementById('daily-planner-grid');
+            const formFilter = document.getElementById('filter-planner-form')?.value || 'ALL';
+            const searchKey = document.getElementById('search-planner-bab')?.value.toLowerCase() || '';
+
+            let filteredSessions = sessions.filter(s => {
+                const matchForm = formFilter === 'ALL' || s.form === formFilter;
+                const matchBab = s.bab.toLowerCase().includes(searchKey) || s.title.toLowerCase().includes(searchKey);
+                return matchForm && matchBab;
+            });
+
+            document.getElementById('planner-total-count').innerText = `${filteredSessions.length} Hari Paparan`;
+
+            if (filteredSessions.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-xs">Tiada bab dijumpai.</div>`;
+                return;
+            }
+
+            container.innerHTML = filteredSessions.map(s => `
+                <div class="bg-slate-950 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition group relative">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-slate-800 text-slate-200 font-bold text-xs px-2.5 py-1 rounded-lg border border-slate-700">
+                                ${s.title} ${s.date ? `(${s.date})` : ''}
+                            </span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.form === '4' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'}">
+                                Ting. ${s.form}
+                            </span>
+                        </div>
+
+                        <h4 class="font-bold text-white text-sm mt-2 line-clamp-2 leading-snug">
+                            <i class="fa-solid fa-book-bookmark text-emerald-400 text-xs mr-1"></i> ${s.bab}
+                        </h4>
+
+                        ${s.notes ? `<p class="text-[11px] text-slate-400 mt-2 bg-slate-900 p-2 rounded-lg border border-slate-800 italic">${s.notes}</p>` : ''}
+
+                        <div class="mt-3 flex flex-wrap gap-1.5 text-[10px]">
+                            <span class="bg-slate-900 text-slate-300 px-2 py-0.5 rounded-md border border-slate-800">🎴 ${s.flashcard}</span>
+                            <span class="bg-slate-900 text-amber-300 px-2 py-0.5 rounded-md border border-slate-800 font-medium">⚡ ${s.activity}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                        <button onclick="openQuickChapterModal('${s.id}')" class="admin-only w-full bg-slate-900 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 font-bold py-1.5 rounded-xl transition flex items-center justify-center space-x-1">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            <span>Tukar Bab Hari Ini</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateBabDropdown() {
+            const level = document.getElementById('session-form-level')?.value || "4";
+            const babSelect = document.getElementById('session-bab-input');
+            if (!babSelect) return;
+
+            const babList = SYLLABUS[level] || [];
+            babSelect.innerHTML = babList.map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+
+        function renderSessionList() {
+            const tbody = document.getElementById('session-list-body');
+            document.getElementById('session-count-tag').innerText = `${sessions.length} Sesi`;
+
+            tbody.innerHTML = sessions.map(s => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 font-semibold text-white">
+                        ${s.title}
+                        ${s.date ? `<span class="block text-[10px] text-slate-400 font-normal">${s.date}</span>` : ''}
+                    </td>
+                    <td class="p-3 text-slate-200">
+                        <span class="text-xs font-bold ${s.form === '4' ? 'text-emerald-400' : 'text-amber-400'}">[Ting. ${s.form}]</span> ${s.bab}
+                    </td>
+                    <td class="p-3 text-slate-300">${s.flashcard}</td>
+                    <td class="p-3 text-amber-300 font-medium">${s.activity}</td>
+                    <td class="p-3 text-right">
+                        <button onclick="editSessionForm('${s.id}')" class="admin-only text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openQuickChapterModal(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+
+            document.getElementById('quick-session-id').value = session.id;
+            document.getElementById('quick-modal-day-title').innerText = `${session.title} - Tetapkan Bab`;
+            document.getElementById('quick-session-date').value = session.date || getFormattedDate();
+            document.getElementById('quick-session-level').value = session.form;
+            populateQuickBabDropdown();
+            document.getElementById('quick-session-bab').value = session.bab;
+            document.getElementById('quick-session-flashcard').value = session.flashcard || "Set 1";
+            document.getElementById('quick-session-activity').value = session.activity || "Recall Challenge";
+            document.getElementById('quick-session-notes').value = session.notes || "";
+
+            document.getElementById('modal-quick-chapter').classList.remove('hidden');
+        }
+
+        function populateQuickBabDropdown() {
+            const level = document.getElementById('quick-session-level').value;
+            const select = document.getElementById('quick-session-bab');
+            const babList = SYLLABUS[level] || [];
+
+            select.innerHTML = babList.map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+
+        function handleSaveQuickChapter(e) {
+            e.preventDefault();
+            const id = document.getElementById('quick-session-id').value;
+            const date = document.getElementById('quick-session-date').value;
+            const form = document.getElementById('quick-session-level').value;
+            const bab = document.getElementById('quick-session-bab').value;
+            const flashcard = document.getElementById('quick-session-flashcard').value;
+            const activity = document.getElementById('quick-session-activity').value;
+            const notes = document.getElementById('quick-session-notes').value;
+
+            const idx = sessions.findIndex(s => s.id === id);
+            if (idx !== -1) {
+                sessions[idx].date = date;
+                sessions[idx].form = form;
+                sessions[idx].bab = bab;
+                sessions[idx].flashcard = flashcard;
+                sessions[idx].activity = activity;
+                sessions[idx].notes = notes;
+
+                saveDataToCloud();
+                renderDailyPlannerGrid();
+                renderSessionList();
+                populateAttendanceSessionDropdown();
+                loadAttendanceMatrix();
+                updateDashboard();
+                closeModal('modal-quick-chapter');
+                showToast("Bab harian berjaya dikemaskini di Cloud!");
+            }
+        }
+
+        function handleSaveSession(e) {
+            e.preventDefault();
+            const id = document.getElementById('session-id-input').value;
+            const title = document.getElementById('session-title-input').value;
+            const date = document.getElementById('session-date-input').value;
+            const form = document.getElementById('session-form-level').value;
+            const bab = document.getElementById('session-bab-input').value;
+            const flashcard = document.getElementById('session-flashcard-input').value;
+            const activity = document.getElementById('session-activity-input').value;
+            const notes = document.getElementById('session-notes-input').value;
+
+            if (id) {
+                const idx = sessions.findIndex(s => s.id === id);
+                if (idx !== -1) sessions[idx] = { id, title, date, form, bab, flashcard, activity, notes };
+            } else {
+                const newId = 's_' + Date.now();
+                sessions.push({ id: newId, title, date, form, bab, flashcard, activity, notes });
+            }
+
+            saveDataToCloud();
+            resetSessionForm();
+            renderDailyPlannerGrid();
+            renderSessionList();
+            populateAttendanceSessionDropdown();
+            loadAttendanceMatrix();
+            updateDashboard();
+            showToast("Jadual bab disimpan ke Cloud!");
+        }
+
+        function editSessionForm(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+
+            document.getElementById('session-id-input').value = session.id;
+            document.getElementById('session-title-input').value = session.title;
+            document.getElementById('session-date-input').value = session.date || getFormattedDate();
+            document.getElementById('session-form-level').value = session.form;
+            populateBabDropdown();
+            document.getElementById('session-bab-input').value = session.bab;
+            document.getElementById('session-flashcard-input').value = session.flashcard;
+            document.getElementById('session-activity-input').value = session.activity;
+            document.getElementById('session-notes-input').value = session.notes || '';
+            document.getElementById('session-form-title').innerText = "Kemaskini Sesi " + session.title;
+        }
+
+        function resetSessionForm() {
+            document.getElementById('session-id-input').value = '';
+            document.getElementById('session-title-input').value = '';
+            document.getElementById('session-date-input').value = '';
+            document.getElementById('session-notes-input').value = '';
+            document.getElementById('session-form-title').innerText = "Kemaskini / Tetap Bab Hari Ini";
+        }
+
+        function openAddNewDayModal() {
+            const nextDayNum = sessions.length + 1;
+            const newId = 's_' + Date.now();
+            const defaultForm = "4";
+            const defaultBab = SYLLABUS["4"][0];
+
+            sessions.push({
+                id: newId,
+                title: `Hari ${nextDayNum}`,
+                date: getFormattedDate(),
+                form: defaultForm,
+                bab: defaultBab,
+                flashcard: "Set 1",
+                activity: "Recall Challenge",
+                notes: ""
+            });
+
+            saveDataToCloud();
+            renderDailyPlannerGrid();
+            renderSessionList();
+            populateAttendanceSessionDropdown();
+            openQuickChapterModal(newId);
+        }
+
+        function autoScheduleSyllabusConfirm() {
+            showConfirmModal(
+                "Auto Susun Sukatan SPM",
+                "Adakah anda ingin menjana semula jadual bab secara automatik mengikut susunan sukatan Tingkatan 4 dan Tingkatan 5?",
+                function() {
+                    sessions = [...DEFAULT_SESSIONS];
+                    saveDataToCloud();
+                    renderDailyPlannerGrid();
+                    renderSessionList();
+                    populateAttendanceSessionDropdown();
+                    loadAttendanceMatrix();
+                    updateDashboard();
+                    showToast("Jadual bab harian direset!");
+                }
+            );
+        }
+
+        function renderStudentCards() {
+            const grid = document.getElementById('student-cards-grid');
+            grid.innerHTML = students.map(std => {
+                const stats = calculateStudentStats(std.id);
+
+                return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-emerald-500/50 transition shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="belt-badge ${stats.belt.bgClass}">
+                                    ${stats.belt.icon} ${stats.belt.title}
+                                </span>
+                                <span class="text-xs text-slate-400 font-bold">${stats.attendancePct}% Kehadiran</span>
+                            </div>
+
+                            <h4 class="font-bold text-white text-sm line-clamp-1 mt-1">${std.name}</h4>
+
+                            <div class="grid grid-cols-2 gap-2 mt-3 text-center">
+                                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 block">Jumlah Cop</span>
+                                    <span class="text-base font-extrabold text-emerald-400">${stats.totalCops}</span>
+                                </div>
+                                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 block">Minit Belajar</span>
+                                    <span class="text-base font-extrabold text-amber-400">${stats.totalMinutes}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex space-x-2">
+                            <button onclick="viewStudentPassport('${std.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                                <i class="fa-solid fa-id-card"></i>
+                                <span>Passport</span>
+                            </button>
+                            <button onclick="openEditStudentModal('${std.id}')" class="admin-only bg-slate-800 hover:bg-slate-700 text-blue-400 p-1.5 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewStudentPassport(studentId) {
+            const std = students.find(s => s.id === studentId);
+            if (!std) return;
+
+            const stats = calculateStudentStats(studentId);
+
+            document.getElementById('passport-modal-name').innerText = std.name;
+            document.getElementById('passport-modal-belt').innerHTML = `
+                <span class="belt-badge ${stats.belt.bgClass}">
+                    ${stats.belt.icon} ${stats.belt.title}
+                </span>
+            `;
+
+            document.getElementById('passport-modal-cops').innerText = stats.totalCops;
+            document.getElementById('passport-modal-cops-badge').innerText = `${stats.totalCops} Cop`;
+            document.getElementById('passport-modal-minutes').innerText = `${stats.totalMinutes} Min`;
+
+            document.getElementById('btn-passport-minus').onclick = () => quickAddCop(studentId, -1);
+            document.getElementById('btn-passport-plus').onclick = () => quickAddCop(studentId, 1);
+
+            document.getElementById('passport-modal-badges').innerHTML = `
+                <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">⭐ Perfect Recall: ${stats.badges.perfectRecall}</span>
+                <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">👑 Champion: ${stats.badges.champion}</span>
+                <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg">🧠 Terangkan Konsep: ${stats.badges.explainConcept}</span>
+            `;
+
+            const historyDiv = document.getElementById('passport-modal-history');
+            historyDiv.innerHTML = sessions.map(s => {
+                const rec = attendanceRecords[s.id]?.[studentId];
+                const status = rec ? rec.status : 'A';
+                const statusBadge = status === '✓' ? '<span class="text-emerald-400 font-bold">Hadir (+1 Cop)</span>' : status === 'P' ? '<span class="text-amber-400 font-bold">Tak Lengkap</span>' : '<span class="text-rose-400">Tidak Hadir</span>';
+
+                return `
+                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-950 border border-slate-800">
+                        <div>
+                            <span class="font-bold text-white">${s.title}</span>
+                            <span class="text-slate-400 text-[10px] ml-1">(${s.bab})</span>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('modal-passport').classList.remove('hidden');
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('new-student-name-input').value = '';
+            document.getElementById('modal-add-student').classList.remove('hidden');
+        }
+
+        function handleAddStudent() {
+            const nameInput = document.getElementById('new-student-name-input').value.trim();
+            if (!nameInput) return;
+
+            const newId = 'std_' + Date.now();
+            students.push({ id: newId, name: nameInput.toUpperCase() });
+
+            saveDataToCloud();
+            closeModal('modal-add-student');
+            refreshAllUI();
+            showToast("Murid baru berjaya ditambah!");
+        }
+
+        function openEditStudentModal(studentId) {
+            const std = students.find(s => s.id === studentId);
+            if (!std) return;
+
+            document.getElementById('edit-student-id-input').value = std.id;
+            document.getElementById('edit-student-name-input').value = std.name;
+            document.getElementById('modal-edit-student').classList.remove('hidden');
+        }
+
+        function handleSaveEditStudent() {
+            const id = document.getElementById('edit-student-id-input').value;
+            const newName = document.getElementById('edit-student-name-input').value.trim();
+
+            if (id && newName) {
+                const idx = students.findIndex(s => s.id === id);
+                if (idx !== -1) {
+                    students[idx].name = newName.toUpperCase();
+                    saveDataToCloud();
+                    closeModal('modal-edit-student');
+                    refreshAllUI();
+                    showToast("Nama murid telah dikemaskini!");
+                }
+            }
+        }
+
+        function deleteStudentConfirm(studentId) {
+            const std = students.find(s => s.id === studentId);
+            if (!std) return;
+
+            showConfirmModal(
+                "Padam Murid",
+                `Adakah anda pasti untuk memadam ${std.name} dari senarai?`,
+                function() {
+                    students = students.filter(s => s.id !== studentId);
+                    saveDataToCloud();
+                    refreshAllUI();
+                    showToast("Murid telah dipadam", "warning");
+                }
+            );
+        }
+
+        function resetDataConfirmation() {
+            showConfirmModal(
+                "Reset Semua Data",
+                "Adakah anda pasti untuk menetapkan semula semua data kehadiran murid?",
+                function() {
+                    attendanceRecords = {};
+                    manualCops = {};
+                    saveDataToCloud();
+                    refreshAllUI();
+                    showToast("Semua rekod kehadiran berjaya direset!", "warning");
+                }
+            );
+        }
+
+        function triggerConfetti() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,Jumlah Cop,Jumlah Minit,Kehadiran (%)\n";
+            students.forEach((s, idx) => {
+                const stats = calculateStudentStats(s.id);
+                csvContent += `${idx + 1},"${s.name}",${stats.totalCops},${stats.totalMinutes},${stats.attendancePct}%\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_BioDojo_${getFormattedDate()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function updateCharts() {
+            const studentStats = students.map(s => ({ name: s.name.split(' ')[0], ...calculateStudentStats(s.id) }));
+
+            // Chart 1: Minutes per Student
+            const ctx1 = document.getElementById('chart-minutes-per-student')?.getContext('2d');
+            if (ctx1) {
+                if (minutesChart) minutesChart.destroy();
+                minutesChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: studentStats.map(s => s.name),
+                        datasets: [{
+                            label: 'Minit Belajar',
+                            data: studentStats.map(s => s.totalMinutes),
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Belt Ranks Distribution
+            const ctx2 = document.getElementById('chart-belt-distribution')?.getContext('2d');
+            if (ctx2) {
+                if (beltChart) beltChart.destroy();
+                const beltCounts = { 'STARTER': 0, 'EXPLORER': 0, 'ACHIEVER': 0, 'MASTER': 0, 'ELITE': 0, 'LEGEND': 0 };
+                studentStats.forEach(s => {
+                    const title = s.belt.title.replace('BIO-DOJO ', '');
+                    if (beltCounts[title] !== undefined) beltCounts[title]++;
+                });
+
+                beltChart = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(beltCounts),
+                        datasets: [{
+                            data: Object.values(beltCounts),
+                            backgroundColor: ['#94a3b8', '#10b981', '#3b82f6', '#8b5cf6', '#334155', '#f59e0b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#e2e8f0' } } }
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>
